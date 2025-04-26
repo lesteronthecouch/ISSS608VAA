@@ -4,6 +4,8 @@ author: "Peng Hsiao Yuan"
 format: html
 ---
 
+Author: "Peng Hsiao Yuan"
+
 ```{r}
 pacman::p_load(tidyverse) 
 install.packages("ggplot2") 
