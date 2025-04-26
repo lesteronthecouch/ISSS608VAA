@@ -6,6 +6,10 @@ format: html
 
 Author: "Peng Hsiao Yuan"
 
+##2 Beyond ggplot2 Fundamentals
+
+Install and launch R packages
+
 ```{r}
 pacman::p_load(tidyverse) 
 install.packages("ggplot2") 
@@ -16,7 +20,7 @@ library(ggplot2)
 exam_data <- read.csv("data/Exam_data.csv")
 ```
 
-## 2 Beyond ggplot2 Fundamentals
+## 
 
 ## 2.1 Overview
 
