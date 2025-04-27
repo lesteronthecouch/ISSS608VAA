@@ -32,13 +32,16 @@ exam_data <- read.csv("data/Exam_data.csv")
 ggplot(data=exam_data, aes(x = MATHS)) +
   geom_histogram(bins=10, 
                  boundary = 100,
-                 color="black", 
-                 fill="grey") +
+                 color = "black",
+                 fill = "light blue" )+
   ggtitle("Distribution of Maths scores")
 ```
 
 ```{r}
-hist(exam_data$MATHS)
+hist(exam_data$MATHS,
+     col = "lightblue",   
+     border = "black")
+
 ```
 
 ## 1.4 Grammar of Graphics
@@ -96,7 +99,8 @@ ggplot(data=exam_data,
 ```{r}
 ggplot(data=exam_data, 
        aes(x=RACE)) +
-  geom_bar()
+  geom_bar(color = "black",
+           fill = "light blue")
 ```
 
 ## 1.7.2 Geometric Objects: geom_dotplot
@@ -112,7 +116,8 @@ ggplot(data=exam_data,
 ```{r}
 ggplot(data=exam_data, 
        aes(x = MATHS)) +
-  geom_histogram() 
+  geom_histogram(color = "black",
+                 fill = "light blue") 
 ```
 
 ## 1.7.4 Modifying a geometric object by changing geom()
@@ -181,7 +186,7 @@ The code chunk below plots two kernel density lines by using colour or fill argu
 ggplot(data=exam_data, 
        aes(x = MATHS, 
            colour = GENDER)) +
-  geom_density()
+  geom_density(size = 1) +
 ```
 
 ## 1.7.7 Geometric Objects: geom_boxplot
@@ -394,7 +399,7 @@ ggplot(data=exam_data,
   theme_gray()
 ```
 
-A horizontal bar chart plotted using theme_economist_white().
+A horizontal bar chart plotted using theme_classic().
 
 ```{r}
 ggplot(data=exam_data, 
@@ -402,5 +407,5 @@ ggplot(data=exam_data,
   geom_bar(color = "black",
                  fill = "light blue") +
   coord_flip() +
-  theme_economist_white()
+  theme_classic()
 ```
