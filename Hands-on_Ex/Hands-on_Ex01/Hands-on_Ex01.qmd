@@ -132,9 +132,41 @@ ggplot(data=exam_data,
        aes(x= MATHS, 
            fill = GENDER)) +
   geom_histogram(bins=20, 
-                 color="grey30")
-```
+                 color="grey30") +
+  scale_fill_manual(values = c("blue", "red"))
 
+```
+```{r}
+exam_data <- exam_data %>%
+  mutate(MATHS_GROUP = cut(MATHS, breaks = 10))
+
+# Step 2: 先讓 MATHS_GROUP 依照區間排序
+# 提取 levels 並反轉
+levels_order <- levels(cut(exam_data$MATHS, breaks = 10))
+levels_order <- rev(levels_order)  # 反轉順序（高分在上）
+
+# 再重新設定 MATHS_GROUP 為 factor
+exam_data <- exam_data %>%
+  mutate(MATHS_GROUP = factor(MATHS_GROUP, levels = levels_order))
+
+# Step 3: 計算每組男女的人數
+pyramid_data <- exam_data %>%
+  group_by(MATHS_GROUP, GENDER) %>%
+  summarise(count = n(), .groups = "drop")
+
+# Step 4: 女性取負
+pyramid_data <- pyramid_data %>%
+  mutate(count = ifelse(GENDER == "Female", -count, count))
+
+# Step 5: 繪製金字塔圖
+ggplot(pyramid_data, aes(x = MATHS_GROUP, y = count, fill = GENDER)) +
+  geom_bar(stat = "identity", position = "identity") +
+  coord_flip() +
+  scale_y_continuous(labels = abs) +
+  labs(x = "MATHS 分數區間", y = "人數", title = "數學成績金字塔圖") +
+  scale_fill_manual(values = c("green", "navy")) +
+  theme_minimal()
+```
 ## 1.7.6 Geometric Objects: geom-density()
 
 ```{r}
@@ -160,7 +192,8 @@ geom_boxplot() displays continuous value list. It visualises five summary statis
 ggplot(data=exam_data, 
        aes(y = MATHS,       
            x= GENDER)) +    
-  geom_boxplot()   
+  geom_boxplot(color = "black",
+               fill = "light blue")   
 ```
 
 The code chunk below plots the distribution of Maths scores by gender in notched plot instead of boxplot.
@@ -169,7 +202,9 @@ The code chunk below plots the distribution of Maths scores by gender in notched
 ggplot(data=exam_data, 
        aes(y = MATHS, 
            x= GENDER)) +
-  geom_boxplot(notch=TRUE)
+  geom_boxplot(notch=TRUE,
+               color = "black",
+               fill = "light blue")
 ```
 
 ## 1.7.8 Geometric Objects: geom_violin
@@ -180,7 +215,8 @@ geom_violin is designed for creating violin plot. Violin plots are a way of comp
 ggplot(data=exam_data, 
        aes(y = MATHS, 
            x= GENDER)) +
-  geom_violin()
+  geom_violin(color = "black",
+               fill = "light blue")
 ```
 
 ## 1.7.9 Geometric Objects: geom_point()
@@ -200,9 +236,10 @@ ggplot(data=exam_data,
 ggplot(data=exam_data, 
        aes(y = MATHS, 
            x= GENDER)) +
-  geom_boxplot() +                    
+  geom_boxplot(color = "black",
+               fill = "light blue") +                    
   geom_point(position="jitter", 
-             size = 0.5)    
+             size = 1)    
 ```
 
 ## 1.8 Essential Grammatical Elements in ggplot2: stat
@@ -214,7 +251,8 @@ frequency of values of a variable (bar graph) a mean a confidence limit There ar
 ```{r}
 ggplot(data=exam_data, 
        aes(y = MATHS, x= GENDER)) +
-  geom_boxplot()
+  geom_boxplot(color = "black",
+               fill = "light blue")
 ```
 
 ## 1.8.2 Working with stat - the stat_summary() method
@@ -222,11 +260,12 @@ ggplot(data=exam_data,
 ```{r}
 ggplot(data=exam_data, 
        aes(y = MATHS, x= GENDER)) +
-  geom_boxplot() +
+  geom_boxplot(color = "black",
+               fill = "light blue") +
   stat_summary(geom = "point",       
                fun = "mean",         
                colour ="red",        
-               size=4)               
+               size= 2)               
 ```
 
 ## 1.8.3 Working with stat - the geom() method
@@ -234,11 +273,12 @@ ggplot(data=exam_data,
 ```{r}
 ggplot(data=exam_data, 
        aes(y = MATHS, x= GENDER)) +
-  geom_boxplot() +
+  geom_boxplot(color = "black",
+               fill = "light blue") +
   geom_point(stat="summary",        
              fun="mean",           
              colour="red",          
-             size=4)          
+             size= 2)          
 ```
 
 ## 1.8.4 Adding a best fit curve on a scatterplot?
@@ -249,7 +289,8 @@ The scatter-plot below shows the relationship of Maths and English grades of pup
 ggplot(data=exam_data, 
        aes(x= MATHS, y=ENGLISH)) +
   geom_point() +
-  geom_smooth(size=0.5)
+  geom_smooth(size= 1,
+              color= "red")
 ```
 
 ```{r}
@@ -258,7 +299,8 @@ ggplot(data=exam_data,
            y=ENGLISH)) +
   geom_point() +
   geom_smooth(method=lm, 
-              linewidth=0.5)
+              linewidth= 1, 
+              color ="red")
 ```
 
 ## 1.9 Essential Grammatical Elements in ggplot2: Facets
@@ -274,7 +316,9 @@ facet_wrap wraps a 1d sequence of panels into 2d. This is generally a better use
 ```{r}
 ggplot(data=exam_data, 
        aes(x= MATHS)) +
-  geom_histogram(bins=20) +
+  geom_histogram(bins=20,
+                 color = "black",
+                 fill = "light blue") +
     facet_wrap(~ CLASS)
 ```
 
@@ -285,7 +329,9 @@ facet_grid() forms a matrix of panels defined by row and column facetting variab
 ```{r}
 ggplot(data=exam_data, 
        aes(x= MATHS)) +
-  geom_histogram(bins=20) +
+  geom_histogram(bins=20,
+                 color = "black",
+                 fill = "light blue") +
     facet_grid(~ CLASS)
 ```
 
@@ -296,13 +342,18 @@ ggplot(data=exam_data,
 ```{r}
 ggplot(data=exam_data, 
        aes(x=RACE)) +
-  geom_bar()
+  geom_bar(color = "black",
+                 fill = "light blue")
 ```
+
+Flipping the Chart
+
 
 ```{r}
 ggplot(data=exam_data, 
        aes(x=RACE)) +
-  geom_bar() +
+  geom_bar(color = "black",
+                 fill = "light blue") +
   coord_flip()
 ```
 
@@ -312,7 +363,8 @@ ggplot(data=exam_data,
 ggplot(data=exam_data, 
        aes(x= MATHS, y=ENGLISH)) +
   geom_point() +
-  geom_smooth(method=lm, size=0.5)
+  geom_smooth(method=lm, size=1,
+              color = "red")
 ```
 
 ```{r}
@@ -320,7 +372,8 @@ ggplot(data=exam_data,
        aes(x= MATHS, y=ENGLISH)) +
   geom_point() +
   geom_smooth(method=lm, 
-              size=0.5) +  
+              size=1,
+              color = "red") +  
   coord_cartesian(xlim=c(0,100),
                   ylim=c(0,100))
 ```
@@ -329,20 +382,25 @@ ggplot(data=exam_data,
 
 ## 1.11.1 Working with theme
 
+
+A horizontal bar chart plotted using theme_gray()
+
 ```{r}
 ggplot(data=exam_data, 
        aes(x=RACE)) +
-  geom_bar() +
+  geom_bar(color = "black",
+           fill = "light blue") +
   coord_flip() +
   theme_gray()
 ```
 
-A horizontal bar chart plotted using theme_classic().
+A horizontal bar chart plotted using theme_economist_white().
 
 ```{r}
 ggplot(data=exam_data, 
        aes(x=RACE)) +
-  geom_bar() +
+  geom_bar(color = "black",
+                 fill = "light blue") +
   coord_flip() +
-  theme_classic()
+  theme_economist_white()
 ```
