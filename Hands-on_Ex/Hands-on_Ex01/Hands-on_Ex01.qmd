@@ -29,11 +29,11 @@ exam_data <- read.csv("data/Exam_data.csv")
 ## Plotting a simple bar chart
 
 ```{r}
-ggplot(data=exam_data, aes(x = MATHS)) +
-  geom_histogram(bins=10, 
+ggplot(data = exam_data, aes(x = MATHS)) +
+  geom_histogram(bins = 10, 
                  boundary = 100,
                  color = "black",
-                 fill = "light blue" )+
+                 fill = "lightblue") +  # << 沒有空格
   ggtitle("Distribution of Maths scores")
 ```
 
@@ -41,7 +41,6 @@ ggplot(data=exam_data, aes(x = MATHS)) +
 hist(exam_data$MATHS,
      col = "lightblue",   
      border = "black")
-
 ```
 
 ## 1.4 Grammar of Graphics
@@ -100,7 +99,7 @@ ggplot(data=exam_data,
 ggplot(data=exam_data, 
        aes(x=RACE)) +
   geom_bar(color = "black",
-           fill = "light blue")
+           fill = "lightblue")
 ```
 
 ## 1.7.2 Geometric Objects: geom_dotplot
@@ -117,7 +116,7 @@ ggplot(data=exam_data,
 ggplot(data=exam_data, 
        aes(x = MATHS)) +
   geom_histogram(color = "black",
-                 fill = "light blue") 
+                 fill = "lightblue") 
 ```
 
 ## 1.7.4 Modifying a geometric object by changing geom()
@@ -127,7 +126,7 @@ ggplot(data=exam_data,
        aes(x= MATHS)) +
   geom_histogram(bins=20,            
                  color="black",      
-                 fill="light blue")  
+                 fill="lightblue")  
 ```
 
 ## 1.7.5 Modifying a geometric object by changing aes()
@@ -185,8 +184,8 @@ The code chunk below plots two kernel density lines by using colour or fill argu
 ```{r}
 ggplot(data=exam_data, 
        aes(x = MATHS, 
-           colour = GENDER)) +
-  geom_density(size = 1) +
+       colour = GENDER)) +
+  geom_density(size = 1)
 ```
 
 ## 1.7.7 Geometric Objects: geom_boxplot
@@ -198,7 +197,7 @@ ggplot(data=exam_data,
        aes(y = MATHS,       
            x= GENDER)) +    
   geom_boxplot(color = "black",
-               fill = "light blue")   
+               fill = "lightblue")   
 ```
 
 The code chunk below plots the distribution of Maths scores by gender in notched plot instead of boxplot.
@@ -209,7 +208,7 @@ ggplot(data=exam_data,
            x= GENDER)) +
   geom_boxplot(notch=TRUE,
                color = "black",
-               fill = "light blue")
+               fill = "lightblue")
 ```
 
 ## 1.7.8 Geometric Objects: geom_violin
@@ -221,7 +220,7 @@ ggplot(data=exam_data,
        aes(y = MATHS, 
            x= GENDER)) +
   geom_violin(color = "black",
-               fill = "light blue")
+               fill = "lightblue")
 ```
 
 ## 1.7.9 Geometric Objects: geom_point()
@@ -242,7 +241,7 @@ ggplot(data=exam_data,
        aes(y = MATHS, 
            x= GENDER)) +
   geom_boxplot(color = "black",
-               fill = "light blue") +                    
+               fill = "lightblue") +                    
   geom_point(position="jitter", 
              size = 1)    
 ```
@@ -257,7 +256,7 @@ frequency of values of a variable (bar graph) a mean a confidence limit There ar
 ggplot(data=exam_data, 
        aes(y = MATHS, x= GENDER)) +
   geom_boxplot(color = "black",
-               fill = "light blue")
+               fill = "lightblue")
 ```
 
 ## 1.8.2 Working with stat - the stat_summary() method
@@ -310,10 +309,6 @@ ggplot(data=exam_data,
 
 ## 1.9 Essential Grammatical Elements in ggplot2: Facets
 
-```{r}
-
-```
-
 ## 1.9.1 Working with facet_wrap()
 
 facet_wrap wraps a 1d sequence of panels into 2d. This is generally a better use of screen space than facet_grid because most displays are roughly rectangular.
@@ -323,7 +318,7 @@ ggplot(data=exam_data,
        aes(x= MATHS)) +
   geom_histogram(bins=20,
                  color = "black",
-                 fill = "light blue") +
+                 fill = "lightblue") +
     facet_wrap(~ CLASS)
 ```
 
@@ -336,7 +331,7 @@ ggplot(data=exam_data,
        aes(x= MATHS)) +
   geom_histogram(bins=20,
                  color = "black",
-                 fill = "light blue") +
+                 fill = "lightblue") +
     facet_grid(~ CLASS)
 ```
 
@@ -348,7 +343,7 @@ ggplot(data=exam_data,
 ggplot(data=exam_data, 
        aes(x=RACE)) +
   geom_bar(color = "black",
-                 fill = "light blue")
+                 fill = "lightblue")
 ```
 
 Flipping the Chart
@@ -358,7 +353,7 @@ Flipping the Chart
 ggplot(data=exam_data, 
        aes(x=RACE)) +
   geom_bar(color = "black",
-                 fill = "light blue") +
+                 fill = "lightblue") 
   coord_flip()
 ```
 
@@ -378,7 +373,7 @@ ggplot(data=exam_data,
   geom_point() +
   geom_smooth(method=lm, 
               size=1,
-              color = "red") +  
+              color = "red")
   coord_cartesian(xlim=c(0,100),
                   ylim=c(0,100))
 ```
@@ -394,7 +389,7 @@ A horizontal bar chart plotted using theme_gray()
 ggplot(data=exam_data, 
        aes(x=RACE)) +
   geom_bar(color = "black",
-           fill = "light blue") +
+           fill = "lightblue") +
   coord_flip() +
   theme_gray()
 ```

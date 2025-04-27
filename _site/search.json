@@ -25,7 +25,7 @@
     "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#plotting-a-simple-bar-chart",
     "title": "Hands-on Exercise 1",
     "section": "Plotting a simple bar chart",
-    "text": "Plotting a simple bar chart\n\nggplot(data=exam_data, aes(x = MATHS)) +\n  geom_histogram(bins=10, \n                 boundary = 100,\n                 color=\"black\", \n                 fill=\"grey\") +\n  ggtitle(\"Distribution of Maths scores\")\n\n\n\n\n\n\n\n\n\nhist(exam_data$MATHS)"
+    "text": "Plotting a simple bar chart\n\nggplot(data = exam_data, aes(x = MATHS)) +\n  geom_histogram(bins = 10, \n                 boundary = 100,\n                 color = \"black\",\n                 fill = \"lightblue\") +  # &lt;&lt; 沒有空格\n  ggtitle(\"Distribution of Maths scores\")\n\n\n\n\n\n\n\n\n\nhist(exam_data$MATHS,\n     col = \"lightblue\",   \n     border = \"black\")"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#grammar-of-graphics",
@@ -60,7 +60,7 @@
     "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#geometric-objects-geom_bar",
     "title": "Hands-on Exercise 1",
     "section": "1.7.1 Geometric Objects: geom_bar",
-    "text": "1.7.1 Geometric Objects: geom_bar\n\nggplot(data=exam_data, \n       aes(x=RACE)) +\n  geom_bar()"
+    "text": "1.7.1 Geometric Objects: geom_bar\n\nggplot(data=exam_data, \n       aes(x=RACE)) +\n  geom_bar(color = \"black\",\n           fill = \"lightblue\")"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#geometric-objects-geom_dotplot",
@@ -74,14 +74,14 @@
     "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#geometric-objects-geom_histogram",
     "title": "Hands-on Exercise 1",
     "section": "1.7.3 Geometric Objects: geom_histogram()",
-    "text": "1.7.3 Geometric Objects: geom_histogram()\n\nggplot(data=exam_data, \n       aes(x = MATHS)) +\n  geom_histogram() \n\n`stat_bin()` using `bins = 30`. Pick better value with `binwidth`."
+    "text": "1.7.3 Geometric Objects: geom_histogram()\n\nggplot(data=exam_data, \n       aes(x = MATHS)) +\n  geom_histogram(color = \"black\",\n                 fill = \"lightblue\") \n\n`stat_bin()` using `bins = 30`. Pick better value with `binwidth`."
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#modifying-a-geometric-object-by-changing-geom",
     "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#modifying-a-geometric-object-by-changing-geom",
     "title": "Hands-on Exercise 1",
     "section": "1.7.4 Modifying a geometric object by changing geom()",
-    "text": "1.7.4 Modifying a geometric object by changing geom()\n\nggplot(data=exam_data, \n       aes(x= MATHS)) +\n  geom_histogram(bins=20,            \n                 color=\"black\",      \n                 fill=\"light blue\")"
+    "text": "1.7.4 Modifying a geometric object by changing geom()\n\nggplot(data=exam_data, \n       aes(x= MATHS)) +\n  geom_histogram(bins=20,            \n                 color=\"black\",      \n                 fill=\"lightblue\")"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#modifying-a-geometric-object-by-changing-aes",
@@ -95,21 +95,21 @@
     "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#geometric-objects-geom-density",
     "title": "Hands-on Exercise 1",
     "section": "1.7.6 Geometric Objects: geom-density()",
-    "text": "1.7.6 Geometric Objects: geom-density()\n\nggplot(data=exam_data, \n       aes(x = MATHS)) +\n  geom_density()     \n\n\n\n\n\n\n\n\nThe code chunk below plots two kernel density lines by using colour or fill arguments of aes()\n\nggplot(data=exam_data, \n       aes(x = MATHS, \n           colour = GENDER)) +\n  geom_density()"
+    "text": "1.7.6 Geometric Objects: geom-density()\n\nggplot(data=exam_data, \n       aes(x = MATHS)) +\n  geom_density()     \n\n\n\n\n\n\n\n\nThe code chunk below plots two kernel density lines by using colour or fill arguments of aes()\n\nggplot(data=exam_data, \n       aes(x = MATHS, \n       colour = GENDER)) +\n  geom_density(size = 1)\n\nWarning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.\nℹ Please use `linewidth` instead."
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#geometric-objects-geom_boxplot",
     "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#geometric-objects-geom_boxplot",
     "title": "Hands-on Exercise 1",
     "section": "1.7.7 Geometric Objects: geom_boxplot",
-    "text": "1.7.7 Geometric Objects: geom_boxplot\ngeom_boxplot() displays continuous value list. It visualises five summary statistics (the median, two hinges and two whiskers), and all “outlying” points individually.\n\nggplot(data=exam_data, \n       aes(y = MATHS,       \n           x= GENDER)) +    \n  geom_boxplot(color = \"black\",\n               fill = \"light blue\")   \n\n\n\n\n\n\n\n\nThe code chunk below plots the distribution of Maths scores by gender in notched plot instead of boxplot.\n\nggplot(data=exam_data, \n       aes(y = MATHS, \n           x= GENDER)) +\n  geom_boxplot(notch=TRUE,\n               color = \"black\",\n               fill = \"light blue\")"
+    "text": "1.7.7 Geometric Objects: geom_boxplot\ngeom_boxplot() displays continuous value list. It visualises five summary statistics (the median, two hinges and two whiskers), and all “outlying” points individually.\n\nggplot(data=exam_data, \n       aes(y = MATHS,       \n           x= GENDER)) +    \n  geom_boxplot(color = \"black\",\n               fill = \"lightblue\")   \n\n\n\n\n\n\n\n\nThe code chunk below plots the distribution of Maths scores by gender in notched plot instead of boxplot.\n\nggplot(data=exam_data, \n       aes(y = MATHS, \n           x= GENDER)) +\n  geom_boxplot(notch=TRUE,\n               color = \"black\",\n               fill = \"lightblue\")"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#geometric-objects-geom_violin",
     "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#geometric-objects-geom_violin",
     "title": "Hands-on Exercise 1",
     "section": "1.7.8 Geometric Objects: geom_violin",
-    "text": "1.7.8 Geometric Objects: geom_violin\ngeom_violin is designed for creating violin plot. Violin plots are a way of comparing multiple data distributions. With ordinary density curves, it is difficult to compare more than just a few distributions because the lines visually interfere with each other. With a violin plot, it’s easier to compare several distributions since they’re placed side by side.\n\nggplot(data=exam_data, \n       aes(y = MATHS, \n           x= GENDER)) +\n  geom_violin(color = \"black\",\n               fill = \"light blue\")"
+    "text": "1.7.8 Geometric Objects: geom_violin\ngeom_violin is designed for creating violin plot. Violin plots are a way of comparing multiple data distributions. With ordinary density curves, it is difficult to compare more than just a few distributions because the lines visually interfere with each other. With a violin plot, it’s easier to compare several distributions since they’re placed side by side.\n\nggplot(data=exam_data, \n       aes(y = MATHS, \n           x= GENDER)) +\n  geom_violin(color = \"black\",\n               fill = \"lightblue\")"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#geometric-objects-geom_point",
@@ -123,14 +123,14 @@
     "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#geom-objects-can-be-combined",
     "title": "Hands-on Exercise 1",
     "section": "1.7.10 geom objects can be combined",
-    "text": "1.7.10 geom objects can be combined\n\nggplot(data=exam_data, \n       aes(y = MATHS, \n           x= GENDER)) +\n  geom_boxplot(color = \"black\",\n               fill = \"light blue\") +                    \n  geom_point(position=\"jitter\", \n             size = 1)"
+    "text": "1.7.10 geom objects can be combined\n\nggplot(data=exam_data, \n       aes(y = MATHS, \n           x= GENDER)) +\n  geom_boxplot(color = \"black\",\n               fill = \"lightblue\") +                    \n  geom_point(position=\"jitter\", \n             size = 1)"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#essential-grammatical-elements-in-ggplot2-stat",
     "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#essential-grammatical-elements-in-ggplot2-stat",
     "title": "Hands-on Exercise 1",
     "section": "1.8 Essential Grammatical Elements in ggplot2: stat",
-    "text": "1.8 Essential Grammatical Elements in ggplot2: stat\nThe Statistics functions statistically transform data, usually as some form of summary. For example:\nfrequency of values of a variable (bar graph) a mean a confidence limit There are two ways to use these functions: add a stat_() function and override the default geom, or add a geom_() function and override the default stat. ## 1.8.1 Working with stat()\n\nggplot(data=exam_data, \n       aes(y = MATHS, x= GENDER)) +\n  geom_boxplot(color = \"black\",\n               fill = \"light blue\")"
+    "text": "1.8 Essential Grammatical Elements in ggplot2: stat\nThe Statistics functions statistically transform data, usually as some form of summary. For example:\nfrequency of values of a variable (bar graph) a mean a confidence limit There are two ways to use these functions: add a stat_() function and override the default geom, or add a geom_() function and override the default stat. ## 1.8.1 Working with stat()\n\nggplot(data=exam_data, \n       aes(y = MATHS, x= GENDER)) +\n  geom_boxplot(color = \"black\",\n               fill = \"lightblue\")"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#working-with-stat---the-stat_summary-method",
@@ -151,7 +151,7 @@
     "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#adding-a-best-fit-curve-on-a-scatterplot",
     "title": "Hands-on Exercise 1",
     "section": "1.8.4 Adding a best fit curve on a scatterplot?",
-    "text": "1.8.4 Adding a best fit curve on a scatterplot?\nThe scatter-plot below shows the relationship of Maths and English grades of pupils. The interpretability of this graph can be improved by adding a best fit curve. In the code chunk below, geom_smooth() is used to plot a best fit curve on the scatter-plot.\n\nggplot(data=exam_data, \n       aes(x= MATHS, y=ENGLISH)) +\n  geom_point() +\n  geom_smooth(size= 1,\n              color= \"red\")\n\nWarning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.\nℹ Please use `linewidth` instead.\n\n\n`geom_smooth()` using method = 'loess' and formula = 'y ~ x'\n\n\n\n\n\n\n\n\n\n\nggplot(data=exam_data, \n       aes(x= MATHS, \n           y=ENGLISH)) +\n  geom_point() +\n  geom_smooth(method=lm, \n              linewidth= 1, \n              color =\"red\")\n\n`geom_smooth()` using formula = 'y ~ x'"
+    "text": "1.8.4 Adding a best fit curve on a scatterplot?\nThe scatter-plot below shows the relationship of Maths and English grades of pupils. The interpretability of this graph can be improved by adding a best fit curve. In the code chunk below, geom_smooth() is used to plot a best fit curve on the scatter-plot.\n\nggplot(data=exam_data, \n       aes(x= MATHS, y=ENGLISH)) +\n  geom_point() +\n  geom_smooth(size= 1,\n              color= \"red\")\n\n`geom_smooth()` using method = 'loess' and formula = 'y ~ x'\n\n\n\n\n\n\n\n\n\n\nggplot(data=exam_data, \n       aes(x= MATHS, \n           y=ENGLISH)) +\n  geom_point() +\n  geom_smooth(method=lm, \n              linewidth= 1, \n              color =\"red\")\n\n`geom_smooth()` using formula = 'y ~ x'"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#essential-grammatical-elements-in-ggplot2-facets",
@@ -165,14 +165,14 @@
     "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#working-with-facet_wrap",
     "title": "Hands-on Exercise 1",
     "section": "1.9.1 Working with facet_wrap()",
-    "text": "1.9.1 Working with facet_wrap()\nfacet_wrap wraps a 1d sequence of panels into 2d. This is generally a better use of screen space than facet_grid because most displays are roughly rectangular.\n\nggplot(data=exam_data, \n       aes(x= MATHS)) +\n  geom_histogram(bins=20,\n                 color = \"black\",\n                 fill = \"light blue\") +\n    facet_wrap(~ CLASS)"
+    "text": "1.9.1 Working with facet_wrap()\nfacet_wrap wraps a 1d sequence of panels into 2d. This is generally a better use of screen space than facet_grid because most displays are roughly rectangular.\n\nggplot(data=exam_data, \n       aes(x= MATHS)) +\n  geom_histogram(bins=20,\n                 color = \"black\",\n                 fill = \"lightblue\") +\n    facet_wrap(~ CLASS)"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#facet_grid-function",
     "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#facet_grid-function",
     "title": "Hands-on Exercise 1",
     "section": "1.9.2 facet_grid() function",
-    "text": "1.9.2 facet_grid() function\nfacet_grid() forms a matrix of panels defined by row and column facetting variables. It is most useful when you have two discrete variables, and all combinations of the variables exist in the data.\n\nggplot(data=exam_data, \n       aes(x= MATHS)) +\n  geom_histogram(bins=20,\n                 color = \"black\",\n                 fill = \"light blue\") +\n    facet_grid(~ CLASS)"
+    "text": "1.9.2 facet_grid() function\nfacet_grid() forms a matrix of panels defined by row and column facetting variables. It is most useful when you have two discrete variables, and all combinations of the variables exist in the data.\n\nggplot(data=exam_data, \n       aes(x= MATHS)) +\n  geom_histogram(bins=20,\n                 color = \"black\",\n                 fill = \"lightblue\") +\n    facet_grid(~ CLASS)"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#essential-grammatical-elements-in-ggplot2-coordinates",
@@ -186,14 +186,14 @@
     "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#working-with-coordinate",
     "title": "Hands-on Exercise 1",
     "section": "1.10.1 Working with Coordinate",
-    "text": "1.10.1 Working with Coordinate\n\nggplot(data=exam_data, \n       aes(x=RACE)) +\n  geom_bar(color = \"black\",\n                 fill = \"light blue\")\n\n\n\n\n\n\n\n\nFlipping the Chart\n\nggplot(data=exam_data, \n       aes(x=RACE)) +\n  geom_bar(color = \"black\",\n                 fill = \"light blue\") +\n  coord_flip()"
+    "text": "1.10.1 Working with Coordinate\n\nggplot(data=exam_data, \n       aes(x=RACE)) +\n  geom_bar(color = \"black\",\n                 fill = \"lightblue\")\n\n\n\n\n\n\n\n\nFlipping the Chart\n\nggplot(data=exam_data, \n       aes(x=RACE)) +\n  geom_bar(color = \"black\",\n                 fill = \"lightblue\") \n\n\n\n\n\n\n\n  coord_flip()\n\n&lt;ggproto object: Class CoordFlip, CoordCartesian, Coord, gg&gt;\n    aspect: function\n    backtransform_range: function\n    clip: on\n    default: FALSE\n    distance: function\n    expand: TRUE\n    is_free: function\n    is_linear: function\n    labels: function\n    limits: list\n    modify_scales: function\n    range: function\n    render_axis_h: function\n    render_axis_v: function\n    render_bg: function\n    render_fg: function\n    setup_data: function\n    setup_layout: function\n    setup_panel_guides: function\n    setup_panel_params: function\n    setup_params: function\n    train_panel_guides: function\n    transform: function\n    super:  &lt;ggproto object: Class CoordFlip, CoordCartesian, Coord, gg&gt;"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#changing-the-y--and-x-axis-range",
     "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#changing-the-y--and-x-axis-range",
     "title": "Hands-on Exercise 1",
     "section": "1.10.2 Changing the y- and x-axis range",
-    "text": "1.10.2 Changing the y- and x-axis range\n\nggplot(data=exam_data, \n       aes(x= MATHS, y=ENGLISH)) +\n  geom_point() +\n  geom_smooth(method=lm, size=1,\n              color = \"red\")\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\n\n\n\n\n\n\n\n\nggplot(data=exam_data, \n       aes(x= MATHS, y=ENGLISH)) +\n  geom_point() +\n  geom_smooth(method=lm, \n              size=1,\n              color = \"red\") +  \n  coord_cartesian(xlim=c(0,100),\n                  ylim=c(0,100))\n\n`geom_smooth()` using formula = 'y ~ x'"
+    "text": "1.10.2 Changing the y- and x-axis range\n\nggplot(data=exam_data, \n       aes(x= MATHS, y=ENGLISH)) +\n  geom_point() +\n  geom_smooth(method=lm, size=1,\n              color = \"red\")\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\n\n\n\n\n\n\n\n\nggplot(data=exam_data, \n       aes(x= MATHS, y=ENGLISH)) +\n  geom_point() +\n  geom_smooth(method=lm, \n              size=1,\n              color = \"red\")\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\n\n\n\n\n\n\n  coord_cartesian(xlim=c(0,100),\n                  ylim=c(0,100))\n\n&lt;ggproto object: Class CoordCartesian, Coord, gg&gt;\n    aspect: function\n    backtransform_range: function\n    clip: on\n    default: FALSE\n    distance: function\n    expand: TRUE\n    is_free: function\n    is_linear: function\n    labels: function\n    limits: list\n    modify_scales: function\n    range: function\n    render_axis_h: function\n    render_axis_v: function\n    render_bg: function\n    render_fg: function\n    setup_data: function\n    setup_layout: function\n    setup_panel_guides: function\n    setup_panel_params: function\n    setup_params: function\n    train_panel_guides: function\n    transform: function\n    super:  &lt;ggproto object: Class CoordCartesian, Coord, gg&gt;"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#essential-grammatical-elements-in-ggplot2-themes",
@@ -207,7 +207,7 @@
     "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#working-with-theme",
     "title": "Hands-on Exercise 1",
     "section": "1.11.1 Working with theme",
-    "text": "1.11.1 Working with theme\nA horizontal bar chart plotted using theme_gray()\n\nggplot(data=exam_data, \n       aes(x=RACE)) +\n  geom_bar(color = \"black\",\n           fill = \"light blue\") +\n  coord_flip() +\n  theme_gray()\n\n\n\n\n\n\n\n\nA horizontal bar chart plotted using theme_classic().\n\nggplot(data=exam_data, \n       aes(x=RACE)) +\n  geom_bar(color = \"black\",\n                 fill = \"light blue\") +\n  coord_flip() +\n  theme_classic()"
+    "text": "1.11.1 Working with theme\nA horizontal bar chart plotted using theme_gray()\n\nggplot(data=exam_data, \n       aes(x=RACE)) +\n  geom_bar(color = \"black\",\n           fill = \"lightblue\") +\n  coord_flip() +\n  theme_gray()\n\n\n\n\n\n\n\n\nA horizontal bar chart plotted using theme_classic().\n\nggplot(data=exam_data, \n       aes(x=RACE)) +\n  geom_bar(color = \"black\",\n                 fill = \"light blue\") +\n  coord_flip() +\n  theme_classic()"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html",
