@@ -1,0 +1,85 @@
+---
+title: "Take-home Exercise 1 - Data Visualizations in Singapore Residence by Planning Area"
+author: "PENG Hsiao Yuan"
+---
+# 1. Overview
+
+# 1.1 Background Information and Data Source
+
+The data set is downloaded from "https://www.singstat.gov.sg/"
+
+File Name: "Singapore Residents by Planning Area / Subzone, Single Year of Age and Sex, June 2024"
+
+# 1.2 Importing Data and Install Packages 
+
+Loading and Installing packages
+
+```{r}
+pacman::p_load(tidyverse, haven, knitr,
+               patchwork, ggthemes, scales,
+               ggridges, ggpubr, gganimate,
+               ggdist, ggtext, ggalt,
+               cowplot, ggnewscale)
+```
+
+```{r}
+```
+
+Importing Data
+
+```{r}
+exam_data <- read.csv("respopagesexfa2024/respopagesexfa2024.csv")
+```
+
+# 2. Background and Notes 
+
+A local online media company that publishes daily content on digital platforms is planning to release an article on demographic structures and distribution of Singapore in 2024.
+
+# 2.1 Task Objective
+
+Assuming the role of the graphical editor of the media company, you are tasked to prepare at most three data visualisation for the article.
+
+# 2.2 Column Headers:
+
+```{r}
+df <- tibble(
+  PA = c("Planning Area"),
+  SZ = c("Subzone"),
+  Sex = c("Sex"),
+  FA = c("Age Group"),
+  Pop = c("Floor Area of Residence"),
+  Time = c("Resident Count(Population)")
+)
+
+df %>%
+  knitr::kable(caption = "Column Name") %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover", "bordered"),
+    full_width = FALSE
+  )
+```
+
+Note:
+
+1)
+For June 2024, Planning Areas refer to areas demarcated in the Urban Redevelopment Authority's Master Plan 2019.
+
+2) 
+Data from 2003 onwards exclude residents who have been away from Singapore for a continuous period of 12 months or longer as at the reference period.
+
+3) 
+The figures have been rounded to the nearest 10. 
+
+4) 
+The data may not add up due to rounding.
+
+
+
+
+
+
+
+
+
+
+
