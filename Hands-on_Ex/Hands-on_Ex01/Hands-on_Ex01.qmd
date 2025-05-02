@@ -140,6 +140,7 @@ ggplot(data=exam_data,
   scale_fill_manual(values = c("blue", "red"))
 
 ```
+
 ```{r}
 exam_data <- exam_data %>%
   mutate(MATHS_GROUP = cut(MATHS, breaks = 10))
@@ -171,6 +172,7 @@ ggplot(pyramid_data, aes(x = MATHS_GROUP, y = count, fill = GENDER)) +
   scale_fill_manual(values = c("green", "navy")) +
   theme_minimal()
 ```
+
 ## 1.7.6 Geometric Objects: geom-density()
 
 ```{r}
@@ -348,7 +350,6 @@ ggplot(data=exam_data,
 
 Flipping the Chart
 
-
 ```{r}
 ggplot(data=exam_data, 
        aes(x=RACE)) +
@@ -381,7 +382,6 @@ ggplot(data=exam_data,
 ## 1.11 Essential Grammatical Elements in ggplot2: themes
 
 ## 1.11.1 Working with theme
-
 
 A horizontal bar chart plotted using theme_gray()
 

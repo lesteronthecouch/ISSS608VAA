@@ -40,7 +40,7 @@ website:
 
 format:
   html:
-    theme: solar
+    theme: sandstone
     css: styles.css
     toc: true
 
