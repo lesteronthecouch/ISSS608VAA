@@ -32,25 +32,26 @@ Loading and Installing Packages
 # Read the file and Clean BOM
 
 ```{r}
-raw_lines <- readLines("respopagesexfa2024/respopagesexfa2024.csv", encoding = "UTF-8")
-writeLines(raw_lines, "respopagesexfa2024/respopagesexfa2024_clean.csv", useBytes = TRUE)
+raw_lines <- readLines("respopagesex2024/respopagesex2024.csv", encoding = "UTF-8")
+writeLines(raw_lines, "respopagesex2024/respopagesex2024_clean.csv", useBytes = TRUE)
 ```
 
 # Read the Clean File
 
 ```{r}
 echo = FALSE
-df <- read_csv("respopagesexfa2024/respopagesexfa2024_clean.csv")
-```
+df <- read_csv("respopagesex2024/respopagesex2024_clean.csv",  skip_empty_rows = TRUE)
 
-# Transform the Pop Data into Numbers and Remove NA
+df <- df %>%
+  mutate(
+    Age = suppressWarnings(as.numeric(Age)),
+    Pop = suppressWarnings(as.numeric(Pop))
+  )
 
-```{r}
 df_clean <- df %>%
-  mutate(Pop = as.numeric(Pop)) %>%
-  filter(!is.na(Pop) & Pop > 0)
+  filter(!is.na(Pop) & !is.na(Age))
+show_col_types = FALSE
 ```
-
 # 2. Background and Notes
 
 A local online media company that publishes daily content on digital platforms is planning to release an article on demographic structures and distribution of Singapore in 2024.
@@ -59,11 +60,10 @@ A local online media company that publishes daily content on digital platforms i
 df <- tibble(
   PA = c("Planning Area"),
   SZ = c("Subzone"),
-  AG = c("Age Group"),
+  Age = c("Age"),
   Sex = c("Sex"),
-  FA = c("Floor Area of Residence"),
   Pop = c("Population"),
-  Time = c("Resident Count(Population)")
+  Time = c("Time")
 )
 
 df %>%
@@ -78,28 +78,19 @@ df %>%
 
 Assuming the role of the graphical editor of the media company, you are tasked to prepare at most three data visualizations for the article.
 
-Note:
-
-1)  For June 2024, Planning Areas refer to areas demarcated in the Urban Redevelopment Authority's Master Plan 2019.
-
-2)  Data from 2003 onwards exclude residents who have been away from Singapore for a continuous period of 12 months or longer as at the reference period.
-
-3)  The figures have been rounded to the nearest 10.
-
-4)  The data may not add up due to rounding.
-
-# 2 Distribution Analysis -
-
-Summarize the Pop Data by Planning Area
+# 2 Distribution Analysis 
 
 ```{r}
 df_summary <- df_clean %>%
   group_by(PA) %>%
-  summarise(Total_Pop = sum(Pop)) %>%
+  summarise(
+    Total_Pop = sum(Pop, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
   arrange(desc(Total_Pop))
 ```
 
-The code below plots the distributions of population by removing lowest 10 values from the data
+The code below plots the distributions of population.
 
 X: Planning area
 
@@ -116,7 +107,7 @@ df_summary_filtered <- df_summary %>%
 
 ggplot(df_summary_filtered, aes(x = reorder(PA, -Total_Pop), y = Total_Pop)) +
   geom_bar(stat = "identity", color = "black", fill = "lightblue", width = 0.75) +
-  scale_y_continuous(labels = scales::comma, expand = c(0, 0)) +   # 關鍵：貼底
+  scale_y_continuous(labels = scales::comma, expand = c(0, 0)) +  
   labs(
     x = "Planning Area",
     y = "Total Population",
@@ -126,111 +117,125 @@ ggplot(df_summary_filtered, aes(x = reorder(PA, -Total_Pop), y = Total_Pop)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-The bar chart above suggests that **Tampines** are the most populated area according to the survey. This outcome also indicates that the outskirt area such as **Tampines**, **Bedok**, **Jurong West** and **Woodlands** are among the most populated residential area. This could be attributed to the higher rent in the central area, convenient public transportation nationwide or greener environment.
+The bar chart above suggests that **Tampines** are the most populated area according to the survey. This outcome also indicates that the outskirt area such as **Tampines**, **Bedok**, **Jurong West** and **Woodlands** are among the most populated residential area. This could be attributed to the higher rent in the central area, convenient public transportation nationwide or greener environment. 
 
-```{r, fig.width = 20, fig.height= 15}
+As a media company, the marketing department is able to allocate more resources on advertisement on the area which has higher population density. By analyzing population of each planning area and the resources invested in that area, companies are able to evaluate the KPI of the advertisement to further adjust the strategies. 
 
-df_prop <- df_clean %>%
-  group_by(PA, AG) %>%
-  summarise(Total_Pop = sum(Pop, na.rm = TRUE)) %>%
+##2. The Generation Strucutre Ratio by Planning Area
+
+```{r} 
+library(tidyverse)
+
+df <- read_csv("respopagesex2024/respopagesex2024_clean.csv",
+               skip_empty_rows = TRUE,
+               show_col_types = FALSE) %>%
+  rename(Age_raw = Age) %>%                      
+  mutate(
+    Age = suppressWarnings(as.numeric(Age_raw)), 
+    Pop = suppressWarnings(as.numeric(Pop))
+  )
+
+df_clean <- df %>%
+  filter(!is.na(Pop))
+```
+
+## 2.1 Grouping
+
+```{r}
+df <- tibble(
+  Children = c("0-14"),
+  Adults = c("15-64"),
+  Seniors = c("Above 65"),
+)
+
+df %>%
+  knitr::kable(caption = "Column Information") %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover", "bordered"),
+    full_width = FALSE
+  )
+```
+
+##2.2 Data Processing and Cleaning
+
+```{r}
+df_clean <- df_clean %>%
+  mutate(AgeGroup = case_when(
+    Age_raw == "90_and_Over"    ~ "Seniors",      
+    Age >= 0  & Age <= 14       ~ "Children",
+    Age >= 15 & Age <= 64       ~ "Adults",
+    Age >= 65                   ~ "Seniors",
+    TRUE                        ~ NA_character_
+  )) %>%
+  filter(!is.na(AgeGroup))                     
+
+df_percent <- df_clean %>%
+  group_by(PA, AgeGroup) %>%
+  summarise(Pop = sum(Pop, na.rm = TRUE), .groups = "drop") %>%
   group_by(PA) %>%
-  mutate(Proportion = Total_Pop / sum(Total_Pop)) %>%
-  ungroup()
-df_prop$AG <- factor(df_prop$AG, levels = c(
-  "0_to_4", "5_to_9", "10_to_14", "15_to_19", "20_to_24",
-  "25_to_29", "30_to_34", "35_to_39", "40_to_44", "45_to_49",
-  "50_to_54", "55_to_59", "60_to_64", "65_to_69", "70_to_74",
-  "75_to_79", "80_to_84", "85_to_89", "90_and_over"
-))
+  mutate(
+    Total_Pop = sum(Pop),
+    Percent   = Pop / Total_Pop * 100
+  ) %>%
+  filter(Percent > 0)      
+```
 
+##2.4 Plotting the Graph
 
-ggplot(df_prop, aes(x = reorder(PA, -Proportion), y = Proportion, fill = AG)) +
-  geom_bar(stat = "identity", position = "fill", width = 0.6) +
-  scale_y_continuous(labels = scales::percent) +
-  scale_fill_manual(values = c(
-    "0_to_4" = "#FFC300", "5_to_9" = "#FF5733", "10_to_14" = "#C70039",
-    "15_to_19" = "#900C3F", "20_to_24" = "#581845", "25_to_29" = "#1F618D",
-    "30_to_34" = "#2874A6", "35_to_39" = "#2E86C1", "40_to_44" = "#3498DB",
-    "45_to_49" = "#52BE80", "50_to_54" = "#58D68D", "55_to_59" = "#F4D03F",
-    "60_to_64" = "#F39C12", "65_to_69" = "#E67E22", "70_to_74" = "#DC7633",
-    "75_to_79" = "#A04000", "80_to_84" = "#BA4A00", "85_to_89" = "#6E2C00",
-    "90_and_over" = "#4A235A"
+```{r, fig.width= 20, fig.height= 12}
+ggplot(df_percent, aes(
+    x    = reorder(PA, -Total_Pop),
+    y    = Percent,
+    fill = AgeGroup
   )) +
-  labs(
-    title = "Age Group Proportion by Planning Area (2024)",
-    x = "Planning Area", y = "Proportion", fill = "Age Group"
+  geom_bar(stat = "identity",
+           position = "stack",
+           width = 0.5,
+           color = "black") +
+  scale_y_continuous(labels = scales::percent_format(scale = 1)) +
+  scale_fill_manual(
+    values = c("Children" = "lightblue", "Adults" = "lightgray", "Seniors" = "navy")
   ) +
-  theme_minimal(base_size = 26) +
+  labs(
+    title = "Age Structure by Planning Area",
+    x     = "Planning Area",
+    y     = "Ratio",
+    fill  = "Age Group"
+  ) +
+  theme_minimal(base_size = 20) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+# Analysis
+
+By analyzing the population structures of a specific area, media companies are able to advertise the products or the service according to the age distributions. By targeting the majority generation of a specific area, tha advertisements are more likely to reach it's target customer, further improving the KPI of the expenses.If done properly, the advertisement could enhance the sales of a products significantly.
+
+## 3 The Distributions of Subzones by Planning Area
+
+```{r, fig.height=20, fig.width= 40}
+library(tidyverse)
+
+# 1. 先從清理後的 df_clean 抽出有意義的 PA–SZ
+df_sz_count <- df_clean %>%
+  filter(!is.na(SZ) & SZ != "") %>%      
+  distinct(PA, SZ) %>%                  
+  count(PA, name = "SZ_count") %>%      
+  arrange(desc(SZ_count))               
+
+# 2. 畫圖
+ggplot(df_sz_count, aes(
+    x    = reorder(PA, -SZ_count),     # 按 SZ_count 做降冪排序
+    y    = SZ_count
+  )) +
+  geom_col(fill = "lightblue", colour = "black", width = 0.5) +
   coord_flip() +
-  theme(
-    legend.position = "top",
-    legend.title = element_text(size = 10),
-    legend.text = element_text(size = 8)
-  ) +
-  guides(fill = guide_legend(nrow = 2))
-```
-
-```{r, fig.height = 20, fig.width=20}
-df_fa <- df_clean %>%
-  group_by(FA) %>%
-  summarise(Total_Pop = sum(Pop, na.rm = TRUE)) %>%
-  arrange(desc(Total_Pop))
-
-ggplot(df_fa, aes(x = reorder(FA, -Total_Pop), y = Total_Pop)) +
-  geom_bar(stat = "identity",color="black", fill = "lightblue", width = 0.7) +
-  geom_text(aes(label = scales::comma(Total_Pop)), vjust = -0.5, size = 3) +
-  scale_y_continuous(expand = c(0, 0)) +
   labs(
-    title = "Distribution of Population by Floor Area",
-    x = "Floor Area Range (sqm)",
-    y = "Total Population"
+    title = "The Distributions Numbers of Subzone by Planning Area",
+    x     = "PA",
+    y     = "Numbers of Subzone"
   ) +
-  theme_economist_white(base_size = 26) +
+  theme_minimal(base_size = 16) +
   theme(
-    plot.margin = margin(10, 10, 0, 10), 
-    axis.title.x = element_text(margin = margin(t = 5)),  
-    axis.text.x  = element_text(margin = margin(t = 2), size = 9) 
+    axis.text.x = element_text(angle = 0, size = 30),
+    axis.text.y = element_text(size = 20)
   )
-```
-
-```{r, fig.width=20, fig.height=15}
-df_ag_sex <- df_clean %>%
-  group_by(AG, Sex) %>%
-  summarise(Total_Pop = sum(Pop, na.rm = TRUE)) %>%
-  ungroup()
-
-# Step 2: 設定年齡層順序
-df_ag_sex$AG <- factor(df_ag_sex$AG, levels = c(
-  "0_to_4", "5_to_9", "10_to_14", "15_to_19", "20_to_24",
-  "25_to_29", "30_to_34", "35_to_39", "40_to_44", "45_to_49",
-  "50_to_54", "55_to_59", "60_to_64", "65_to_69", "70_to_74",
-  "75_to_79", "80_to_84", "85_to_89", "90_and_over"
-))
-
-# Step 3: 畫圖（含美化）
-ggplot(df_ag_sex, aes(x = AG, y = Total_Pop, fill = Sex)) +
-  geom_bar(stat = "identity", position = position_dodge(width = 0.8), width = 0.7) +
-  geom_text(aes(label = comma(Total_Pop)),
-            position = position_dodge(width = 0.8),
-            vjust = -0.4, size = 3) +
-  scale_fill_manual(values = c("Males" = "#4B9CD3", "Females" = "#F08080")) +
-  scale_y_continuous(labels = comma, expand = c(0, 0)) +
-  labs(
-    title = "Population by Age Group and Sex",
-    x = "Age Group", y = "Total Population", fill = "Sex"
-  ) +
-  theme_minimal(base_size = 26) +
-  theme(
-    axis.text.x = element_text(angle = 45, hjust = 1),
-    plot.title = element_text(face = "bold", size = 14, hjust = 0.5),
-    legend.position = "top"
-  )
-```
-
-```{r}
-
-```
-
-```{r}
-
 ```
