@@ -220,18 +220,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#environment-set-up" id="toc-environment-set-up" class="nav-link active" data-scroll-target="#environment-set-up">1. Environment Set-up</a></li>
   <li><a href="#background-information-and-data-source" id="toc-background-information-and-data-source" class="nav-link" data-scroll-target="#background-information-and-data-source">1.1 Background Information and Data Source</a></li>
   <li><a href="#data-processing" id="toc-data-processing" class="nav-link" data-scroll-target="#data-processing">1.2 Data Processing</a></li>
-  <li><a href="#read-the-file-and-clean-bom" id="toc-read-the-file-and-clean-bom" class="nav-link" data-scroll-target="#read-the-file-and-clean-bom">Read the file and Clean BOM</a></li>
-  <li><a href="#read-the-clean-file" id="toc-read-the-clean-file" class="nav-link" data-scroll-target="#read-the-clean-file">Read the Clean File</a></li>
-  <li><a href="#background-and-notes" id="toc-background-and-notes" class="nav-link" data-scroll-target="#background-and-notes">2. Background and Notes</a></li>
+  <li><a href="#read-the-file-and-clean-bom" id="toc-read-the-file-and-clean-bom" class="nav-link" data-scroll-target="#read-the-file-and-clean-bom">1.3Read the file and Clean BOM</a></li>
+  <li><a href="#read-the-clean-file" id="toc-read-the-clean-file" class="nav-link" data-scroll-target="#read-the-clean-file">1.4 Read the Clean File</a></li>
+  <li><a href="#population-distributions-by-planning-area" id="toc-population-distributions-by-planning-area" class="nav-link" data-scroll-target="#population-distributions-by-planning-area">2. Population Distributions by Planning Area</a></li>
   <li><a href="#task-objective" id="toc-task-objective" class="nav-link" data-scroll-target="#task-objective">2.1 Task Objective</a></li>
-  <li><a href="#distribution-analysis" id="toc-distribution-analysis" class="nav-link" data-scroll-target="#distribution-analysis">2 Distribution Analysis</a>
-  <ul class="collapse">
-  <li><a href="#grouping" id="toc-grouping" class="nav-link" data-scroll-target="#grouping">2.1 Grouping</a></li>
-  </ul></li>
-  <li><a href="#analysis" id="toc-analysis" class="nav-link" data-scroll-target="#analysis">Analysis</a>
-  <ul class="collapse">
-  <li><a href="#the-distributions-of-subzones-by-planning-area" id="toc-the-distributions-of-subzones-by-planning-area" class="nav-link" data-scroll-target="#the-distributions-of-subzones-by-planning-area">3 The Distributions of Subzones by Planning Area</a></li>
-  </ul></li>
+  <li><a href="#data-preparation" id="toc-data-preparation" class="nav-link" data-scroll-target="#data-preparation">2.2 Data Preparation</a></li>
+  <li><a href="#plot-the-graph" id="toc-plot-the-graph" class="nav-link" data-scroll-target="#plot-the-graph">2.3 Plot the Graph</a></li>
+  <li><a href="#grouping" id="toc-grouping" class="nav-link" data-scroll-target="#grouping">3.1 Grouping</a></li>
+  <li><a href="#data-processing-and-cleaning" id="toc-data-processing-and-cleaning" class="nav-link" data-scroll-target="#data-processing-and-cleaning">3.2 Data Processing and Cleaning</a></li>
+  <li><a href="#plotting-the-graph" id="toc-plotting-the-graph" class="nav-link" data-scroll-target="#plotting-the-graph">3.3 Plotting the Graph</a></li>
+  <li><a href="#analysis" id="toc-analysis" class="nav-link" data-scroll-target="#analysis">3.4 Analysis</a></li>
   </ul>
 </nav>
     </div>
@@ -263,16 +261,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="environment-set-up" class="level1">
-<h1>1. Environment Set-up</h1>
+<section id="environment-set-up" class="level2">
+<h2 class="anchored" data-anchor-id="environment-set-up">1. Environment Set-up</h2>
 </section>
-<section id="background-information-and-data-source" class="level1">
-<h1>1.1 Background Information and Data Source</h1>
+<section id="background-information-and-data-source" class="level2">
+<h2 class="anchored" data-anchor-id="background-information-and-data-source">1.1 Background Information and Data Source</h2>
 <p>The data set is downloaded from “https://www.singstat.gov.sg/”</p>
 <p>File Name: “Singapore Residents by Planning Area / Subzone, Single Year of Age and Sex, June 2024”</p>
 </section>
-<section id="data-processing" class="level1">
-<h1>1.2 Data Processing</h1>
+<section id="data-processing" class="level2">
+<h2 class="anchored" data-anchor-id="data-processing">1.2 Data Processing</h2>
 <p>Importing Data and Install Packages</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>echo <span class="ot">=</span> <span class="cn">FALSE</span></span>
@@ -287,15 +285,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Loading and Installing Packages</p>
 </section>
-<section id="read-the-file-and-clean-bom" class="level1">
-<h1>Read the file and Clean BOM</h1>
+<section id="read-the-file-and-clean-bom" class="level2">
+<h2 class="anchored" data-anchor-id="read-the-file-and-clean-bom">1.3Read the file and Clean BOM</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>raw_lines <span class="ot">&lt;-</span> <span class="fu">readLines</span>(<span class="st">"respopagesex2024/respopagesex2024.csv"</span>, <span class="at">encoding =</span> <span class="st">"UTF-8"</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">writeLines</span>(raw_lines, <span class="st">"respopagesex2024/respopagesex2024_clean.csv"</span>, <span class="at">useBytes =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="read-the-clean-file" class="level1">
-<h1>Read the Clean File</h1>
+<section id="read-the-clean-file" class="level2">
+<h2 class="anchored" data-anchor-id="read-the-clean-file">1.4 Read the Clean File</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>echo <span class="ot">=</span> <span class="cn">FALSE</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"respopagesex2024/respopagesex2024_clean.csv"</span>,  <span class="at">skip_empty_rows =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -320,8 +318,8 @@ dbl (2): Pop, Time
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>show_col_types <span class="ot">=</span> <span class="cn">FALSE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="background-and-notes" class="level1">
-<h1>2. Background and Notes</h1>
+<section id="population-distributions-by-planning-area" class="level2">
+<h2 class="anchored" data-anchor-id="population-distributions-by-planning-area">2. Population Distributions by Planning Area</h2>
 <p>A local online media company that publishes daily content on digital platforms is planning to release an article on demographic structures and distribution of Singapore in 2024.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
@@ -366,12 +364,12 @@ dbl (2): Pop, Time
 </div>
 </div>
 </section>
-<section id="task-objective" class="level1">
-<h1>2.1 Task Objective</h1>
+<section id="task-objective" class="level2">
+<h2 class="anchored" data-anchor-id="task-objective">2.1 Task Objective</h2>
 <p>Assuming the role of the graphical editor of the media company, you are tasked to prepare at most three data visualizations for the article.</p>
 </section>
-<section id="distribution-analysis" class="level1">
-<h1>2 Distribution Analysis</h1>
+<section id="data-preparation" class="level2">
+<h2 class="anchored" data-anchor-id="data-preparation">2.2 Data Preparation</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>df_summary <span class="ot">&lt;-</span> df_clean <span class="sc">%&gt;%</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(PA) <span class="sc">%&gt;%</span></span>
@@ -381,6 +379,9 @@ dbl (2): Pop, Time
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(Total_Pop))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
+<section id="plot-the-graph" class="level2">
+<h2 class="anchored" data-anchor-id="plot-the-graph">2.3 Plot the Graph</h2>
 <p>The code below plots the distributions of population.</p>
 <p>X: Planning area</p>
 <p>Y: Total population by area in 2024</p>
@@ -410,9 +411,10 @@ dbl (2): Pop, Time
 </div>
 </div>
 </div>
+<p>##2.4 Analysis</p>
 <p>The bar chart above suggests that <strong>Tampines</strong> are the most populated area according to the survey. This outcome also indicates that the outskirt area such as <strong>Tampines</strong>, <strong>Bedok</strong>, <strong>Jurong West</strong> and <strong>Woodlands</strong> are among the most populated residential area. This could be attributed to the higher rent in the central area, convenient public transportation nationwide or greener environment.</p>
 <p>As a media company, the marketing department is able to allocate more resources on advertisement on the area which has higher population density. By analyzing population of each planning area and the resources invested in that area, companies are able to evaluate the KPI of the advertisement to further adjust the strategies.</p>
-<p>##2. The Generation Strucutre Ratio by Planning Area</p>
+<p>##3.The Generation Strucutre Ratio by Planning Area</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -428,8 +430,9 @@ dbl (2): Pop, Time
 <span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>df_clean <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
 <span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Pop))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
 <section id="grouping" class="level2">
-<h2 class="anchored" data-anchor-id="grouping">2.1 Grouping</h2>
+<h2 class="anchored" data-anchor-id="grouping">3.1 Grouping</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Children =</span> <span class="fu">c</span>(<span class="st">"0-14"</span>),</span>
@@ -463,7 +466,9 @@ dbl (2): Pop, Time
 </table>
 </div>
 </div>
-<p>##2.2 Data Processing and Cleaning</p>
+</section>
+<section id="data-processing-and-cleaning" class="level2">
+<h2 class="anchored" data-anchor-id="data-processing-and-cleaning">3.2 Data Processing and Cleaning</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>df_clean <span class="ot">&lt;-</span> df_clean <span class="sc">%&gt;%</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">AgeGroup =</span> <span class="fu">case_when</span>(</span>
@@ -485,7 +490,9 @@ dbl (2): Pop, Time
 <span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
 <span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Percent <span class="sc">&gt;</span> <span class="dv">0</span>)      </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>##2.4 Plotting the Graph</p>
+</section>
+<section id="plotting-the-graph" class="level2">
+<h2 class="anchored" data-anchor-id="plotting-the-graph">3.3 Plotting the Graph</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_percent, <span class="fu">aes</span>(</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">x    =</span> <span class="fu">reorder</span>(PA, <span class="sc">-</span>Total_Pop),</span>
@@ -517,50 +524,11 @@ dbl (2): Pop, Time
 </div>
 </div>
 </section>
-</section>
-<section id="analysis" class="level1">
-<h1>Analysis</h1>
+<section id="analysis" class="level2">
+<h2 class="anchored" data-anchor-id="analysis">3.4 Analysis</h2>
 <p>By analyzing the population structures of a specific area, media companies are able to advertise the products or the service according to the age distributions. By targeting the majority generation of a specific area, tha advertisements are more likely to reach it’s target customer, further improving the KPI of the expenses.If done properly, the advertisement could enhance the sales of a products significantly.</p>
-<section id="the-distributions-of-subzones-by-planning-area" class="level2">
-<h2 class="anchored" data-anchor-id="the-distributions-of-subzones-by-planning-area">3 The Distributions of Subzones by Planning Area</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 先從清理後的 df_clean 抽出有意義的 PA–SZ</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>df_sz_count <span class="ot">&lt;-</span> df_clean <span class="sc">%&gt;%</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(SZ) <span class="sc">&amp;</span> SZ <span class="sc">!=</span> <span class="st">""</span>) <span class="sc">%&gt;%</span>      </span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(PA, SZ) <span class="sc">%&gt;%</span>                  </span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(PA, <span class="at">name =</span> <span class="st">"SZ_count"</span>) <span class="sc">%&gt;%</span>      </span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(SZ_count))               </span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. 畫圖</span></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_sz_count, <span class="fu">aes</span>(</span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">x    =</span> <span class="fu">reorder</span>(PA, <span class="sc">-</span>SZ_count),     <span class="co"># 按 SZ_count 做降冪排序</span></span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">y    =</span> SZ_count</span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">+</span></span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"lightblue"</span>, <span class="at">colour =</span> <span class="st">"black"</span>, <span class="at">width =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"The Distributions Numbers of Subzone by Planning Area"</span>,</span>
-<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">x     =</span> <span class="st">"PA"</span>,</span>
-<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">y     =</span> <span class="st">"Numbers of Subzone"</span></span>
-<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">16</span>) <span class="sc">+</span></span>
-<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">0</span>, <span class="at">size =</span> <span class="dv">30</span>),</span>
-<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">20</span>)</span>
-<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Take-home_Ex01_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="3840"></p>
-</figure>
-</div>
-</div>
-</div>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->

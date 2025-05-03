@@ -3,15 +3,15 @@ title: "Take-home Exercise 1 - Data Visualizations in Singapore Residence by Pla
 author: "PENG Hsiao Yuan"
 ---
 
-# 1. Environment Set-up
+## 1. Environment Set-up
 
-# 1.1 Background Information and Data Source
+## 1.1 Background Information and Data Source
 
 The data set is downloaded from "https://www.singstat.gov.sg/"
 
 File Name: "Singapore Residents by Planning Area / Subzone, Single Year of Age and Sex, June 2024"
 
-# 1.2 Data Processing
+## 1.2 Data Processing
 
 Importing Data and Install Packages
 
@@ -29,14 +29,14 @@ pacman::p_load(
 
 Loading and Installing Packages
 
-# Read the file and Clean BOM
+## 1.3Read the file and Clean BOM
 
 ```{r}
 raw_lines <- readLines("respopagesex2024/respopagesex2024.csv", encoding = "UTF-8")
 writeLines(raw_lines, "respopagesex2024/respopagesex2024_clean.csv", useBytes = TRUE)
 ```
 
-# Read the Clean File
+## 1.4 Read the Clean File
 
 ```{r}
 echo = FALSE
@@ -52,7 +52,8 @@ df_clean <- df %>%
   filter(!is.na(Pop) & !is.na(Age))
 show_col_types = FALSE
 ```
-# 2. Background and Notes
+
+## 2. Population Distributions by Planning Area
 
 A local online media company that publishes daily content on digital platforms is planning to release an article on demographic structures and distribution of Singapore in 2024.
 
@@ -74,11 +75,11 @@ df %>%
   )
 ```
 
-# 2.1 Task Objective
+## 2.1 Task Objective
 
 Assuming the role of the graphical editor of the media company, you are tasked to prepare at most three data visualizations for the article.
 
-# 2 Distribution Analysis 
+## 2.2 Data Preparation
 
 ```{r}
 df_summary <- df_clean %>%
@@ -90,6 +91,8 @@ df_summary <- df_clean %>%
   arrange(desc(Total_Pop))
 ```
 
+
+## 2.3 Plot the Graph
 The code below plots the distributions of population.
 
 X: Planning area
@@ -117,13 +120,15 @@ ggplot(df_summary_filtered, aes(x = reorder(PA, -Total_Pop), y = Total_Pop)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-The bar chart above suggests that **Tampines** are the most populated area according to the survey. This outcome also indicates that the outskirt area such as **Tampines**, **Bedok**, **Jurong West** and **Woodlands** are among the most populated residential area. This could be attributed to the higher rent in the central area, convenient public transportation nationwide or greener environment. 
+##2.4 Analysis
 
-As a media company, the marketing department is able to allocate more resources on advertisement on the area which has higher population density. By analyzing population of each planning area and the resources invested in that area, companies are able to evaluate the KPI of the advertisement to further adjust the strategies. 
+The bar chart above suggests that **Tampines** are the most populated area according to the survey. This outcome also indicates that the outskirt area such as **Tampines**, **Bedok**, **Jurong West** and **Woodlands** are among the most populated residential area. This could be attributed to the higher rent in the central area, convenient public transportation nationwide or greener environment.
 
-##2. The Generation Strucutre Ratio by Planning Area
+As a media company, the marketing department is able to allocate more resources on advertisement on the area which has higher population density. By analyzing population of each planning area and the resources invested in that area, companies are able to evaluate the KPI of the advertisement to further adjust the strategies.
 
-```{r} 
+##3.The Generation Strucutre Ratio by Planning Area
+
+```{r}
 library(tidyverse)
 
 df <- read_csv("respopagesex2024/respopagesex2024_clean.csv",
@@ -139,7 +144,7 @@ df_clean <- df %>%
   filter(!is.na(Pop))
 ```
 
-## 2.1 Grouping
+## 3.1 Grouping
 
 ```{r}
 df <- tibble(
@@ -156,7 +161,7 @@ df %>%
   )
 ```
 
-##2.2 Data Processing and Cleaning
+## 3.2 Data Processing and Cleaning
 
 ```{r}
 df_clean <- df_clean %>%
@@ -180,7 +185,7 @@ df_percent <- df_clean %>%
   filter(Percent > 0)      
 ```
 
-##2.4 Plotting the Graph
+## 3.3 Plotting the Graph
 
 ```{r, fig.width= 20, fig.height= 12}
 ggplot(df_percent, aes(
@@ -205,37 +210,7 @@ ggplot(df_percent, aes(
   theme_minimal(base_size = 20) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
-# Analysis
+
+## 3.4 Analysis
 
 By analyzing the population structures of a specific area, media companies are able to advertise the products or the service according to the age distributions. By targeting the majority generation of a specific area, tha advertisements are more likely to reach it's target customer, further improving the KPI of the expenses.If done properly, the advertisement could enhance the sales of a products significantly.
-
-## 3 The Distributions of Subzones by Planning Area
-
-```{r, fig.height=20, fig.width= 40}
-library(tidyverse)
-
-# 1. 先從清理後的 df_clean 抽出有意義的 PA–SZ
-df_sz_count <- df_clean %>%
-  filter(!is.na(SZ) & SZ != "") %>%      
-  distinct(PA, SZ) %>%                  
-  count(PA, name = "SZ_count") %>%      
-  arrange(desc(SZ_count))               
-
-# 2. 畫圖
-ggplot(df_sz_count, aes(
-    x    = reorder(PA, -SZ_count),     # 按 SZ_count 做降冪排序
-    y    = SZ_count
-  )) +
-  geom_col(fill = "lightblue", colour = "black", width = 0.5) +
-  coord_flip() +
-  labs(
-    title = "The Distributions Numbers of Subzone by Planning Area",
-    x     = "PA",
-    y     = "Numbers of Subzone"
-  ) +
-  theme_minimal(base_size = 16) +
-  theme(
-    axis.text.x = element_text(angle = 0, size = 30),
-    axis.text.y = element_text(size = 20)
-  )
-```
