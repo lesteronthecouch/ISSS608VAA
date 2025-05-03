@@ -11,6 +11,10 @@ The data set is downloaded from "https://www.singstat.gov.sg/"
 
 File Name: "Singapore Residents by Planning Area / Subzone, Single Year of Age and Sex, June 2024"
 
+# 1.2 Data Processing
+
+Importing Data and Install Packages
+
 ```{r}
 echo = FALSE
 pacman::p_load(
@@ -22,10 +26,6 @@ pacman::p_load(
   sf, viridis
 )
 ```
-
-# 1.2 Data Processing
-
-Importing Data and Install Packages
 
 Loading and Installing Packages
 
@@ -66,9 +66,8 @@ df <- tibble(
   Time = c("Resident Count(Population)")
 )
 
-# 用 kable 顯示表格並加上格線
 df %>%
-  knitr::kable(caption = "欄位對應說明") %>%
+  knitr::kable(caption = "Column Information") %>%
   kableExtra::kable_styling(
     bootstrap_options = c("striped", "hover", "bordered"),
     full_width = FALSE
@@ -78,15 +77,6 @@ df %>%
 # 2.1 Task Objective
 
 Assuming the role of the graphical editor of the media company, you are tasked to prepare at most three data visualizations for the article.
-
-# Summarize the Pop Data by Planning Area
-
-```{r}
-df_summary <- df_clean %>%
-  group_by(PA) %>%
-  summarise(Total_Pop = sum(Pop)) %>%
-  arrange(desc(Total_Pop))
-```
 
 Note:
 
@@ -100,7 +90,16 @@ Note:
 
 # 2 Distribution Analysis -
 
-The code below plots the distributions of population in the survey by planning area.
+Summarize the Pop Data by Planning Area
+
+```{r}
+df_summary <- df_clean %>%
+  group_by(PA) %>%
+  summarise(Total_Pop = sum(Pop)) %>%
+  arrange(desc(Total_Pop))
+```
+
+The code below plots the distributions of population by removing lowest 10 values from the data
 
 X: Planning area
 
@@ -112,11 +111,9 @@ bottom10_pa <- df_summary %>%
   slice_min(Total_Pop, n = 10) %>%
   pull(PA)
 
-# 剔除這些 PA
 df_summary_filtered <- df_summary %>%
   filter(!PA %in% bottom10_pa)
 
-# 畫圖
 ggplot(df_summary_filtered, aes(x = reorder(PA, -Total_Pop), y = Total_Pop)) +
   geom_bar(stat = "identity", color = "black", fill = "lightblue", width = 0.75) +
   scale_y_continuous(labels = scales::comma, expand = c(0, 0)) +   # 關鍵：貼底
@@ -173,7 +170,7 @@ ggplot(df_prop, aes(x = reorder(PA, -Proportion), y = Proportion, fill = AG)) +
   guides(fill = guide_legend(nrow = 2))
 ```
 
-```{r, fig.height = 15, fig.width=20}
+```{r, fig.height = 20, fig.width=20}
 df_fa <- df_clean %>%
   group_by(FA) %>%
   summarise(Total_Pop = sum(Pop, na.rm = TRUE)) %>%
