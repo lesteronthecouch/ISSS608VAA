@@ -232,3 +232,116 @@ ratio_plot <- ggplot(ratio_data, aes(x = ratio, y = fct_rev(PA))) +
   plot_layout(heights = c(2, 1)) +
   plot_annotation(title = "Population Distribution and Aging Ratio by Planning Area")
 ```
+
+
+
+# Data Visualization 4
+
+```{r}
+expanded_data <- data %>%
+  filter(!is.na(PA)) %>%
+  mutate(Age = ifelse(Age == "90_and_Over", "95", Age),
+         Age = as.numeric(Age)) %>%
+  filter(!is.na(Age)) %>%
+  mutate(PA = str_trim(PA)) %>%
+  mutate(region_type = case_when(
+    # Core Central Region
+    PA %in% c("Downtown Core", "Outram", "Sentosa", "Rochor", "Orchard", "Newton",
+              "River Valley", "Bukit Timah", "Holland Road", "Tanglin", "Novena", "Thomson") ~ "Core Central Region",
+    
+    # Rest of Central Region
+    PA %in% c("Bishan", "Bukit Merah", "Geylang", "Kallang", "Marine Parade", "Queenstown", "Southern Islands", "Toa Payoh") ~ "Rest of Central Region",
+    
+    # North Region
+    PA %in% c("Central Water Catchment", "Lim Chu Kang", "Mandai", "Sembawang", "Simpang", "Sungei Kadut", "Woodlands", "Yishun") ~ "North Region",
+    
+    # North-East Region
+    PA %in% c("Ang Mo Kio", "Hougang", "North-Eastern Islands", "Punggol", "Seletar",
+              "Sengkang", "Serangoon") ~ "North-East Region",
+    
+    # East Region
+    PA %in% c("Bedok", "Changi", "Changi Bay", "Paya Lebar", "Pasir Ris", "Tampines") ~ "East Region",
+    
+    # West Region
+    PA %in% c("Bukit Batok", "Bukit Panjang", "Boon Lay", "Pioneer", "Choa Chu Kang", "Clementi", "Jurong East", "Jurong West", "Tengah", "Tuas", "Western Islands", "Western Water Catchment") ~ "West Region",
+    TRUE ~ NA_character_
+  )) %>%
+  filter(!is.na(region_type)) %>%
+  uncount(weights = Pop)
+  
+p1 <- ggplot(expanded_data, aes(x = region_type, y = Age, fill = region_type)) +
+  geom_boxplot() +
+  labs(title = "Age Distribution by Region Type", x = "Region", y = "Age") +
+  theme_minimal() +
+  coord_flip()
+
+p2 <- ggplot(expanded_data, aes(x = Age, y = fct_reorder(PA, Age), fill = region_type)) +
+  geom_boxplot() +
+  facet_wrap(~ region_type, scales = "free_y") +
+  labs(
+    title = "Age Distribution by Planning Area and Region",
+    x = "Age",
+    y = "Planning Area"
+  ) +
+  theme_minimal()
+
+p1 / p2 +
+  plot_annotation(title = "Overview: Regional and Planning Area Age Distribution")
+```
+
+# Comment 4
+
+The combination of the box plot clearly illustrates the sge strucutre of each region. The color of each box plot are akso pretty contrast to better tell the difference among regions. 
+However, the font zise of the graph are too small to read since the size of the box plot is so much greater than the font.
+```{r}
+expanded_data <- data %>%
+  filter(!is.na(PA)) %>%
+  mutate(Age = ifelse(Age == "90_and_Over", "95", Age),
+         Age = as.numeric(Age)) %>%
+  filter(!is.na(Age)) %>%
+  mutate(PA = str_trim(PA)) %>%
+  mutate(region_type = case_when(
+    # Core Central Region
+    PA %in% c("Downtown Core", "Outram", "Sentosa", "Rochor", "Orchard", "Newton",
+              "River Valley", "Bukit Timah", "Holland Road", "Tanglin", "Novena", "Thomson") ~ "Core Central Region",
+    
+    # Rest of Central Region
+    PA %in% c("Bishan", "Bukit Merah", "Geylang", "Kallang", "Marine Parade", "Queenstown", "Southern Islands", "Toa Payoh") ~ "Rest of Central Region",
+    
+    # North Region
+    PA %in% c("Central Water Catchment", "Lim Chu Kang", "Mandai", "Sembawang", "Simpang", "Sungei Kadut", "Woodlands", "Yishun") ~ "North Region",
+    
+    # North-East Region
+    PA %in% c("Ang Mo Kio", "Hougang", "North-Eastern Islands", "Punggol", "Seletar",
+              "Sengkang", "Serangoon") ~ "North-East Region",
+    
+    # East Region
+    PA %in% c("Bedok", "Changi", "Changi Bay", "Paya Lebar", "Pasir Ris", "Tampines") ~ "East Region",
+    
+    # West Region
+    PA %in% c("Bukit Batok", "Bukit Panjang", "Boon Lay", "Pioneer", "Choa Chu Kang", "Clementi", "Jurong East", "Jurong West", "Tengah", "Tuas", "Western Islands", "Western Water Catchment") ~ "West Region",
+    TRUE ~ NA_character_
+  )) %>%
+  filter(!is.na(region_type)) %>%
+  uncount(weights = Pop)
+  
+p1 <- ggplot(expanded_data, aes(x = region_type, y = Age, fill = region_type)) +
+  geom_boxplot() +
+  labs(title = "Age Distribution by Region Type", x = "Region", y = "Age") +
+  theme_minimal() +
+  coord_flip()
+
+p2 <- ggplot(expanded_data, aes(x = Age, y = fct_reorder(PA, Age), fill = region_type)) +
+  geom_boxplot() +
+  facet_wrap(~ region_type, scales = "free_y") +
+  labs(
+    title = "Age Distribution by Planning Area and Region",
+    x = "Age",
+    y = "Planning Area"
+    
+  ) +
+  theme_minimal()
+
+p1 / p2 +
+  plot_annotation(title = "Overview: Regional and Planning Area Age Distribution")
+```
