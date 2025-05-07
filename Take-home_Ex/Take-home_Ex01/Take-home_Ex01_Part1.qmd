@@ -91,8 +91,8 @@ df_summary <- df_clean %>%
   arrange(desc(Total_Pop))
 ```
 
-
 ## 2.3 Plot the Graph
+
 The code below plots the distributions of population.
 
 X: Planning area
@@ -120,7 +120,7 @@ ggplot(df_summary_filtered, aes(x = reorder(PA, -Total_Pop), y = Total_Pop)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-##2.4 Analysis
+## 2.4 Analysis
 
 The bar chart above suggests that **Tampines** are the most populated area according to the survey. This outcome also indicates that the outskirt area such as **Tampines**, **Bedok**, **Jurong West** and **Woodlands** are among the most populated residential area. This could be attributed to the higher rent in the central area, convenient public transportation nationwide or greener environment.
 
