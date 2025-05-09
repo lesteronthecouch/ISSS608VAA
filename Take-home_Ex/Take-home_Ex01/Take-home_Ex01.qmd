@@ -1,14 +1,224 @@
 ---
-title: "Take-home_Ex01_Part2"
+title: "Take-home Exercise 1 - Data Visualizations in Singapore Residence by Planning Area"
 author: "PENG Hsiao Yuan"
+format: html
 ---
-Reference Source: https://isss608-ay2025t2.netlify.app/take-home_ex/take-home_ex01/take-home_ex01
 
-Students Name: FU YILIN
+## 1. Environment Set-up
+
+## 1.1 Background Information and Data Source
+
+The data set is downloaded from "https://www.singstat.gov.sg/"
+
+File Name: "Singapore Residents by Planning Area / Subzone, Single Year of Age and Sex, June 2024"
+
+## 1.2 Data Processing
+
+Importing Data and Install Packages
 
 ```{r}
-pacman::p_load(tidyverse, ggplot2, dplyr, forcats, ggthemes, patchwork, knitr, gt)
+echo = FALSE
+pacman::p_load(
+  tidyverse, haven, knitr,
+  patchwork, ggthemes, scales,
+  ggridges, ggpubr, gganimate,
+  ggdist, ggtext, ggalt,
+  cowplot, ggnewscale,
+  sf, viridis
+)
 ```
+
+Loading and Installing Packages
+
+## 1.3Read the file and Clean BOM
+
+```{r}
+raw_lines <- readLines("respopagesex2024/respopagesex2024.csv", encoding = "UTF-8")
+writeLines(raw_lines, "respopagesex2024/respopagesex2024_clean.csv", useBytes = TRUE)
+```
+
+## 1.4 Read the Clean File
+
+```{r}
+echo = FALSE
+df <- read_csv("respopagesex2024/respopagesex2024_clean.csv",  skip_empty_rows = TRUE)
+
+df <- df %>%
+  mutate(
+    Age = suppressWarnings(as.numeric(Age)),
+    Pop = suppressWarnings(as.numeric(Pop))
+  )
+
+df_clean <- df %>%
+  filter(!is.na(Pop) & !is.na(Age))
+show_col_types = FALSE
+```
+
+## 2. Population Distributions by Planning Area
+
+A local online media company that publishes daily content on digital platforms is planning to release an article on demographic structures and distribution of Singapore in 2024.
+
+```{r}
+df <- tibble(
+  PA = c("Planning Area"),
+  SZ = c("Subzone"),
+  Age = c("Age"),
+  Sex = c("Sex"),
+  Pop = c("Population"),
+  Time = c("Time")
+)
+
+df %>%
+  knitr::kable(caption = "Column Information") %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover", "bordered"),
+    full_width = FALSE
+  )
+```
+
+## 2.1 Task Objective
+
+Assuming the role of the graphical editor of the media company, you are tasked to prepare at most three data visualizations for the article.
+
+## 2.2 Data Preparation
+
+```{r}
+df_summary <- df_clean %>%
+  group_by(PA) %>%
+  summarise(
+    Total_Pop = sum(Pop, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  arrange(desc(Total_Pop))
+```
+
+## 2.3 Plot the Graph
+
+The code below plots the distributions of population.
+
+X: Planning area
+
+Y: Total population by area in 2024
+
+```{r, fig.width = 20, fig.height=15}
+
+bottom10_pa <- df_summary %>%
+  slice_min(Total_Pop, n = 10) %>%
+  pull(PA)
+
+df_summary_filtered <- df_summary %>%
+  filter(!PA %in% bottom10_pa)
+
+ggplot(df_summary_filtered, aes(x = reorder(PA, -Total_Pop), y = Total_Pop)) +
+  geom_bar(stat = "identity", color = "black", fill = "lightblue", width = 0.75) +
+  scale_y_continuous(labels = scales::comma, expand = c(0, 0)) +  
+  labs(
+    x = "Planning Area",
+    y = "Total Population",
+    title = "Total Population by Planning Area (2024)"
+  ) +
+  theme_classic(base_size = 26) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+## 2.4 Analysis
+
+The bar chart above suggests that **Tampines** are the most populated area according to the survey. This outcome also indicates that the outskirt area such as **Tampines**, **Bedok**, **Jurong West** and **Woodlands** are among the most populated residential area. This could be attributed to the higher rent in the central area, convenient public transportation nationwide or greener environment.
+
+As a media company, the marketing department is able to allocate more resources on advertisement on the area which has higher population density. By analyzing population of each planning area and the resources invested in that area, companies are able to evaluate the KPI of the advertisement to further adjust the strategies.
+
+##3.The Generation Strucutre Ratio by Planning Area
+
+```{r}
+library(tidyverse)
+
+df <- read_csv("respopagesex2024/respopagesex2024_clean.csv",
+               skip_empty_rows = TRUE,
+               show_col_types = FALSE) %>%
+  rename(Age_raw = Age) %>%                      
+  mutate(
+    Age = suppressWarnings(as.numeric(Age_raw)), 
+    Pop = suppressWarnings(as.numeric(Pop))
+  )
+
+df_clean <- df %>%
+  filter(!is.na(Pop))
+```
+
+## 3.1 Grouping
+
+```{r}
+df <- tibble(
+  Children = c("0-14"),
+  Adults = c("15-64"),
+  Seniors = c("Above 65"),
+)
+
+df %>%
+  knitr::kable(caption = "Column Information") %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover", "bordered"),
+    full_width = FALSE
+  )
+```
+
+## 3.2 Data Processing and Cleaning
+
+```{r}
+df_clean <- df_clean %>%
+  mutate(AgeGroup = case_when(
+    Age_raw == "90_and_Over"    ~ "Seniors",      
+    Age >= 0  & Age <= 14       ~ "Children",
+    Age >= 15 & Age <= 64       ~ "Adults",
+    Age >= 65                   ~ "Seniors",
+    TRUE                        ~ NA_character_
+  )) %>%
+  filter(!is.na(AgeGroup))                     
+
+df_percent <- df_clean %>%
+  group_by(PA, AgeGroup) %>%
+  summarise(Pop = sum(Pop, na.rm = TRUE), .groups = "drop") %>%
+  group_by(PA) %>%
+  mutate(
+    Total_Pop = sum(Pop),
+    Percent   = Pop / Total_Pop * 100
+  ) %>%
+  filter(Percent > 0)      
+```
+
+## 3.3 Plotting the Graph
+
+```{r, fig.width= 20, fig.height= 12}
+ggplot(df_percent, aes(
+    x    = reorder(PA, -Total_Pop),
+    y    = Percent,
+    fill = AgeGroup
+  )) +
+  geom_bar(stat = "identity",
+           position = "stack",
+           width = 0.5,
+           color = "black") +
+  scale_y_continuous(labels = scales::percent_format(scale = 1)) +
+  scale_fill_manual(
+    values = c("Children" = "lightblue", "Adults" = "lightgray", "Seniors" = "navy")
+  ) +
+  labs(
+    title = "Age Structure by Planning Area",
+    x     = "Planning Area",
+    y     = "Ratio",
+    fill  = "Age Group"
+  ) +
+  theme_minimal(base_size = 20) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+## 3.4 Analysis
+
+By analyzing the population structures of a specific area, media companies are able to advertise the products or the service according to the age distributions. By targeting the majority generation of a specific area, tha advertisements are more likely to reach it's target customer, further improving the KPI of the expenses.If done properly, the advertisement could enhance the sales of a products significantly.
+
+# 4. Part 2 - Graph Evaluation
+
+# 4.1 Environment Setup
 
 ```{r}
 data <- read_csv("respopagesex2024/respopagesex2024.csv") %>%
@@ -17,7 +227,9 @@ data <- read_csv("respopagesex2024/respopagesex2024.csv") %>%
   drop_na(Age)
 ```
 
-# Data Visualization 1
+# 4.2 Figure 1
+
+# 4.2.1 Plot the Graph
 ```{r}
 pyramid_data <- data %>%
   group_by(Age, Sex) %>%
@@ -35,11 +247,11 @@ pyramid_plot <- ggplot(pyramid_data, aes(x = Age, y = Pop, fill = Sex)) +
 pyramid_plot
 ```
 
-# Comment 1: 
+# 4.2.2 Comment :
 
 The width of the bars are too thin to distinguish the counterside of the other gender. If the number of the bars can be reduced, the graph will be more clear and easier to compare between genders.
 
-# Improvement 1:
+# 4.2.3 Improvement:
 
 ```{r}
 library(tidyverse)
@@ -74,7 +286,9 @@ ggplot(pyramid_data, aes(x = age_group, y = Pop, fill = Sex)) +
 
 ```
 
-# Data Visualization 2
+# 4.3 Figure 2
+
+# 4.3.1 Plot the Graph
 
 ```{r}
 age_groups <- data %>%
@@ -94,23 +308,29 @@ ggplot(age_groups, aes(x = reorder(PA, -total_pop), y = total_pop, fill = group)
   theme_minimal()
 ```
 
-# Comment2:
+# 4.3.2 Comment:
+
 First of all, there are lots of data have no values in the graph. It will make the graoh overall more inormation-focused my removing the empty part. Secondly, the color of two age groups should be more contrast and the space between genders should be wider as we can see it is difficult distinguish the age group.
 
-# Improvement 2
+# 4.3.3 Improvement:
 
 ```{r}
-ggplot(age_groups, aes(x = reorder(PA, -total_pop), y = total_pop, fill = group)) +
-  geom_col(
-    position = position_dodge(width = 0.8),
-    width = 0.6
-  ) +
-  scale_fill_manual(
-    values = c(
-      Young = "blue",
-      Aging = "salmon"
-    )
-  ) +
+library(dplyr)
+library(ggplot2)
+
+bottom10_PAs <- age_groups %>%
+  group_by(PA) %>%
+  summarise(total_pa = sum(total_pop, na.rm = TRUE)) %>%
+  arrange(total_pa) %>%
+  slice_head(n = 10) %>%
+  pull(PA)
+
+age_groups_filtered <- age_groups %>%
+  filter(!PA %in% bottom10_PAs)
+
+ggplot(age_groups_filtered, aes(x = reorder(PA, -total_pop), y = total_pop, fill = group)) +
+  geom_col(position = position_dodge(width = 0.8), width = 0.6) +
+  scale_fill_manual(values = c(Young = "blue", Aging = "salmon")) +
   coord_flip() +
   labs(
     title = "Young vs Aging Population by Planning Area",
@@ -119,9 +339,12 @@ ggplot(age_groups, aes(x = reorder(PA, -total_pop), y = total_pop, fill = group)
     fill  = "Age Group"
   ) +
   theme_minimal()
+
 ```
 
-# Data Visualization 3
+# 4.4 Data Visualization 3
+
+# 4.4.1 Plot the Figure
 
 ```{r}
 top_pa <- age_groups %>%
@@ -169,12 +392,12 @@ line_plot <- ggplot(ratio_data, aes(x = PA, y = ratio)) +
 (bar_plot / line_plot) + plot_layout(heights = c(2, 1)) +
   plot_annotation(title = "Population Distribution and Aging Ratio by Planning Area")
 ```
-# Comment 3
-The bar chart is pretty clear and have no redundant categories. Besides, the design clearly show the total population by descending orders, illustrating the popularity of the area.
-But the color and the range between different areas still can be wider to be more easy to read. Also, The usage of the line chart is not very proper since the ratio is not illustrating the trend over a period of time. 
 
+# 4.4.2 Comment:
 
-# Improvement 3
+The bar chart is pretty clear and have no redundant categories. Besides, the design clearly show the total population by descending orders, illustrating the popularity of the area. But the color and the range between different areas still can be wider to be more easy to read. Also, The usage of the line chart is not very proper since the ratio is not illustrating the trend over a period of time.
+
+# 4.4.3 Improvement:
 
 ```{r}
 library(tidyverse)
@@ -233,9 +456,9 @@ ratio_plot <- ggplot(ratio_data, aes(x = ratio, y = fct_rev(PA))) +
   plot_annotation(title = "Population Distribution and Aging Ratio by Planning Area")
 ```
 
+# 4.5 Data Visualization 4
 
-
-# Data Visualization 4
+# 4.5.1 Plot the Graph
 
 ```{r}
 expanded_data <- data %>%
@@ -289,10 +512,10 @@ p1 / p2 +
   plot_annotation(title = "Overview: Regional and Planning Area Age Distribution")
 ```
 
-# Comment 4
+# 4.5.2 Comment: 
 
-The combination of the box plot clearly illustrates the sge strucutre of each region. The color of each box plot are akso pretty contrast to better tell the difference among regions. 
-However, the font zise of the graph are too small to read since the size of the box plot is so much greater than the font.
+The combination of the box plot clearly illustrates the sge strucutre of each region. The color of each box plot are akso pretty contrast to better tell the difference among regions. However, the font zise of the graph are too small to read since the size of the box plot is so much greater than the font.
+
 ```{r}
 expanded_data <- data %>%
   filter(!is.na(PA)) %>%

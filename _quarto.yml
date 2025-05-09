@@ -41,7 +41,7 @@ website:
       - about.qmd
 
 format:
-  html:
+  docx:
     theme: sandstone
     css: styles.css
     toc: true
