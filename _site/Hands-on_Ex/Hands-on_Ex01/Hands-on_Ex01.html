@@ -75,7 +75,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-985aa47af68dae11cd4d235c71fb941e.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-e83117e711fad372bcb8c8022997a9a8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-991b1886d3c685c7aa2b62b80640c7af.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -105,10 +105,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 
-<link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed quarto-light">
+<body class="nav-fixed fullcontent quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -170,10 +169,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex10/Hands-on_Ex10.html">
  <span class="dropdown-text">Hands-on Exercise 10</span></a>
   </li>  
-        <li>
-    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html">
- <span class="dropdown-text">Hands-on Exercise 3</span></a>
-  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
@@ -190,8 +185,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
+    <span class="nav-link">
+<span class="menu-text">Home</span>
+    </span>
+  </li>  
+  <li class="nav-item">
     <a class="nav-link" href="../../index.html"> 
-<span class="menu-text">Home</span></a>
+<span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../../about.html"> 
@@ -208,43 +208,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#install-and-launch-r-packages" id="toc-install-and-launch-r-packages" class="nav-link active" data-scroll-target="#install-and-launch-r-packages">Install and launch R packages</a></li>
-  <li><a href="#importing-the-data" id="toc-importing-the-data" class="nav-link" data-scroll-target="#importing-the-data">Importing the data</a></li>
-  <li><a href="#plotting-a-simple-bar-chart" id="toc-plotting-a-simple-bar-chart" class="nav-link" data-scroll-target="#plotting-a-simple-bar-chart">Plotting a simple bar chart</a></li>
-  <li><a href="#grammar-of-graphics" id="toc-grammar-of-graphics" class="nav-link" data-scroll-target="#grammar-of-graphics">1.4 Grammar of Graphics</a></li>
-  <li><a href="#essential-grammatical-elements-in-ggplot2-data" id="toc-essential-grammatical-elements-in-ggplot2-data" class="nav-link" data-scroll-target="#essential-grammatical-elements-in-ggplot2-data">1.5 Essential Grammatical Elements in ggplot2: data</a></li>
-  <li><a href="#essential-grammatical-elements-in-ggplot2-aesthetic-mappings" id="toc-essential-grammatical-elements-in-ggplot2-aesthetic-mappings" class="nav-link" data-scroll-target="#essential-grammatical-elements-in-ggplot2-aesthetic-mappings">1.6 Essential Grammatical Elements in ggplot2: Aesthetic mappings</a></li>
-  <li><a href="#essential-grammatical-elements-in-ggplot2-geom" id="toc-essential-grammatical-elements-in-ggplot2-geom" class="nav-link" data-scroll-target="#essential-grammatical-elements-in-ggplot2-geom">1.7 Essential Grammatical Elements in ggplot2: geom</a></li>
-  <li><a href="#geometric-objects-geom_bar" id="toc-geometric-objects-geom_bar" class="nav-link" data-scroll-target="#geometric-objects-geom_bar">1.7.1 Geometric Objects: geom_bar</a></li>
-  <li><a href="#geometric-objects-geom_dotplot" id="toc-geometric-objects-geom_dotplot" class="nav-link" data-scroll-target="#geometric-objects-geom_dotplot">1.7.2 Geometric Objects: geom_dotplot</a></li>
-  <li><a href="#geometric-objects-geom_histogram" id="toc-geometric-objects-geom_histogram" class="nav-link" data-scroll-target="#geometric-objects-geom_histogram">1.7.3 Geometric Objects: geom_histogram()</a></li>
-  <li><a href="#modifying-a-geometric-object-by-changing-geom" id="toc-modifying-a-geometric-object-by-changing-geom" class="nav-link" data-scroll-target="#modifying-a-geometric-object-by-changing-geom">1.7.4 Modifying a geometric object by changing geom()</a></li>
-  <li><a href="#modifying-a-geometric-object-by-changing-aes" id="toc-modifying-a-geometric-object-by-changing-aes" class="nav-link" data-scroll-target="#modifying-a-geometric-object-by-changing-aes">1.7.5 Modifying a geometric object by changing aes()</a></li>
-  <li><a href="#geometric-objects-geom-density" id="toc-geometric-objects-geom-density" class="nav-link" data-scroll-target="#geometric-objects-geom-density">1.7.6 Geometric Objects: geom-density()</a></li>
-  <li><a href="#geometric-objects-geom_boxplot" id="toc-geometric-objects-geom_boxplot" class="nav-link" data-scroll-target="#geometric-objects-geom_boxplot">1.7.7 Geometric Objects: geom_boxplot</a></li>
-  <li><a href="#geometric-objects-geom_violin" id="toc-geometric-objects-geom_violin" class="nav-link" data-scroll-target="#geometric-objects-geom_violin">1.7.8 Geometric Objects: geom_violin</a></li>
-  <li><a href="#geometric-objects-geom_point" id="toc-geometric-objects-geom_point" class="nav-link" data-scroll-target="#geometric-objects-geom_point">1.7.9 Geometric Objects: geom_point()</a></li>
-  <li><a href="#geom-objects-can-be-combined" id="toc-geom-objects-can-be-combined" class="nav-link" data-scroll-target="#geom-objects-can-be-combined">1.7.10 geom objects can be combined</a></li>
-  <li><a href="#essential-grammatical-elements-in-ggplot2-stat" id="toc-essential-grammatical-elements-in-ggplot2-stat" class="nav-link" data-scroll-target="#essential-grammatical-elements-in-ggplot2-stat">1.8 Essential Grammatical Elements in ggplot2: stat</a></li>
-  <li><a href="#working-with-stat---the-stat_summary-method" id="toc-working-with-stat---the-stat_summary-method" class="nav-link" data-scroll-target="#working-with-stat---the-stat_summary-method">1.8.2 Working with stat - the stat_summary() method</a></li>
-  <li><a href="#working-with-stat---the-geom-method" id="toc-working-with-stat---the-geom-method" class="nav-link" data-scroll-target="#working-with-stat---the-geom-method">1.8.3 Working with stat - the geom() method</a></li>
-  <li><a href="#adding-a-best-fit-curve-on-a-scatterplot" id="toc-adding-a-best-fit-curve-on-a-scatterplot" class="nav-link" data-scroll-target="#adding-a-best-fit-curve-on-a-scatterplot">1.8.4 Adding a best fit curve on a scatterplot?</a></li>
-  <li><a href="#essential-grammatical-elements-in-ggplot2-facets" id="toc-essential-grammatical-elements-in-ggplot2-facets" class="nav-link" data-scroll-target="#essential-grammatical-elements-in-ggplot2-facets">1.9 Essential Grammatical Elements in ggplot2: Facets</a></li>
-  <li><a href="#working-with-facet_wrap" id="toc-working-with-facet_wrap" class="nav-link" data-scroll-target="#working-with-facet_wrap">1.9.1 Working with facet_wrap()</a></li>
-  <li><a href="#facet_grid-function" id="toc-facet_grid-function" class="nav-link" data-scroll-target="#facet_grid-function">1.9.2 facet_grid() function</a></li>
-  <li><a href="#essential-grammatical-elements-in-ggplot2-coordinates" id="toc-essential-grammatical-elements-in-ggplot2-coordinates" class="nav-link" data-scroll-target="#essential-grammatical-elements-in-ggplot2-coordinates">1.10 Essential Grammatical Elements in ggplot2: Coordinates</a></li>
-  <li><a href="#working-with-coordinate" id="toc-working-with-coordinate" class="nav-link" data-scroll-target="#working-with-coordinate">1.10.1 Working with Coordinate</a></li>
-  <li><a href="#changing-the-y--and-x-axis-range" id="toc-changing-the-y--and-x-axis-range" class="nav-link" data-scroll-target="#changing-the-y--and-x-axis-range">1.10.2 Changing the y- and x-axis range</a></li>
-  <li><a href="#essential-grammatical-elements-in-ggplot2-themes" id="toc-essential-grammatical-elements-in-ggplot2-themes" class="nav-link" data-scroll-target="#essential-grammatical-elements-in-ggplot2-themes">1.11 Essential Grammatical Elements in ggplot2: themes</a></li>
-  <li><a href="#working-with-theme" id="toc-working-with-theme" class="nav-link" data-scroll-target="#working-with-theme">1.11.1 Working with theme</a></li>
-  </ul>
-</nav>
-    </div>
+    
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
