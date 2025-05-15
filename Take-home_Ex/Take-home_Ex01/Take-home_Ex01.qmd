@@ -2,11 +2,6 @@
 title: "Take-home Exercise 1 - Data Visualizations in Singapore Residence by Planning Area"
 author: "PENG Hsiao Yuan"
 format: html
-execute: 
-  eval: true
-  echo: true
-  warning: false
-  freeze: true
 ---
 
 ## 1. Environment Set-up
@@ -72,7 +67,6 @@ df <- tibble(
   Pop = c("Population"),
   Time = c("Time")
 )
-
 df %>%
   knitr::kable(caption = "Column Information")
 ```
@@ -226,6 +220,8 @@ data <- read_csv("respopagesex2024/respopagesex2024.csv") %>%
 
 # 4.2 Figure 1
 
+Reference Websites: https://isss608-ay2025t2.netlify.app/take-home_ex/take-home_ex01/take-home_ex01
+
 # 4.2.1 Plot the Graph
 ```{r}
 pyramid_data <- data %>%
@@ -253,40 +249,53 @@ pyramid_plot
 2. There should be some spaces between bars to identify the different age.
 
 3. The data should be grouped to illustrate the distributions more clearly.
+
 # Good Points
 
 1.The parameters of the horizontal axis are properly scaled to illustrate the numbers of the population of two genders.
 
 2. The selections of the type of graph are very clear in contrasting the difference of population between genders unser certain ages.
 
-3.
+3.There are outlier which is easy for readers to ignore the data.
 
 
-# 4.2.3 Improvement:
+# 4.2.3 Revised version:
 
 ```{r}
 library(tidyverse)
+library(scales)
+
 data_binned <- data %>%
   mutate(
     age_group = cut(
       Age,
-      breaks = seq(0, 100, by = 5),
-      right = FALSE,
+      breaks = seq(0, 100, by = 5),     
+      right = FALSE,                      
       labels = paste0(seq(0, 95, by = 5), "-", seq(4, 99, by = 5))
     ),
-    age_group = factor(age_group, levels = paste0(seq(0, 95, by = 5), "-", seq(4, 99, by = 5)))
+    age_group = factor(
+      age_group,
+      levels = paste0(seq(0, 95, by = 5), "-", seq(4, 99, by = 5))
+    )
   )
+
 pyramid_data <- data_binned %>%
   group_by(age_group, Sex) %>%
   summarise(Pop = sum(Pop), .groups = "drop") %>%
-  mutate(Pop = if_else(Sex == "Males", -Pop, Pop))
+  mutate(
+    Pop = if_else(Sex == "Males", -Pop, Pop)
+  )
+
 ggplot(pyramid_data, aes(x = age_group, y = Pop, fill = Sex)) +
   geom_col(width = 0.8) +
   coord_flip() +
-  scale_y_continuous(labels = abs) +
+  scale_y_continuous(
+    labels = function(x) comma(abs(x), accuracy = 1),  
+    breaks = pretty_breaks(n = 8)
+  ) +
   labs(
     title = "Singapore Resident Population Pyramid (2024)",
-    x = "Age Group",
+    x = "Age Group (5-year bins)",
     y = "Population"
   ) +
   theme_minimal() +
@@ -294,4 +303,5 @@ ggplot(pyramid_data, aes(x = age_group, y = Pop, fill = Sex)) +
     axis.text.y = element_text(size = 8),
     axis.text.x = element_text(size = 8)
   )
+
 ```
