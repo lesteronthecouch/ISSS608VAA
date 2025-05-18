@@ -3,29 +3,29 @@
     "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#background-information-and-data-source",
     "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#background-information-and-data-source",
     "title": "Take-home Exercise 1 - Data Visualizations in Singapore Residence by Planning Area",
-    "section": "1.1 Background Information and Data Source",
-    "text": "1.1 Background Information and Data Source\nThe data set is downloaded from “https://www.singstat.gov.sg/”\nFile Name: “Singapore Residents by Planning Area / Subzone, Single Year of Age and Sex, June 2024”"
+    "section": "",
+    "text": "The data set is downloaded from “https://www.singstat.gov.sg/”\nFile Name: “Singapore Residents by Planning Area / Subzone, Single Year of Age and Sex, June 2024”"
   },
   {
     "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#data-processing",
     "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#data-processing",
     "title": "Take-home Exercise 1 - Data Visualizations in Singapore Residence by Planning Area",
-    "section": "1.2 Data Processing",
-    "text": "1.2 Data Processing\nImporting Data and Install Packages\n\necho = FALSE\npacman::p_load(\n  tidyverse, haven, knitr,\n  patchwork, ggthemes, scales,\n  ggridges, ggpubr, gganimate,\n  ggdist, ggtext, ggalt,\n  cowplot, ggnewscale,\n  sf, viridis\n)\n\nLoading and Installing Packages"
+    "section": "",
+    "text": "Importing Data and Install Packages\n\necho = FALSE\npacman::p_load(\n  tidyverse, haven, knitr,\n  patchwork, ggthemes, scales,\n  ggridges, ggpubr, gganimate,\n  ggdist, ggtext, ggalt,\n  cowplot, ggnewscale,\n  sf, viridis\n)\n\nLoading and Installing Packages"
   },
   {
     "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#read-the-file-and-clean-bom",
     "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#read-the-file-and-clean-bom",
     "title": "Take-home Exercise 1 - Data Visualizations in Singapore Residence by Planning Area",
-    "section": "1.3 Read the file and Clean BOM",
-    "text": "1.3 Read the file and Clean BOM\n\nraw_lines &lt;- readLines(\"respopagesex2024/respopagesex2024.csv\", encoding = \"UTF-8\")\nwriteLines(raw_lines, \"respopagesex2024/respopagesex2024_clean.csv\", useBytes = TRUE)"
+    "section": "",
+    "text": "raw_lines &lt;- readLines(\"respopagesex2024/respopagesex2024.csv\", encoding = \"UTF-8\")\nwriteLines(raw_lines, \"respopagesex2024/respopagesex2024_clean.csv\", useBytes = TRUE)"
   },
   {
     "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#read-the-clean-file",
     "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#read-the-clean-file",
     "title": "Take-home Exercise 1 - Data Visualizations in Singapore Residence by Planning Area",
-    "section": "1.4 Read the Clean File",
-    "text": "1.4 Read the Clean File\n\necho = FALSE\ndf &lt;- read_csv(\"respopagesex2024/respopagesex2024_clean.csv\",  skip_empty_rows = TRUE)\n\nRows: 60424 Columns: 6\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (4): PA, SZ, Age, Sex\ndbl (2): Pop, Time\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\ndf &lt;- df %&gt;%\n  mutate(\n    Age = suppressWarnings(as.numeric(Age)),\n    Pop = suppressWarnings(as.numeric(Pop))\n  )\n\ndf_clean &lt;- df %&gt;%\n  filter(!is.na(Pop) & !is.na(Age))\nshow_col_types = FALSE"
+    "section": "",
+    "text": "echo = FALSE\ndf &lt;- read_csv(\"respopagesex2024/respopagesex2024_clean.csv\",  skip_empty_rows = TRUE)\n\nRows: 60424 Columns: 6\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (4): PA, SZ, Age, Sex\ndbl (2): Pop, Time\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\ndf &lt;- df %&gt;%\n  mutate(\n    Age = suppressWarnings(as.numeric(Age)),\n    Pop = suppressWarnings(as.numeric(Pop))\n  )\n\ndf_clean &lt;- df %&gt;%\n  filter(!is.na(Pop) & !is.na(Age))\nshow_col_types = FALSE"
   },
   {
     "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#population-distributions-by-planning-area",
@@ -60,7 +60,7 @@
     "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#analysis",
     "title": "Take-home Exercise 1 - Data Visualizations in Singapore Residence by Planning Area",
     "section": "2.4 Analysis",
-    "text": "2.4 Analysis\nThe bar chart above suggests that Tampines are the most populated area according to the survey. This outcome also indicates that the outskirt area such as Tampines, Bedok, Jurong West and Woodlands are among the most populated residential area. This could be attributed to the higher rent in the central area, convenient public transportation nationwide or greener environment.\nAs a media company, the marketing department is able to allocate more resources on advertisement on the area which has higher population density. By analyzing population of each planning area and the resources invested in that area, companies are able to evaluate the KPI of the advertisement to further adjust the strategies.\n##3.The Generation Strucutre Ratio by Planning Area\n\nlibrary(tidyverse)\n\ndf &lt;- read_csv(\"respopagesex2024/respopagesex2024_clean.csv\",\n               skip_empty_rows = TRUE,\n               show_col_types = FALSE) %&gt;%\n  rename(Age_raw = Age) %&gt;%                      \n  mutate(\n    Age = suppressWarnings(as.numeric(Age_raw)), \n    Pop = suppressWarnings(as.numeric(Pop))\n  )\n\ndf_clean &lt;- df %&gt;%\n  filter(!is.na(Pop))"
+    "text": "2.4 Analysis\nThe bar chart above suggests that Tampines are the most populated area according to the survey. This outcome also indicates that the outskirt area such as Tampines, Bedok, Jurong West and Woodlands are among the most populated residential area. This could be attributed to the higher rent in the central area, convenient public transportation nationwide or greener environment.\nAs a media company, the marketing department is able to allocate more resources on advertisement on the area which has higher population density. By analyzing population of each planning area and the resources invested in that area, companies are able to evaluate the KPI of the advertisement to further adjust the strategies."
   },
   {
     "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#grouping",
@@ -474,5 +474,138 @@
     "title": "Hands-0n_Ex05",
     "section": "",
     "text": "visNetwork() is a R package for network visualization, using vis.js javascript library.\nvisNetwork() function uses a nodes list and edges list to create an interactive graph.\n\n\nThe nodes list must include an “id” column, and the edge list must have “from” and “to” columns.\nThe function also plots the labels for the nodes, using the names of the actors from the “label” column in the node list.\n\n\nThe resulting graph is fun to play around with.\n\n\nYou can move the nodes and the graph will use an algorithm to keep the nodes properly spaced.\nYou can also zoom in and out on the plot and move it around to re-center it.\n\n\n\nBefore we can plot the interactive network graph, we need to prepare the data model by using the code chunk below.\n\nGAStech_edges_aggregated &lt;- GAStech_edges %&gt;%\n  left_join(GAStech_nodes, by = c(\"sourceLabel\" = \"label\")) %&gt;%\n  rename(from = id) %&gt;%\n  left_join(GAStech_nodes, by = c(\"targetLabel\" = \"label\")) %&gt;%\n  rename(to = id) %&gt;%\n  filter(MainSubject == \"Work related\") %&gt;%\n  group_by(from, to) %&gt;%\n    summarise(weight = n()) %&gt;%\n  filter(from!=to) %&gt;%\n  filter(weight &gt; 1) %&gt;%\n  ungroup()\n\n`summarise()` has grouped output by 'from'. You can override using the\n`.groups` argument.\n\n\n\n\n\nThe code chunk below will be used to plot an interactive network graph by using the data prepared.\n\nvisNetwork(GAStech_nodes, \n           GAStech_edges_aggregated)\n\n\n\n\n\n\n\n\nIn the code chunk below, Fruchterman and Reingold layout is used.\n\nvisNetwork(GAStech_nodes,\n           GAStech_edges_aggregated) %&gt;%\n  visIgraphLayout(layout = \"layout_with_fr\") \n\n\n\n\n\n\n\n\nvisNetwork() looks for a field called “group” in the nodes object and colour the nodes according to the values of the group field.\nThe code chunk below rename Department field to group.\n\nGAStech_nodes &lt;- GAStech_nodes %&gt;%\n  rename(group = Department) \n\nWhen we rerun the code chunk below, visNetwork shades the nodes by assigning unique colour to each category in the group field.\n\nvisNetwork(GAStech_nodes,\n           GAStech_edges_aggregated) %&gt;%\n  visIgraphLayout(layout = \"layout_with_fr\") %&gt;%\n  visLegend() %&gt;%\n  visLayout(randomSeed = 123)\n\n\n\n\n\n\n\n\nIn the code run below visEdges() is used to symbolise the edges. - The argument arrows is used to define where to place the arrow. - The smooth argument is used to plot the edges using a smooth curve.\n\nvisNetwork(GAStech_nodes,\n           GAStech_edges_aggregated) %&gt;%\n  visIgraphLayout(layout = \"layout_with_fr\") %&gt;%\n  visEdges(arrows = \"to\", \n           smooth = list(enabled = TRUE, \n                         type = \"curvedCW\")) %&gt;%\n  visLegend() %&gt;%\n  visLayout(randomSeed = 123)\n\n\n\n\n\n\n\n\nIn the code chunk below, visOptions() is used to incorporate interactivity features in the data visualisation.\n\nThe argument highlightNearest highlights nearest when clicking a node.\nThe argument nodesIdSelection adds an id node selection creating an HTML select element.\n\n\nvisNetwork(GAStech_nodes,\n           GAStech_edges_aggregated) %&gt;%\n  visIgraphLayout(layout = \"layout_with_fr\") %&gt;%\n  visOptions(highlightNearest = TRUE,\n             nodesIdSelection = TRUE) %&gt;%\n  visLegend() %&gt;%\n  visLayout(randomSeed = 123)"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html",
+    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html",
+    "title": "Take-home Exercise 1 - Data Visualizations in Singapore Residence by Planning Area",
+    "section": "",
+    "text": "The data set is downloaded from “https://www.singstat.gov.sg/”\nFile Name: “Singapore Residents by Planning Area / Subzone, Single Year of Age and Sex, June 2024”\n\n\n\nImporting Data and Install Packages\n\necho = FALSE\npacman::p_load(\n  tidyverse, haven, knitr,\n  patchwork, ggthemes, scales,\n  ggridges, ggpubr, gganimate,\n  ggdist, ggtext, ggalt,\n  cowplot, ggnewscale,\n  sf, viridis\n)\n\nLoading and Installing Packages\n\n\n\n\nraw_lines &lt;- readLines(\"respopagesex2024/respopagesex2024.csv\", encoding = \"UTF-8\")\nwriteLines(raw_lines, \"respopagesex2024/respopagesex2024_clean.csv\", useBytes = TRUE)\n\n\n\n\n\necho = FALSE\ndf &lt;- read_csv(\"respopagesex2024/respopagesex2024_clean.csv\",  skip_empty_rows = TRUE)\n\nRows: 60424 Columns: 6\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (4): PA, SZ, Age, Sex\ndbl (2): Pop, Time\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\ndf &lt;- df %&gt;%\n  mutate(\n    Age = suppressWarnings(as.numeric(Age)),\n    Pop = suppressWarnings(as.numeric(Pop))\n  )\n\ndf_clean &lt;- df %&gt;%\n  filter(!is.na(Pop) & !is.na(Age))\nshow_col_types = FALSE"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#plot-the-graph-1",
+    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#plot-the-graph-1",
+    "title": "Take-home Exercise 1 - Data Visualizations in Singapore Residence by Planning Area",
+    "section": "4.2.1 Plot the Graph",
+    "text": "4.2.1 Plot the Graph\n\npyramid_data &lt;- data %&gt;%\n  group_by(Age, Sex) %&gt;%\n  summarise(Pop = sum(Pop), .groups = \"drop\") %&gt;%\n  mutate(Pop = if_else(Sex == \"Males\", -Pop, Pop))\n\npyramid_plot &lt;- ggplot(pyramid_data, aes(x = Age, y = Pop, fill = Sex)) +\n  geom_bar(stat = \"identity\", width = 1) +\n  coord_flip() +\n  scale_y_continuous(labels = abs) +\n  labs(title = \"Singapore Resident Population Pyramid (2024)\",\n       x = \"Age\", y = \"Population\") +\n  theme_minimal()\n\npyramid_plot"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#comment",
+    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#comment",
+    "title": "Take-home Exercise 1 - Data Visualizations in Singapore Residence by Planning Area",
+    "section": "4.2.2 Comment :",
+    "text": "4.2.2 Comment :\n\nImprovement:\n\nThe width of the bars are too thin to distinguish the counter population of the other gender.\nThere should be some spaces between bars to identify the different age.\nThe data should be grouped to illustrate the distributions more clearly.\n\n\n\nGood Points:\n1.The parameters of the horizontal axis are properly scaled to illustrate the numbers of the population of two genders.\n\nThe selections of the type of graph are very clear in contrasting the difference of population between genders unser certain ages.\n\n3.There are outlier which is easy for readers to ignore the data."
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#revised-version",
+    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#revised-version",
+    "title": "Take-home Exercise 1 - Data Visualizations in Singapore Residence by Planning Area",
+    "section": "4.2.3 Revised version:",
+    "text": "4.2.3 Revised version:\n\nlibrary(tidyverse)\nlibrary(scales)\n\ndata_binned &lt;- data %&gt;%\n  mutate(\n    age_group = cut(\n      Age,\n      breaks = seq(0, 100, by = 5),     \n      right = FALSE,                      \n      labels = paste0(seq(0, 95, by = 5), \"-\", seq(4, 99, by = 5))\n    ),\n    age_group = factor(\n      age_group,\n      levels = paste0(seq(0, 95, by = 5), \"-\", seq(4, 99, by = 5))\n    )\n  )\n\npyramid_data &lt;- data_binned %&gt;%\n  group_by(age_group, Sex) %&gt;%\n  summarise(Pop = sum(Pop), .groups = \"drop\") %&gt;%\n  mutate(\n    Pop = if_else(Sex == \"Males\", -Pop, Pop)\n  )\n\nggplot(pyramid_data, aes(x = age_group, y = Pop, fill = Sex)) +\n  geom_col(width = 0.8) +\n  coord_flip() +\n  scale_y_continuous(\n    labels = function(x) comma(abs(x), accuracy = 1),  \n    breaks = pretty_breaks(n = 8)\n  ) +\n  labs(\n    title = \"Singapore Resident Population Pyramid (2024)\",\n    x = \"Age Group\",\n    y = \"Population\"\n  ) +\n  theme_minimal() +\n  theme(\n    axis.text.y = element_text(size = 8),\n    axis.text.x = element_text(size = 8)\n  )"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html",
+    "href": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html",
+    "title": "Take-home_Ex02",
+    "section": "",
+    "text": "pacman::p_load(tidyverse, jsonlite, SmartEDA, tidygraph,ggraph, igraph)\n\n\n\n\n# Read JSON file\nmc1_data &lt;- fromJSON(\"data/MC1_graph.json\")\n\n\nstr(mc1_data, max.level = 1)\n\nList of 5\n $ directed  : logi TRUE\n $ multigraph: logi TRUE\n $ graph     :List of 2\n $ nodes     :'data.frame': 17412 obs. of  10 variables:\n $ links     :'data.frame': 37857 obs. of  4 variables:\n\n\n\nglimpse(mc1_data)\n\nList of 5\n $ directed  : logi TRUE\n $ multigraph: logi TRUE\n $ graph     :List of 2\n  ..$ node_default: Named list()\n  ..$ edge_default: Named list()\n $ nodes     :'data.frame': 17412 obs. of  10 variables:\n  ..$ Node Type     : chr [1:17412] \"Song\" \"Person\" \"Person\" \"Person\" ...\n  ..$ name          : chr [1:17412] \"Breaking These Chains\" \"Carlos Duffy\" \"Min Qin\" \"Xiuying Xie\" ...\n  ..$ single        : logi [1:17412] TRUE NA NA NA NA FALSE ...\n  ..$ release_date  : chr [1:17412] \"2017\" NA NA NA ...\n  ..$ genre         : chr [1:17412] \"Oceanus Folk\" NA NA NA ...\n  ..$ notable       : logi [1:17412] TRUE NA NA NA NA TRUE ...\n  ..$ id            : int [1:17412] 0 1 2 3 4 5 6 7 8 9 ...\n  ..$ written_date  : chr [1:17412] NA NA NA NA ...\n  ..$ stage_name    : chr [1:17412] NA NA NA NA ...\n  ..$ notoriety_date: chr [1:17412] NA NA NA NA ...\n $ links     :'data.frame': 37857 obs. of  4 variables:\n  ..$ Edge Type: chr [1:37857] \"InterpolatesFrom\" \"RecordedBy\" \"PerformerOf\" \"ComposerOf\" ...\n  ..$ source   : int [1:37857] 0 0 1 1 2 2 3 5 5 5 ...\n  ..$ target   : int [1:37857] 1841 4 0 16180 0 16180 0 5088 14332 11677 ...\n  ..$ key      : int [1:37857] 0 0 0 0 0 0 0 0 0 0 ...\n\n\n\n\n\n\nnodes_tbl &lt;- as_tibble(mc1_data$nodes)\nedges_tbl &lt;- as_tibble(mc1_data$links)\n\n\n\n\n\nggplot(data = edges_tbl,\n       aes(y = `Edge Type`)) + \n  geom_bar()"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#read-the-data",
+    "href": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#read-the-data",
+    "title": "Take-home_Ex02",
+    "section": "",
+    "text": "# Read JSON file\nmc1_data &lt;- fromJSON(\"data/MC1_graph.json\")\n\n\nstr(mc1_data, max.level = 1)\n\nList of 5\n $ directed  : logi TRUE\n $ multigraph: logi TRUE\n $ graph     :List of 2\n $ nodes     :'data.frame': 17412 obs. of  10 variables:\n $ links     :'data.frame': 37857 obs. of  4 variables:\n\n\n\nglimpse(mc1_data)\n\nList of 5\n $ directed  : logi TRUE\n $ multigraph: logi TRUE\n $ graph     :List of 2\n  ..$ node_default: Named list()\n  ..$ edge_default: Named list()\n $ nodes     :'data.frame': 17412 obs. of  10 variables:\n  ..$ Node Type     : chr [1:17412] \"Song\" \"Person\" \"Person\" \"Person\" ...\n  ..$ name          : chr [1:17412] \"Breaking These Chains\" \"Carlos Duffy\" \"Min Qin\" \"Xiuying Xie\" ...\n  ..$ single        : logi [1:17412] TRUE NA NA NA NA FALSE ...\n  ..$ release_date  : chr [1:17412] \"2017\" NA NA NA ...\n  ..$ genre         : chr [1:17412] \"Oceanus Folk\" NA NA NA ...\n  ..$ notable       : logi [1:17412] TRUE NA NA NA NA TRUE ...\n  ..$ id            : int [1:17412] 0 1 2 3 4 5 6 7 8 9 ...\n  ..$ written_date  : chr [1:17412] NA NA NA NA ...\n  ..$ stage_name    : chr [1:17412] NA NA NA NA ...\n  ..$ notoriety_date: chr [1:17412] NA NA NA NA ...\n $ links     :'data.frame': 37857 obs. of  4 variables:\n  ..$ Edge Type: chr [1:37857] \"InterpolatesFrom\" \"RecordedBy\" \"PerformerOf\" \"ComposerOf\" ...\n  ..$ source   : int [1:37857] 0 0 1 1 2 2 3 5 5 5 ...\n  ..$ target   : int [1:37857] 1841 4 0 16180 0 16180 0 5088 14332 11677 ...\n  ..$ key      : int [1:37857] 0 0 0 0 0 0 0 0 0 0 ..."
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#extract-and-inspect",
+    "href": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#extract-and-inspect",
+    "title": "Take-home_Ex02",
+    "section": "",
+    "text": "nodes_tbl &lt;- as_tibble(mc1_data$nodes)\nedges_tbl &lt;- as_tibble(mc1_data$links)"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#initial-eda",
+    "href": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#initial-eda",
+    "title": "Take-home_Ex02",
+    "section": "",
+    "text": "ggplot(data = edges_tbl,\n       aes(y = `Edge Type`)) + \n  geom_bar()"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#step-1.-mapping-from-node-id-to-row-index",
+    "href": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#step-1.-mapping-from-node-id-to-row-index",
+    "title": "Take-home_Ex02",
+    "section": "Step 1. Mapping from node id to row index",
+    "text": "Step 1. Mapping from node id to row index\n\nid_map &lt;- tibble(id = nodes_tbl$id,\n                 index = seq_len(\n                   nrow(nodes_tbl)))\n\nThis ensures each id from your node list is mapped to the correct row number."
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#step-2.-map-source-and-target-ids-to-row-indices",
+    "href": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#step-2.-map-source-and-target-ids-to-row-indices",
+    "title": "Take-home_Ex02",
+    "section": "Step 2. Map Source and target IDs to row indices",
+    "text": "Step 2. Map Source and target IDs to row indices\n\nedges_tbl &lt;- edges_tbl %&gt;%\n  left_join(id_map, by = c(\"source\" = \"id\")) %&gt;%\n  rename(from = index) %&gt;%\n  left_join(id_map, by = c(\"target\" = \"id\")) %&gt;%\n  rename(to = index)"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#step-3.-remove-na",
+    "href": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#step-3.-remove-na",
+    "title": "Take-home_Ex02",
+    "section": "Step 3. Remove N/A",
+    "text": "Step 3. Remove N/A\n\nedges_tbl &lt;- edges_tbl %&gt;%\n filter(!is.na(from), !is.na(to))"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#step-4.-creating-the-graph",
+    "href": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#step-4.-creating-the-graph",
+    "title": "Take-home_Ex02",
+    "section": "Step 4. Creating the graph",
+    "text": "Step 4. Creating the graph\nLastly, tbl_graph is used to create tidygraph’s graph object by using the code chunk below\n\ngraph &lt;- tbl_graph(nodes = nodes_tbl,\n                   edges = edges_tbl,\n                   directed = mc1_data$directed)"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#visualizing-the-knowledge-graph",
+    "href": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#visualizing-the-knowledge-graph",
+    "title": "Take-home_Ex02",
+    "section": "Visualizing the knowledge graph",
+    "text": "Visualizing the knowledge graph\n\nset.seed(1234)\n\n\nVisualizing the whole graph\n\nggraph(graph, layout = \"fr\") +\n  geom_edge_link(alpha = 0.3,\n                 colour = \"gray\") +\n  geom_node_point(aes(color = `Node Type`),\n                  size = 4) +\n  geom_node_text(aes(label = name),\n                 repel = TRUE,\n                 size = 2.5) +\n  theme_void()\n\nNote: Plot the line first\n\nStep 1: Filter edges to only “Memberof”\n\ngraph_memberof &lt;- graph %&gt;%\n  activate(edges) %&gt;%\n  filter(`Edge Type` == \"MemberOf\")\n\n\n\nStep 2: Extract only connected nodes(i.e., used in thesee edges)\n\nused_nodes_indices &lt;- graph_memberof %&gt;%\n  activate(edges) %&gt;%\n  as_tibble() %&gt;%\n  select(from, to) %&gt;%\n  unlist() %&gt;%\n  unique()\n\n\n\nStep 3: Keep only those nodes\n\ngraph_memberof &lt;- graph_memberof %&gt;%\n  activate(nodes) %&gt;%\n  mutate(row_id = row_number()) %&gt;%\n  filter(row_id %in% used_nodes_indices) %&gt;%\n  select(-row_id) \n\n\n\nPlot the sub-graph\n\nggraph(graph_memberof,\n       layout = \"fr\") +\n  geom_edge_link(alpha = 0.5,\n                 colour = \"gray\") +\n  geom_node_point(aes(color = `Node Type`),\n                  size = 1) +\n  geom_node_text(aes(label = name),\n                 repel = TRUE,\n                 size = 2.5) +\n  theme_void()\n\nWarning: ggrepel: 789 unlabeled data points (too many overlaps). Consider\nincreasing max.overlaps"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#step-5.-visualizing-the-knowledge-graph",
+    "href": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#step-5.-visualizing-the-knowledge-graph",
+    "title": "Take-home_Ex02",
+    "section": "Step 5. Visualizing the knowledge graph",
+    "text": "Step 5. Visualizing the knowledge graph\n\nset.seed(1234)"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#step-1-filter-edges-to-only-memberof",
+    "href": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#step-1-filter-edges-to-only-memberof",
+    "title": "Take-home_Ex02",
+    "section": "Step 1: Filter edges to only “Memberof”",
+    "text": "Step 1: Filter edges to only “Memberof”\n\ngraph_memberof &lt;- graph %&gt;%\n  activate(edges) %&gt;%\n  filter(`Edge Type` == \"MemberOf\")"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#step-2-extract-only-connected-nodesi.e.-used-in-thesee-edges",
+    "href": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#step-2-extract-only-connected-nodesi.e.-used-in-thesee-edges",
+    "title": "Take-home_Ex02",
+    "section": "Step 2: Extract only connected nodes(i.e., used in thesee edges)",
+    "text": "Step 2: Extract only connected nodes(i.e., used in thesee edges)\n\nused_nodes_indices &lt;- graph_memberof %&gt;%\n  activate(edges) %&gt;%\n  as_tibble() %&gt;%\n  select(from, to) %&gt;%\n  unlist() %&gt;%\n  unique()"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#step-3-keep-only-those-nodes",
+    "href": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#step-3-keep-only-those-nodes",
+    "title": "Take-home_Ex02",
+    "section": "Step 3: Keep only those nodes",
+    "text": "Step 3: Keep only those nodes\n\ngraph_memberof &lt;- graph_memberof %&gt;%\n  activate(nodes) %&gt;%\n  mutate(row_id = row_number()) %&gt;%\n  filter(row_id %in% used_nodes_indices) %&gt;%\n  select(-row_id)"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#plot-the-sub-graph",
+    "href": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#plot-the-sub-graph",
+    "title": "Take-home_Ex02",
+    "section": "Plot the sub-graph",
+    "text": "Plot the sub-graph\n\nggraph(graph_memberof,\n       layout = \"fr\") +\n  geom_edge_link(alpha = 0.5,\n                 colour = \"gray\") +\n  geom_node_point(aes(color = `Node Type`),\n                  size = 1) +\n  geom_node_text(aes(label = name),\n                 repel = TRUE,\n                 size = 2.5) +\n  theme_void()\n\nWarning: ggrepel: 789 unlabeled data points (too many overlaps). Consider\nincreasing max.overlaps"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#was-this-influence-intermittent-or-did-it-have-a-gradual-rise",
+    "href": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#was-this-influence-intermittent-or-did-it-have-a-gradual-rise",
+    "title": "Take-home_Ex02",
+    "section": "2.1 Was this influence intermittent or did it have a gradual rise?",
+    "text": "2.1 Was this influence intermittent or did it have a gradual rise?\nStep 1 Filtering Time and Oceanus folks song / album after 2028\n\nfiltered_songs &lt;- nodes_tbl %&gt;%\n  # 先只留「歌曲」節點，且 genre 是 Oceanus Folk\n  filter(`Node Type` == \"Song\",\n         genre      == \"Oceanus Folk\",\n         !is.na(release_date),\n         release_date != \"\") %&gt;%  \n  # 直接把 release_date 當成數字轉年\n  mutate(release_year = as.integer(release_date)) %&gt;%\n  # 過濾 2028 之後\n  filter(release_year &gt; 2028) %&gt;%\n  filter(`notable` == TRUE)\n\n# 看看結果\nfiltered_songs\n\n# A tibble: 35 × 11\n   `Node Type` name         single release_date genre notable    id written_date\n   &lt;chr&gt;       &lt;chr&gt;        &lt;lgl&gt;  &lt;chr&gt;        &lt;chr&gt; &lt;lgl&gt;   &lt;int&gt; &lt;chr&gt;       \n 1 Song        Whispers fr… TRUE   2029         Ocea… TRUE     4393 &lt;NA&gt;        \n 2 Song        Heroes of H… TRUE   2029         Ocea… TRUE     9493 &lt;NA&gt;        \n 3 Song        Echoes With… TRUE   2029         Ocea… TRUE     9655 2029        \n 4 Song        Unbreakable… TRUE   2030         Ocea… TRUE    12138 2030        \n 5 Song        Celestial P… TRUE   2029         Ocea… TRUE    12490 2029        \n 6 Song        Reef Road R… FALSE  2030         Ocea… TRUE    12524 &lt;NA&gt;        \n 7 Song        Waiting by … TRUE   2029         Ocea… TRUE    13396 2029        \n 8 Song        Star-Touche… TRUE   2034         Ocea… TRUE    17050 &lt;NA&gt;        \n 9 Song        When the Ti… FALSE  2037         Ocea… TRUE    17125 &lt;NA&gt;        \n10 Song        Anchored Lo… TRUE   2030         Ocea… TRUE    17247 &lt;NA&gt;        \n# ℹ 25 more rows\n# ℹ 3 more variables: stage_name &lt;chr&gt;, notoriety_date &lt;chr&gt;,\n#   release_year &lt;int&gt;\n\n\n\n# 1. 把你已經處理好的 graph 轉成 tidygraph\ntg &lt;- as_tbl_graph(graph) %&gt;%\n  activate(nodes) %&gt;%\n  # 加一個 genre_clean 欄，把 NA 換成 \"Unknown\"\n  mutate(genre_clean = ifelse(is.na(genre) | genre==\"\", \"Unknown\", genre))\n\n# 2. 只保留 Album 與 Song 節點（若要畫全網就可以跳過這步）\ntg_sub &lt;- tg %&gt;%\n  activate(nodes) %&gt;%\n  filter(`Node Type` %in% c(\"Album\",\"Song\"))\n\n# 3. 畫網狀圖：節點顏色對應 genre，形狀對應 Node Type\nggraph(tg_sub, layout = \"fr\") + \n  # 邊\n  geom_edge_link(alpha = 0.2, colour = \"grey70\") +\n  # 節點\n  geom_node_point(aes(color = genre_clean,\n                      shape = `Node Type`),\n                  size = 3) +\n  # 節點標籤（可視需要開關）\n  # geom_node_text(aes(label = name), size = 2, repel = TRUE) +\n  scale_colour_brewer(palette = \"Set3\") +\n  scale_shape_manual(values = c(16, 17)) +  # 16=circle,17=triangle\n  theme_void() +\n  labs(color = \"Genre\",\n       shape = \"Node Type\",\n       title = \"Album & Song\")\n\nWarning in RColorBrewer::brewer.pal(n, pal): n too large, allowed maximum for palette Set3 is 12\nReturning the palette you asked for with that many colors\n\n\nWarning: Removed 2114 rows containing missing values or values outside the scale range\n(`geom_point()`).\n\n\n\n\n\n\n\n\n\n\n# 1. 準備 df：只要 2029 年以後、Oceanus Folk Song 的 notable 比例\ndf &lt;- nodes_tbl %&gt;%\n  filter(`Node Type` == \"Song\",\n         genre        == \"Oceanus Folk\",\n         !is.na(release_date), release_date != \"\") %&gt;%\n  mutate(year = as.integer(release_date)) %&gt;%\n  filter(year &gt; 2026, year &lt; 2040) %&gt;%\n  group_by(year) %&gt;%\n  summarise(\n    total   = n(),\n    notable = sum(notable, na.rm = TRUE),\n    ratio   = notable / total,\n    .groups = \"drop\"\n  ) %&gt;%\n  arrange(year) %&gt;%\n  mutate(genre = \"Oceanus Folk\")    # for display\n\n# 2. 把 df 轉成 tbl_graph，edges 用空 data.frame()\ng_bubble &lt;- tbl_graph(\n  nodes = df %&gt;% mutate(name = as.character(year)), \n  edges = data.frame(from=character(), to=character()),\n  directed = FALSE\n)\n\n# 3. 建 manual 佈局：x=year, y=1（或其他常數）\nlayout_bubble &lt;- create_layout(\n  g_bubble, \n  layout = \"manual\",\n  x      = df$year,\n  y      = rep(1, nrow(df))\n)\n\n# 4. 用 ggraph 畫泡泡\nggraph(layout_bubble) +\n  geom_node_point(aes(size = ratio, fill = ratio),\n                  shape = 21, colour = \"black\", alpha = 0.8) +\n  scale_size_area(max_size = 20, name = \"Ratio of Ocenaus Folk songs hitting top chart\") +\n  scale_fill_gradient(low = \"lightblue\", high = \"steelblue\", name = \"Ratio of Ocenaus Folk songs hitting top chart\") +\n  scale_x_continuous(\"Released Year\", breaks = df$year) +\n  scale_y_continuous(NULL) +\n  labs(title = \"Ratio of Ocenaus Folk songs hitting top chart\") +\n  theme_void() +\n  theme(\n    axis.text.x     = element_text(angle = 90, hjust = 1),\n    legend.position = \"right\"\n  )"
   }
 ]

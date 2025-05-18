@@ -12,11 +12,10 @@ In this hands-on exercise, you will learn how to model, analyse and visualise ne
 
 By the end of this hands-on exercise, you will be able to:
 
-1. create graph object data frames, manipulate them using appropriate functions of dplyr, lubridate, and tidygraph,
-2. build network graph visualization using appropriate functions of ggraph,
-3. compute network geometrics using tidygraph,
-4. build advanced graph visualisation by incorporating the network geometrics, and
-build interactive network visualisation using visNetwork package.
+1.  create graph object data frames, manipulate them using appropriate functions of dplyr, lubridate, and tidygraph,
+2.  build network graph visualization using appropriate functions of ggraph,
+3.  compute network geometrics using tidygraph,
+4.  build advanced graph visualisation by incorporating the network geometrics, and build interactive network visualisation using visNetwork package.
 
 ### 27.2.1 In this hands-on exercise, you will learn how to model, analyse and visualise network data using R.
 
@@ -44,6 +43,7 @@ Note: GAStech_email_nodes.csv which consist of the names, department and title o
 ### 27.3.3 Importing network data from files
 
 In this step, you will import GAStech_email_node.csv and GAStech_email_edges-v2.csv into RStudio environment by using read_csv() of readr package.
+
 ```{r}
 GAStech_nodes <- read_csv("data/GAStech_email_node.csv")
 GAStech_edges <- read_csv("data/GAStech_email_edge-v2.csv")
@@ -69,11 +69,7 @@ GAStech_edges <- GAStech_edges %>%
                         abbr = FALSE))
 ```
 
-Things to learn from the code chunk above
-1. both dmy() and wday() are functions of lubridate package. lubridate is an R package that makes it easier to work with dates and times.
-2. dmy() transforms the SentDate to Date data type.
-3. wday() returns the day of the week as a decimal number or an ordered factor if label is TRUE. The argument abbr is FALSE keep the daya spells in full, i.e. Monday. The function will create a new column in the data.frame i.e. Weekday and the output of wday() will save in this newly created field.
-4. the values in the Weekday field are in ordinal scale.
+Things to learn from the code chunk above 1. both dmy() and wday() are functions of lubridate package. lubridate is an R package that makes it easier to work with dates and times. 2. dmy() transforms the SentDate to Date data type. 3. wday() returns the day of the week as a decimal number or an ordered factor if label is TRUE. The argument abbr is FALSE keep the daya spells in full, i.e. Monday. The function will create a new column in the data.frame i.e. Weekday and the output of wday() will save in this newly created field. 4. the values in the Weekday field are in ordinal scale.
 
 ### 27.3.6 Reviewing the revised date fields
 
@@ -95,10 +91,7 @@ GAStech_edges_aggregated <- GAStech_edges %>%
   ungroup()
 ```
 
-Things to learn from the code chunk above:
-1. four functions from dplyr package are used. They are: filter(), group(), summarise(), and ungroup().
-2. The output data.frame is called GAStech_edges_aggregated.
-3. A new field called Weight has been added in GAStech_edges_aggregated.
+Things to learn from the code chunk above: 1. four functions from dplyr package are used. They are: filter(), group(), summarise(), and ungroup(). 2. The output data.frame is called GAStech_edges_aggregated. 3. A new field called Weight has been added in GAStech_edges_aggregated.
 
 ### 27.3.8 Reviewing the revised edges file
 
@@ -112,27 +105,29 @@ In this section, you will learn how to create a graph data model by using tidygr
 
 Two functions of tidygraph package can be used to create network objects, they are:
 
-1. tbl_graph() creates a tbl_graph network object from nodes and edges data.
+1.  tbl_graph() creates a tbl_graph network object from nodes and edges data.
 
-2. as_tbl_graph() converts network data and objects to a tbl_graph network. Below are network data and objects supported by as_tbl_graph()
+2.  as_tbl_graph() converts network data and objects to a tbl_graph network. Below are network data and objects supported by as_tbl_graph()
 
-- a node data.frame and an edge data.frame,
-- data.frame, list, matrix from base,
-- igraph from igraph,
-- network from network,
-- dendrogram and hclust from stats,
-- Node from data.tree,
-- phylo and evonet from ape, and
-- graphNEL, graphAM, graphBAM from graph (in Bioconductor).
+-   a node data.frame and an edge data.frame,
+-   data.frame, list, matrix from base,
+-   igraph from igraph,
+-   network from network,
+-   dendrogram and hclust from stats,
+-   Node from data.tree,
+-   phylo and evonet from ape, and
+-   graphNEL, graphAM, graphBAM from graph (in Bioconductor).
 
 ### 27.4.2 The dplyr verbs in tidygraph
 
 activate() verb from tidygraph serves as a switch between tibbles for nodes and edges. All dplyr verbs applied to tbl_graph object are applied to the active tibble.
 
 ### 27.4.3 Using tbl_graph() to build tidygraph data model.
+
 In this section, you will use tbl_graph() of tinygraph package to build an tidygraph’s network graph data.frame.
 
 Before typing the codes, you are recommended to review to reference guide of tbl_graph()
+
 ```{r}
 GAStech_graph <- tbl_graph(nodes = GAStech_nodes,
                            edges = GAStech_edges_aggregated, 
@@ -140,21 +135,21 @@ GAStech_graph <- tbl_graph(nodes = GAStech_nodes,
 ```
 
 ### 27.4.4 Reviewing the output tidygraph’s graph object
+
 ```{r}
 GAStech_graph
 ```
 
 ### 27.4.5 Reviewing the output tidygraph’s graph object
 
-The output above reveals that GAStech_graph is a tbl_graph object with 54 nodes and 4541 edges.
-The command also prints the first six rows of “Node Data” and the first three of “Edge Data”.
-It states that the Node Data is active. The notion of an active tibble within a tbl_graph object makes it possible to manipulate the data in one tibble at a time.
+The output above reveals that GAStech_graph is a tbl_graph object with 54 nodes and 4541 edges. The command also prints the first six rows of “Node Data” and the first three of “Edge Data”. It states that the Node Data is active. The notion of an active tibble within a tbl_graph object makes it possible to manipulate the data in one tibble at a time.
 
 ### 27.4.6 Changing the active object
 
 The nodes tibble data frame is activated by default, but you can change which tibble data frame is active with the activate() function. Thus, if we wanted to rearrange the rows in the edges tibble to list those with the highest “weight” first, we could use activate() and then arrange().
 
 For example,
+
 ```{r}
 GAStech_graph %>%
   activate(edges) %>%
@@ -167,9 +162,9 @@ ggraph is an extension of ggplot2, making it easier to carry over basic ggplot s
 
 As in all network graph, there are three main aspects to a ggraph’s network graph, they are:
 
-- nodes,
-- edges and
-- layouts.
+-   nodes,
+-   edges and
+-   layouts.
 
 For a comprehensive discussion of each of this aspect of graph, please refer to their respective vignettes provided.
 
@@ -183,12 +178,12 @@ ggraph(GAStech_graph) +
   geom_node_point()
 ```
 
-Things to learn from the code chunk above:
-The basic plotting function is ggraph(), which takes the data to be used for the graph and the type of layout desired. Both of the arguments for ggraph() are built around igraph. Therefore, ggraph() can use either an igraph object or a tbl_graph object.
+Things to learn from the code chunk above: The basic plotting function is ggraph(), which takes the data to be used for the graph and the type of layout desired. Both of the arguments for ggraph() are built around igraph. Therefore, ggraph() can use either an igraph object or a tbl_graph object.
 
 ### 27.5.2 Changing the default network graph theme
 
 In this section, you will use theme_graph() to remove the x and y axes. Before your get started, it is advisable to read it’s reference guide at least once.
+
 ```{r}
 g <- ggraph(GAStech_graph) + 
   geom_edge_link(aes()) +
@@ -197,9 +192,7 @@ g <- ggraph(GAStech_graph) +
 g + theme_graph()
 ```
 
-Things to learn from the code chunk above:
-- ggraph introduces a special ggplot theme that provides better defaults for network graphs than the normal ggplot defaults. theme_graph(), besides removing axes, grids, and border, changes the font to Arial Narrow (this can be overridden).
-- The ggraph theme can be set for a series of plots with the set_graph_style() command run before the graphs are plotted or by using theme_graph() in the individual plots.
+Things to learn from the code chunk above: - ggraph introduces a special ggplot theme that provides better defaults for network graphs than the normal ggplot defaults. theme_graph(), besides removing axes, grids, and border, changes the font to Arial Narrow (this can be overridden). - The ggraph theme can be set for a series of plots with the set_graph_style() command run before the graphs are plotted or by using theme_graph() in the individual plots.
 
 ### 27.5.3 Changing the coloring of the plot
 
@@ -233,7 +226,7 @@ g + theme_graph()
 
 Thing to learn from the code chunk above:
 
-- layout argument is used to define the layout to be used.
+-   layout argument is used to define the layout to be used.
 
 ### 27.5.6 Modifying network nodes
 
@@ -251,7 +244,7 @@ g + theme_graph()
 
 Things to learn from the code chunks above:
 
-- geom_node_point is equivalent in functionality to geo_point of ggplot2. It allows for simple plotting of nodes in different shapes, colours and sizes. In the codes chnuks above colour and size are used.
+-   geom_node_point is equivalent in functionality to geo_point of ggplot2. It allows for simple plotting of nodes in different shapes, colours and sizes. In the codes chnuks above colour and size are used.
 
 ```{r}
 g <- ggraph(GAStech_graph, 
@@ -267,7 +260,7 @@ g + theme_graph()
 
 Things to learn from the code chunks above:
 
-- geom_edge_link draws edges in the simplest way - as straight lines between the start and end nodes. But, it can do more that that. In the example above, argument width is used to map the width of the line in proportional to the Weight attribute and argument alpha is used to introduce opacity on the line.
+-   geom_edge_link draws edges in the simplest way - as straight lines between the start and end nodes. But, it can do more that that. In the example above, argument width is used to map the width of the line in proportional to the Weight attribute and argument alpha is used to introduce opacity on the line.
 
 ##　27.6 Creating facet graphs
 
@@ -275,9 +268,9 @@ Another very useful feature of ggraph is faceting. In visualising network data, 
 
 There are three functions in ggraph to implement faceting, they are:
 
-- facet_nodes() whereby edges are only draw in a panel if both terminal nodes are present here,
-- facet_edges() whereby nodes are always drawn in al panels even if the node data contains an attribute named the same as the one used for the edge facetting, and
-- facet_graph() faceting on two variables simultaneously.
+-   facet_nodes() whereby edges are only draw in a panel if both terminal nodes are present here,
+-   facet_edges() whereby nodes are always drawn in al panels even if the node data contains an attribute named the same as the one used for the edge facetting, and
+-   facet_graph() faceting on two variables simultaneously.
 
 ##　27.6.1 Working with facet_edges()
 
@@ -376,8 +369,8 @@ g + theme_graph()
 
 Things to learn from the code chunk above:
 
-- mutate() of dplyr is used to perform the computation.
-- the algorithm used, on the other hand, is the centrality_betweenness() of tidygraph.
+-   mutate() of dplyr is used to perform the computation.
+-   the algorithm used, on the other hand, is the centrality_betweenness() of tidygraph.
 
 ### 27.7.2 Visualising network metrics
 
@@ -449,16 +442,17 @@ g + theme_graph()
 
 ## 27.8 Building Interactive Network Graph with visNetwork
 
-1. visNetwork() is a R package for network visualization, using vis.js javascript library.
+1.  visNetwork() is a R package for network visualization, using vis.js javascript library.
 
-2. visNetwork() function uses a nodes list and edges list to create an interactive graph.
+2.  visNetwork() function uses a nodes list and edges list to create an interactive graph.
 
-- The nodes list must include an “id” column, and the edge list must have “from” and “to” columns.
-- The function also plots the labels for the nodes, using the names of the actors from the “label” column in the node list.
-3. The resulting graph is fun to play around with.
+-   The nodes list must include an “id” column, and the edge list must have “from” and “to” columns.
+-   The function also plots the labels for the nodes, using the names of the actors from the “label” column in the node list.
 
-- You can move the nodes and the graph will use an algorithm to keep the nodes properly spaced.
-- You can also zoom in and out on the plot and move it around to re-center it.
+3.  The resulting graph is fun to play around with.
+
+-   You can move the nodes and the graph will use an algorithm to keep the nodes properly spaced.
+-   You can also zoom in and out on the plot and move it around to re-center it.
 
 ### 27.8.1 Data preparation
 
@@ -520,9 +514,7 @@ visNetwork(GAStech_nodes,
 
 ### 27.8.5 Working with visual attributes - Edges
 
-In the code run below visEdges() is used to symbolise the edges.
-- The argument arrows is used to define where to place the arrow.
-- The smooth argument is used to plot the edges using a smooth curve.
+In the code run below visEdges() is used to symbolise the edges. - The argument arrows is used to define where to place the arrow. - The smooth argument is used to plot the edges using a smooth curve.
 
 ```{r}
 visNetwork(GAStech_nodes,
@@ -539,8 +531,9 @@ visNetwork(GAStech_nodes,
 
 In the code chunk below, visOptions() is used to incorporate interactivity features in the data visualisation.
 
-- The argument highlightNearest highlights nearest when clicking a node.
-- The argument nodesIdSelection adds an id node selection creating an HTML select element.
+-   The argument highlightNearest highlights nearest when clicking a node.
+-   The argument nodesIdSelection adds an id node selection creating an HTML select element.
+
 ```{r}
 visNetwork(GAStech_nodes,
            GAStech_edges_aggregated) %>%
@@ -550,9 +543,3 @@ visNetwork(GAStech_nodes,
   visLegend() %>%
   visLayout(randomSeed = 123)
 ```
-
-
-
-
-
-

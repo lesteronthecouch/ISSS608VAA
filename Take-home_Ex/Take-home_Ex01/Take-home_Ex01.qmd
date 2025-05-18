@@ -4,7 +4,7 @@ author: "PENG Hsiao Yuan"
 format: html
 ---
 
-## 1. Environment Set-up
+# 1. Environment Set-up
 
 ## 1.1 Background Information and Data Source
 
@@ -54,7 +54,7 @@ df_clean <- df %>%
 show_col_types = FALSE
 ```
 
-## 2 Population Distributions by Planning Area
+# 2. Population Distributions by Planning Area
 
 A local online media company that publishes daily content on digital platforms is planning to release an article on demographic structures and distribution of Singapore in 2024.
 
@@ -122,7 +122,7 @@ The bar chart above suggests that **Tampines** are the most populated area accor
 
 As a media company, the marketing department is able to allocate more resources on advertisement on the area which has higher population density. By analyzing population of each planning area and the resources invested in that area, companies are able to evaluate the KPI of the advertisement to further adjust the strategies.
 
-##3.The Generation Strucutre Ratio by Planning Area
+# 3.The Generation Strucutre Ratio by Planning Area
 
 ```{r}
 library(tidyverse)
@@ -222,7 +222,8 @@ data <- read_csv("respopagesex2024/respopagesex2024.csv") %>%
 
 Reference Websites: https://isss608-ay2025t2.netlify.app/take-home_ex/take-home_ex01/take-home_ex01
 
-# 4.2.1 Plot the Graph
+## 4.2.1 Plot the Graph
+
 ```{r}
 pyramid_data <- data %>%
   group_by(Age, Sex) %>%
@@ -240,26 +241,25 @@ pyramid_plot <- ggplot(pyramid_data, aes(x = Age, y = Pop, fill = Sex)) +
 pyramid_plot
 ```
 
-# 4.2.2 Comment :
+## 4.2.2 Comment :
 
-# Improvement: 
+### Improvement:
 
-1. The width of the bars are too thin to distinguish the counter population of the other gender. 
+1.  The width of the bars are too thin to distinguish the counter population of the other gender.
 
-2. There should be some spaces between bars to identify the different age.
+2.  There should be some spaces between bars to identify the different age.
 
-3. The data should be grouped to illustrate the distributions more clearly.
+3.  The data should be grouped to illustrate the distributions more clearly.
 
-# Good Points
+### Good Points:
 
 1.The parameters of the horizontal axis are properly scaled to illustrate the numbers of the population of two genders.
 
-2. The selections of the type of graph are very clear in contrasting the difference of population between genders unser certain ages.
+2.  The selections of the type of graph are very clear in contrasting the difference of population between genders unser certain ages.
 
 3.There are outlier which is easy for readers to ignore the data.
 
-
-# 4.2.3 Revised version:
+## 4.2.3 Revised version:
 
 ```{r}
 library(tidyverse)
@@ -295,7 +295,7 @@ ggplot(pyramid_data, aes(x = age_group, y = Pop, fill = Sex)) +
   ) +
   labs(
     title = "Singapore Resident Population Pyramid (2024)",
-    x = "Age Group (5-year bins)",
+    x = "Age Group",
     y = "Population"
   ) +
   theme_minimal() +
