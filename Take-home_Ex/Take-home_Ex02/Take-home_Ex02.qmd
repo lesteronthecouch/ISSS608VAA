@@ -322,6 +322,18 @@ ggraph(tg_ego, layout = "fr") +
 
 ```
 
+a. Was this influence intermittent or did it have a gradual rise?
+
+First of all, There are few key indicators to observe the influence of Oceanus Folk music genre. I would look at the trend of popularity of "PerformerOf" , "ComposerOf" , "ProducerOf", LyricsOf", "RecordedBy" , "DistributedBy" the Ocernus Folk genre of songs or album after 2018.
+
+b.What genres and top artists have been most influenced by Oceanus Folk?
+
+There are few indicators to look at the Oceanus Folk influence over the musical industry. Firstly, "ComposerOf" suggests the number of composer composing Oceanus Folk, which indirectly suggesting the influence of the popularity of Oceanus Folk music. Similarly, "ProducerOf" also indicates the popularity of that genre of music. As for "InstyleOf", I would like to show the number of non-Oceanus Folk nodes that is performed in the style of Oceanus Folk genre of songs, album, person or musical group. Last but not least, "DirectlySamples" also suggests the popularity of the genre of the Oceanus Folk. To gain popularity, artist tend to follow the trnding genre during the period.
+
+c.On the converse, how has Oceanus Folk changed with the rise of Sailor Shift? From which genres does it draw most of its contemporary inspiration?
+
+
+
 
 
 
