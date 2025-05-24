@@ -320,7 +320,11 @@ rice %>%
   newggslopegraph(Year, Yield, Country,
                 Title = "Rice Yield of Top 11 Asian Counties",
                 SubTitle = "1961-1980",
-                Caption = "Prepared by: Dr. Kam Tin Seong")
+                Caption = "Prepared by: Peng Hsiao Yuan")
 ```
 
-::: **Tip** For effective data visualisation design, *factor()* is used convert the value type of Year field from numeric to factor. :::
+::: {.callout-tip. title = "Tip"}
+
+For effective data visualisation design, *factor()* is used convert the value type of Year field from numeric to factor.
+
+:::
