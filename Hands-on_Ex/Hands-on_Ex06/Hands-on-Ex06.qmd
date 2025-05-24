@@ -2,6 +2,9 @@
 title: "Take-home Exercise 7"
 author: "PENG Hsiao Yuan"
 format: html
+execute:
+  warning: false
+  message: false
 ---
 
 # 17 Visualising and Analysing Time-oriented Data
@@ -74,10 +77,7 @@ make_hr_wkday <- function(ts, sc, tz) {
   }
 ```
 
-::: Note
--   *ymd_hms()* and *hour()* are from lubridate package, and
--   *weekdays()* is a base R function.
-:::
+::: **Note** - *ymd_hms()* and *hour()* are from lubridate package, and - *weekdays()* is a base R function. :::
 
 Step 2: Deriving the attacks tibble data frame
 
@@ -99,9 +99,7 @@ attacks <- attacks %>%
       hour, levels = 0:23))
 ```
 
-::: Note
-Beside extracting the necessary data into attacks data frame, *mutate()* of *dplyr* package is used to convert wkday and hour fields into *factor* so they’ll be ordered when plotting
-:::
+::: **Note** Beside extracting the necessary data into attacks data frame, *mutate()* of *dplyr* package is used to convert wkday and hour fields into *factor* so they’ll be ordered when plotting :::
 
 Table below shows the tidy tibble table after processing.
 
@@ -137,16 +135,21 @@ theme(axis.ticks = element_blank(),
       legend.text = element_text(size = 6) )
 ```
 
-::: Tip
-Things to learn from the code chunk 
-- a tibble data table called grouped is derived by aggregating the attack by wkday and hour fields. 
-- a new field called n is derived by using group_by() and count() functions.
-- *na.omit()* is used to exclude missing value. 
-- *geom_tile()* is used to plot tiles (grids) at each x and y position. color and size arguments are used to specify the border color and line size of the tiles. 
-- *theme_tufte()* of ggthemes package is used to remove unnecessary chart junk. To learn which visual components of default *ggplot2* have been excluded, you are encouraged to comment out this line to examine the default plot. 
-- coord_equal() is used to ensure the plot will have an aspect ratio of 1:1. 
-- *scale_fill_gradient()* function is used to creates a two colour gradient (low-high).
-:::
+::: tip **Tip** Things to learn from the code chunk
+
+\- a tibble data table called grouped is derived by aggregating the attack by wkday and hour fields.
+
+\- a new field called n is derived by using *group_by()* and *count()* functions.
+
+\- *na.omit()* is used to exclude missing value.
+
+\- *geom_tile()* is used to plot tiles (grids) at each x and y position. color and size arguments are used to specify the border color and line size of the tiles.
+
+\- *theme_tufte()* of ggthemes package is used to remove unnecessary chart junk. To learn which visual components of default *ggplot2* have been excluded, you are encouraged to comment out this line to examine the default plot.
+
+\- *coord_equal()* is used to ensure the plot will have an aspect ratio of 1:1.
+
+\- *scale_fill_gradient()* function is used to creates a two colour gradient (low-high). :::
 
 ### 17.3.5 Building Multiple Calendar Heatmaps
 
@@ -156,11 +159,11 @@ Step 1: Deriving attack by country object
 
 In order to identify the top 4 countries with the highest number of attacks, you are required to do the followings:
 
-- count the number of attacks by country,
+-   count the number of attacks by country,
 
-- calculate the percent of attackes by country, and
+-   calculate the percent of attackes by country, and
 
-- save the results in a tibble data frame.
+-   save the results in a tibble data frame.
 
 Challenge: Building multiple heatmaps for the top four countries with the highest number of attacks.
 
@@ -319,6 +322,5 @@ rice %>%
                 SubTitle = "1961-1980",
                 Caption = "Prepared by: Dr. Kam Tin Seong")
 ```
-:::Tip
-For effective data visualisation design, *factor()* is used convert the value type of Year field from numeric to factor.
-:::
+
+::: **Tip** For effective data visualisation design, *factor()* is used convert the value type of Year field from numeric to factor. :::
