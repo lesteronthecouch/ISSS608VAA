@@ -244,7 +244,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="installing-packages-and-importing-data" class="level1">
 <h1>1. Installing Packages and Importing Data</h1>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, jsonlite, SmartEDA, tidygraph,ggraph, igraph)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, jsonlite, SmartEDA, tidygraph,ggraph, igraph, lubridate, ggimage)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="read-the-data" class="level2">
 <h2 class="anchored" data-anchor-id="read-the-data">1.1 Read the Data</h2>
@@ -428,8 +428,8 @@ increasing max.overlaps</code></pre>
 </div>
 </section>
 </section>
-<section id="background-and-scenario" class="level1">
-<h1>3. Background and Scenario</h1>
+<section id="background-and-scenario---vast-challenge-mini-case-1" class="level1">
+<h1>3. Background and Scenario - VAST Challenge Mini Case 1</h1>
 <p>One of music’s biggest superstars is Oceanus native Sailor Shift. From humble beginnings, Sailor has grown in popularity and now enjoys fans around the world. Sailor started her career on the island nation of Oceanus which can be clearly seen in her early work, she started in the genre of “Oceanus Folk”. While Sailor has moved away from the traditional Oceanus style, the Oceanus Folk has made a name for itself in the musical world. The popularity of this music is one of the factors driving an increase in tourism to a quiet island nation that used to be known for fishing.</p>
 <p>In 2023, Sailor Shift joined the Ivy Echoes – an all-female Oceanus Folk band consisting of Sailor (vocalist), Maya Jensen (vocalist), Lila “Lilly” Hartman (guitarist), Jade Thompson (drummer), and Sophie Ramirez (bassist). They played together at venues throughout Oceanus but had broken up to pursue their individual careers by 2026. Sailor’s breakthrough came in 2028 when one of her singles went viral, launched to the top of the global charts (something no other Oceanus Folk song had ever done). Since then, she has only continued to grow in popularity worldwide.</p>
 <p>Sailor has released a new album almost every year since her big break, and each has done better than the last. Although she has remained primarily a solo artist, she has also frequently collaborated with other established artists, especially in the Indie Pop and Indie Folk genres. She herself has branched out musically over the years but regularly returns to the Oceanus Folk genre — even as the genre’s influence on the rest of the music world has spread even more.</p>
@@ -437,81 +437,90 @@ increasing max.overlaps</code></pre>
 <p>Additionally, because of Sailor’s success, more attention began to be paid over the years to her previous bandmates. All 4 have continued in the music industry—Maya as an independent vocalist, Lilly and Jade as instrumentalists in other bands, and Sophie as a music producer for a major record label. In various ways, all of them have contributed to the increased influence of Oceanus folk, resulting in a new generation of up-and-coming Oceanus Folk artists seeking to make a name for themselves in the music industry.</p>
 <p>Now, as Sailor returns to Oceanus in 2040, a local journalist – Silas Reed – is writing a piece titled Oceanus Folk: Then-and-Now that aims to trace the rise of Sailor and the influence of Oceanus Folk on the rest of the music world. He has collected a large dataset of musical artists, producers, albums, songs, and influences and organized it into a knowledge graph. Your task is to help Silas create beautiful and informative visualizations of this data and uncover new and interesting information about Sailor’s past, her rise to stardom, and her influence.</p>
 </section>
-<section id="task-2---develop-visualizations-that-illustrate-how-the-influence-of-oceanus-folk-has-spread-through-the-musical-world." class="level1">
-<h1>2. Task 2 - Develop visualizations that illustrate how the influence of Oceanus Folk has spread through the musical world.</h1>
-<section id="was-this-influence-intermittent-or-did-it-have-a-gradual-rise" class="level2">
-<h2 class="anchored" data-anchor-id="was-this-influence-intermittent-or-did-it-have-a-gradual-rise">2.1 Was this influence intermittent or did it have a gradual rise?</h2>
-<p>Step 1 Filtering Time and Oceanus folks song / album after 2028</p>
+<section id="develop-visualizations-that-illustrate-how-the-influence-of-oceanus-folk-has-spread-through-the-musical-world." class="level1">
+<h1>4 Develop visualizations that illustrate how the influence of Oceanus Folk has spread through the musical world.</h1>
+<section id="visualizing-the-popularity-of-oceanus-folk-songs" class="level2">
+<h2 class="anchored" data-anchor-id="visualizing-the-popularity-of-oceanus-folk-songs">4.1 visualizing the popularity of Oceanus Folk songs</h2>
+<p>In this section, we are going to visualize the popularity of Oceanus Folk’s popularity by plotting the numbers of Oceanus Folk’s songs hitting the top chart.</p>
+<section id="setting-up-annual-statistics-of-the-numbers-of-oceanus-folk-songs-on-the-top-chart" class="level3">
+<h3 class="anchored" data-anchor-id="setting-up-annual-statistics-of-the-numbers-of-oceanus-folk-songs-on-the-top-chart">4.1.1 Setting up annual statistics of the numbers of Oceanus Folk songs on the top chart</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>filtered_songs <span class="ot">&lt;-</span> nodes_tbl <span class="sc">%&gt;%</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 先只留「歌曲」節點，且 genre 是 Oceanus Folk</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="st">`</span><span class="at">Node Type</span><span class="st">`</span> <span class="sc">==</span> <span class="st">"Song"</span>,</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>         genre      <span class="sc">==</span> <span class="st">"Oceanus Folk"</span>,</span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">is.na</span>(release_date),</span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>         release_date <span class="sc">!=</span> <span class="st">""</span>) <span class="sc">%&gt;%</span>  </span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 直接把 release_date 當成數字轉年</span></span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">release_year =</span> <span class="fu">as.integer</span>(release_date)) <span class="sc">%&gt;%</span></span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 過濾 2028 之後</span></span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(release_year <span class="sc">&gt;</span> <span class="dv">2028</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="st">`</span><span class="at">notable</span><span class="st">`</span> <span class="sc">==</span> <span class="cn">TRUE</span>)</span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 看看結果</span></span>
-<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>filtered_songs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 35 × 11
-   `Node Type` name         single release_date genre notable    id written_date
-   &lt;chr&gt;       &lt;chr&gt;        &lt;lgl&gt;  &lt;chr&gt;        &lt;chr&gt; &lt;lgl&gt;   &lt;int&gt; &lt;chr&gt;       
- 1 Song        Whispers fr… TRUE   2029         Ocea… TRUE     4393 &lt;NA&gt;        
- 2 Song        Heroes of H… TRUE   2029         Ocea… TRUE     9493 &lt;NA&gt;        
- 3 Song        Echoes With… TRUE   2029         Ocea… TRUE     9655 2029        
- 4 Song        Unbreakable… TRUE   2030         Ocea… TRUE    12138 2030        
- 5 Song        Celestial P… TRUE   2029         Ocea… TRUE    12490 2029        
- 6 Song        Reef Road R… FALSE  2030         Ocea… TRUE    12524 &lt;NA&gt;        
- 7 Song        Waiting by … TRUE   2029         Ocea… TRUE    13396 2029        
- 8 Song        Star-Touche… TRUE   2034         Ocea… TRUE    17050 &lt;NA&gt;        
- 9 Song        When the Ti… FALSE  2037         Ocea… TRUE    17125 &lt;NA&gt;        
-10 Song        Anchored Lo… TRUE   2030         Ocea… TRUE    17247 &lt;NA&gt;        
-# ℹ 25 more rows
-# ℹ 3 more variables: stage_name &lt;chr&gt;, notoriety_date &lt;chr&gt;,
-#   release_year &lt;int&gt;</code></pre>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> nodes_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Node Type</span><span class="st">`</span> <span class="sc">==</span> <span class="st">"Song"</span>,</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    genre        <span class="sc">==</span> <span class="st">"Oceanus Folk"</span>,</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="sc">!</span><span class="fu">is.na</span>(release_date),</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    release_date <span class="sc">!=</span> <span class="st">""</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">as.integer</span>(release_date)) <span class="sc">%&gt;%</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">&gt;</span> <span class="dv">2018</span>, year <span class="sc">&lt;</span> <span class="dv">2030</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">total   =</span> <span class="fu">n</span>(),</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">notable =</span> <span class="fu">sum</span>(notable, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">ratio   =</span> notable <span class="sc">/</span> total,</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(year)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
+</section>
+<section id="plotting-the-graph" class="level3">
+<h3 class="anchored" data-anchor-id="plotting-the-graph">4.1.2 Plotting the graph</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 把你已經處理好的 graph 轉成 tidygraph</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>tg <span class="ot">&lt;-</span> <span class="fu">as_tbl_graph</span>(graph) <span class="sc">%&gt;%</span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">activate</span>(nodes) <span class="sc">%&gt;%</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 加一個 genre_clean 欄，把 NA 換成 "Unknown"</span></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">genre_clean =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(genre) <span class="sc">|</span> genre<span class="sc">==</span><span class="st">""</span>, <span class="st">"Unknown"</span>, genre))</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. 只保留 Album 與 Song 節點（若要畫全網就可以跳過這步）</span></span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>tg_sub <span class="ot">&lt;-</span> tg <span class="sc">%&gt;%</span></span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">activate</span>(nodes) <span class="sc">%&gt;%</span></span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="st">`</span><span class="at">Node Type</span><span class="st">`</span> <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Album"</span>,<span class="st">"Song"</span>))</span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. 畫網狀圖：節點顏色對應 genre，形狀對應 Node Type</span></span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ggraph</span>(tg_sub, <span class="at">layout =</span> <span class="st">"fr"</span>) <span class="sc">+</span> </span>
-<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 邊</span></span>
-<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>, <span class="at">colour =</span> <span class="st">"grey70"</span>) <span class="sc">+</span></span>
-<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 節點</span></span>
-<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> genre_clean,</span>
-<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>                      <span class="at">shape =</span> <span class="st">`</span><span class="at">Node Type</span><span class="st">`</span>),</span>
-<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>                  <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 節點標籤（可視需要開關）</span></span>
-<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># geom_node_text(aes(label = name), size = 2, repel = TRUE) +</span></span>
-<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_brewer</span>(<span class="at">palette =</span> <span class="st">"Set3"</span>) <span class="sc">+</span></span>
-<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_shape_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="dv">16</span>, <span class="dv">17</span>)) <span class="sc">+</span>  <span class="co"># 16=circle,17=triangle</span></span>
-<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>() <span class="sc">+</span></span>
-<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">color =</span> <span class="st">"Genre"</span>,</span>
-<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>       <span class="at">shape =</span> <span class="st">"Node Type"</span>,</span>
-<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Album &amp; Song"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>df_ratio <span class="ot">&lt;-</span> nodes_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Node Type</span><span class="st">`</span> <span class="sc">==</span> <span class="st">"Song"</span>,</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    genre        <span class="sc">==</span> <span class="st">"Oceanus Folk"</span>,</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="sc">!</span><span class="fu">is.na</span>(release_date),</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    release_date <span class="sc">!=</span> <span class="st">""</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">as.integer</span>(release_date)) <span class="sc">%&gt;%</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">&gt;=</span> <span class="dv">2019</span>, year <span class="sc">&lt;=</span> <span class="dv">2029</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">total   =</span> <span class="fu">n</span>(),</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">notable =</span> <span class="fu">sum</span>(notable, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">ratio   =</span> notable <span class="sc">/</span> total,</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(year)</span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a><span class="co"># ── 2) df_counts: total Oceanus-Folk releases per year ─────────────────────</span></span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>df_counts <span class="ot">&lt;-</span> df_ratio <span class="sc">%&gt;%</span></span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transmute</span>(year, <span class="at">n_releases =</span> total)</span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a><span class="co"># ── 3) Plot Panels A &amp; C ─────────────────────────────────────────────────</span></span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Panel A: Genre success rate</span></span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_ratio, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> ratio)) <span class="sc">+</span></span>
+<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">size =</span> <span class="fl">1.2</span>, <span class="at">color =</span> <span class="st">"steelblue"</span>) <span class="sc">+</span></span>
+<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>, <span class="at">color =</span> <span class="st">"steelblue"</span>) <span class="sc">+</span></span>
+<span id="cb21-29"><a href="#cb21-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="st">"Top-chart %"</span>, <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>(<span class="at">accuracy =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb21-30"><a href="#cb21-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="st">"Year"</span>, <span class="at">breaks =</span> df_ratio<span class="sc">$</span>year) <span class="sc">+</span></span>
+<span id="cb21-31"><a href="#cb21-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"A. % of Oceanus Folk Songs Hitting Top Chart"</span>) <span class="sc">+</span></span>
+<span id="cb21-32"><a href="#cb21-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb21-33"><a href="#cb21-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning in RColorBrewer::brewer.pal(n, pal): n too large, allowed maximum for palette Set3 is 12
-Returning the palette you asked for with that many colors</code></pre>
+<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+ℹ Please use `linewidth` instead.</code></pre>
 </div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 2114 rows containing missing values or values outside the scale range
-(`geom_point()`).</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Panel C: Total release volume</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_counts, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> n_releases)) <span class="sc">+</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"gray80"</span>) <span class="sc">+</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="st">"Number of Releases"</span>) <span class="sc">+</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="st">"Year"</span>, <span class="at">breaks =</span> df_counts<span class="sc">$</span>year) <span class="sc">+</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"C. Oceanus Folk: Release Volume"</span>) <span class="sc">+</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="co"># ── 4) Combine panels vertically ──────────────────────────────────────────</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>(p1 <span class="sc">/</span> p3) <span class="sc">+</span></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_annotation</span>(</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">title    =</span> <span class="st">"Oceanus Folk: Genre Success vs. Release Volume (2019–2029)"</span>,</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Panel A: Top-chart %  •  Panel C: Total release volume"</span></span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -520,137 +529,823 @@ Returning the palette you asked for with that many colors</code></pre>
 </div>
 </div>
 </div>
+<p>Perfect scores are fragile once the catalogue grows. – The genre maintained 100 % only while releases were scarce or strongly branded (early years, Ivy Echoes peak, curated 2027 wave).</p>
+<p>Sailor’s presence is the single biggest swing factor. – When she pivots away (2028), the hit-rate collapses even though release volume is ordinary. – When she leads collaborations (2029) or headlines group projects (2023, 2026-27), success rates soar.</p>
+<p>Volume alone doesn’t guarantee chart impact. – 2023 and 2026 had similar release surges, yet the hit-rate diverged (100 % vs ~86 %) depending on unified branding vs.&nbsp;fragmented efforts.</p>
+<p>Strategic collaborations rejuvenate the scene. – The 2029 rebound aligns exactly with Sailor’s Roots &amp; Tides initiative, confirming that leveraging star power to spotlight newcomers can lift an entire genre.</p>
+<p>Bottom line: the data reinforce the article’s narrative that Oceanus Folk’s fortunes rise and fall with Sailor Shift’s artistic choices—especially her willingness to keep one foot in her roots while experimenting globally.</p>
+</section>
+</section>
+<section id="visualizing-the-trend-of-popularity-of-oceanus-folk." class="level2">
+<h2 class="anchored" data-anchor-id="visualizing-the-trend-of-popularity-of-oceanus-folk.">4.2 Visualizing the trend of popularity of Oceanus Folk.</h2>
+<section id="data-preparations---naming-the-edges" class="level3">
+<h3 class="anchored" data-anchor-id="data-preparations---naming-the-edges">4.2.1 Data Preparations - Naming the edges</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 準備 df：只要 2029 年以後、Oceanus Folk Song 的 notable 比例</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> nodes_tbl <span class="sc">%&gt;%</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="st">`</span><span class="at">Node Type</span><span class="st">`</span> <span class="sc">==</span> <span class="st">"Song"</span>,</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>         genre        <span class="sc">==</span> <span class="st">"Oceanus Folk"</span>,</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">is.na</span>(release_date), release_date <span class="sc">!=</span> <span class="st">""</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">as.integer</span>(release_date)) <span class="sc">%&gt;%</span></span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">&gt;</span> <span class="dv">2026</span>, year <span class="sc">&lt;</span> <span class="dv">2040</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span></span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">total   =</span> <span class="fu">n</span>(),</span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">notable =</span> <span class="fu">sum</span>(notable, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">ratio   =</span> notable <span class="sc">/</span> total,</span>
-<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
-<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(year) <span class="sc">%&gt;%</span></span>
-<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">genre =</span> <span class="st">"Oceanus Folk"</span>)    <span class="co"># for display</span></span>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>edges2 <span class="ot">&lt;-</span> edges_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">rel_type =</span> <span class="st">`</span><span class="at">Edge Type</span><span class="st">`</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="filtering-and-extracting-the-data" class="level3">
+<h3 class="anchored" data-anchor-id="filtering-and-extracting-the-data">4.2.2 Filtering and Extracting the Data</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>oceanus_edges <span class="ot">&lt;-</span> edges2 <span class="sc">%&gt;%</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">semi_join</span>(</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    nodes_tbl <span class="sc">%&gt;%</span> <span class="fu">filter</span>(genre <span class="sc">==</span> <span class="st">"Oceanus Folk"</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(id),</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"target"</span> <span class="ot">=</span> <span class="st">"id"</span>)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(rel_type <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"ComposerOf"</span>, <span class="st">"PerformerOf"</span>, <span class="st">"ProducerOf"</span>))</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>df_yearly <span class="ot">&lt;-</span> oceanus_edges <span class="sc">%&gt;%</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>    nodes_tbl <span class="sc">%&gt;%</span> <span class="fu">select</span>(id, release_date),</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"target"</span> <span class="ot">=</span> <span class="st">"id"</span>)</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">year =</span> <span class="fu">str_extract</span>(release_date, <span class="st">"^</span><span class="sc">\\</span><span class="st">d{4}"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.integer</span>()</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">&gt;=</span> <span class="dv">2022</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. 把 df 轉成 tbl_graph，edges 用空 data.frame()</span></span>
-<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>g_bubble <span class="ot">&lt;-</span> <span class="fu">tbl_graph</span>(</span>
-<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">nodes =</span> df <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">name =</span> <span class="fu">as.character</span>(year)), </span>
-<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">edges =</span> <span class="fu">data.frame</span>(<span class="at">from=</span><span class="fu">character</span>(), <span class="at">to=</span><span class="fu">character</span>()),</span>
-<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">directed =</span> <span class="cn">FALSE</span></span>
-<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. 建 manual 佈局：x=year, y=1（或其他常數）</span></span>
-<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a>layout_bubble <span class="ot">&lt;-</span> <span class="fu">create_layout</span>(</span>
-<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a>  g_bubble, </span>
-<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">layout =</span> <span class="st">"manual"</span>,</span>
-<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">x      =</span> df<span class="sc">$</span>year,</span>
-<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">y      =</span> <span class="fu">rep</span>(<span class="dv">1</span>, <span class="fu">nrow</span>(df))</span>
-<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb25-32"><a href="#cb25-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-33"><a href="#cb25-33" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. 用 ggraph 畫泡泡</span></span>
-<span id="cb25-34"><a href="#cb25-34" aria-hidden="true" tabindex="-1"></a><span class="fu">ggraph</span>(layout_bubble) <span class="sc">+</span></span>
-<span id="cb25-35"><a href="#cb25-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>(<span class="fu">aes</span>(<span class="at">size =</span> ratio, <span class="at">fill =</span> ratio),</span>
-<span id="cb25-36"><a href="#cb25-36" aria-hidden="true" tabindex="-1"></a>                  <span class="at">shape =</span> <span class="dv">21</span>, <span class="at">colour =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
-<span id="cb25-37"><a href="#cb25-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size_area</span>(<span class="at">max_size =</span> <span class="dv">20</span>, <span class="at">name =</span> <span class="st">"Ratio of Ocenaus Folk songs hitting top chart"</span>) <span class="sc">+</span></span>
-<span id="cb25-38"><a href="#cb25-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient</span>(<span class="at">low =</span> <span class="st">"lightblue"</span>, <span class="at">high =</span> <span class="st">"steelblue"</span>, <span class="at">name =</span> <span class="st">"Ratio of Ocenaus Folk songs hitting top chart"</span>) <span class="sc">+</span></span>
-<span id="cb25-39"><a href="#cb25-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="st">"Released Year"</span>, <span class="at">breaks =</span> df<span class="sc">$</span>year) <span class="sc">+</span></span>
-<span id="cb25-40"><a href="#cb25-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="cn">NULL</span>) <span class="sc">+</span></span>
-<span id="cb25-41"><a href="#cb25-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Ratio of Ocenaus Folk songs hitting top chart"</span>) <span class="sc">+</span></span>
-<span id="cb25-42"><a href="#cb25-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>() <span class="sc">+</span></span>
-<span id="cb25-43"><a href="#cb25-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb25-44"><a href="#cb25-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x     =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
-<span id="cb25-45"><a href="#cb25-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"right"</span></span>
-<span id="cb25-46"><a href="#cb25-46" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year, rel_type) <span class="sc">%&gt;%</span></span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">count =</span> <span class="fu">n</span>(), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from  =</span> rel_type,</span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> count,</span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_fill =</span> <span class="dv">0</span></span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(year)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="the-data-table" class="level3">
+<h3 class="anchored" data-anchor-id="the-data-table">4.2.3 The data table</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>df_yearly</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 18 × 4
+    year ComposerOf PerformerOf ProducerOf
+   &lt;int&gt;      &lt;int&gt;       &lt;int&gt;      &lt;int&gt;
+ 1  2022          3          17          5
+ 2  2023         22         130         26
+ 3  2024         14          33          8
+ 4  2025          5          36          5
+ 5  2026         18          69         16
+ 6  2027          6          14          2
+ 7  2028          6          15          2
+ 8  2029          8          48          6
+ 9  2030          4          18          4
+10  2031          3          18          0
+11  2032          0           4          0
+12  2033          2           4          0
+13  2034          7          13          0
+14  2035          7          10          0
+15  2036          1           3          0
+16  2037          1           5          0
+17  2038          5           4          0
+18  2040          1           3          0</code></pre>
+</div>
+</div>
+</section>
+<section id="plotting-the-line-chart-of-the-popularity-of-oceanus-folk" class="level3">
+<h3 class="anchored" data-anchor-id="plotting-the-line-chart-of-the-popularity-of-oceanus-folk">4.2.4 Plotting the line chart of the popularity of Oceanus Folk</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>df_long <span class="ot">&lt;-</span> df_yearly <span class="sc">%&gt;%</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">c</span>(ComposerOf, PerformerOf, ProducerOf),</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to  =</span> <span class="st">"rel_type"</span>,</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"count"</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_long, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> count, <span class="at">color =</span> rel_type)) <span class="sc">+</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">size =</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> df_yearly<span class="sc">$</span>year) <span class="sc">+</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">name   =</span> <span class="st">"Relation Type"</span>,</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(</span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">ComposerOf  =</span> <span class="st">"lightblue"</span>,  </span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">PerformerOf =</span> <span class="st">"lightgreen"</span>,  </span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>      <span class="at">ProducerOf  =</span> <span class="st">"gray"</span>   </span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Popularity of Oceanus Folk songs and albums after 2022"</span>,</span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">x     =</span> <span class="st">"Year"</span>,</span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">y     =</span> <span class="st">"Count"</span>,</span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"Relation Type"</span></span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
+<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">14</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb28-28"><a href="#cb28-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>),</span>
+<span id="cb28-29"><a href="#cb28-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text  =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">11</span>),</span>
+<span id="cb28-30"><a href="#cb28-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>),</span>
+<span id="cb28-31"><a href="#cb28-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.text  =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">11</span>)</span>
+<span id="cb28-32"><a href="#cb28-32" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="960"></p>
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="1440"></p>
 </figure>
 </div>
 </div>
 </div>
+<p>Big picture Three distinct “Sailor pulses.” Performer spikes (2023, 2026, 2029) align exactly with:</p>
+<p>the Ivy Echoes boom,</p>
+<p>their farewell, and</p>
+<p>Sailor’s Roots &amp; Tides comeback. Each pulse corresponds to a rebound or preservation of the 100 % (or near-perfect) top-chart ratio on the first graph.</p>
+<p>Quality vs.&nbsp;quantity hinges on unified branding. When large output is driven by a cohesive banner (Ivy Echoes, Roots &amp; Tides), the genre keeps its hit-making reputation. When volume grows without Sailor’s direct stamp (mid-2020s), success rates slip.</p>
+<p>Post-2030 fade shows influence isn’t permanent without stewardship. Composer and producer lines outlive performer activity—reflecting Maya’s writing gigs and Sophie’s studio career—but neither is enough to maintain mainstream traction. The genre becomes boutique again until Sailor’s 2040 homecoming.</p>
+<p>Silas Reed’s editorial angle. These intertwined trajectories visually prove his thesis: Oceanus Folk’s rise, dips, and mini-revivals are inseparable from Sailor Shift’s career choices—whether she’s front-stage, curating collaborations, or momentarily absent from the scene.</p>
+<p>Use the two visuals together in the article:</p>
+<p>Figure 1 (2019-29 panels) to show the front-end outcomes—chart success and release volume.</p>
+<p>Figure 2 (role-based 2022-40 plot) to uncover the back-end mechanics—who is writing, performing, producing, and how that ebbs when Sailor steps away.</p>
+</section>
+</section>
+</section>
+<section id="examining-the-most-influenced-artist-and-genre-of-music-by-visualizing-the-influence-graph" class="level1">
+<h1>5. Examining the most influenced artist and genre of music by Visualizing the influence graph</h1>
+<section id="visualizing-the-influence-graph---the-genre-of-music-most-influenced-by-oceanus-folk" class="level2">
+<h2 class="anchored" data-anchor-id="visualizing-the-influence-graph---the-genre-of-music-most-influenced-by-oceanus-folk">5.1 Visualizing the influence Graph - The genre of music most influenced by Oceanus Folk</h2>
+<section id="defining-the-influence-types" class="level3">
+<h3 class="anchored" data-anchor-id="defining-the-influence-types">5.1.1 Defining the influence types</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(igraph)</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidygraph)</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggraph)</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 假設你已經有一個 tidygraph 物件叫 graph</span></span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 先轉成 igraph，方便用 make_ego_graph()</span></span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>g_igraph <span class="ot">&lt;-</span> <span class="fu">as.igraph</span>(graph)</span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. 定位 Oceanus Folk 在 igraph 中的頂點編號</span></span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="co">#    這裡用 genre == "Oceanus Folk" 來找節點</span></span>
-<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>centre_vid <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">V</span>(g_igraph)<span class="sc">$</span>genre <span class="sc">==</span> <span class="st">"Oceanus Folk"</span>)</span>
-<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">length</span>(centre_vid)<span class="sc">==</span><span class="dv">0</span>) <span class="fu">stop</span>(<span class="st">"找不到 Oceanus Folk 節點"</span>)</span>
-<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. 用 igraph::make_ego_graph 抽 2‐跳內的子圖</span></span>
-<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>ego_list <span class="ot">&lt;-</span> <span class="fu">make_ego_graph</span>(g_igraph,</span>
-<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>                           <span class="at">order =</span> <span class="dv">2</span>,</span>
-<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>                           <span class="at">nodes =</span> centre_vid,</span>
-<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>                           <span class="at">mode =</span> <span class="st">"all"</span>)</span>
-<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a><span class="co"># 只有一個元素：取出它</span></span>
-<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>ego_sub_igraph <span class="ot">&lt;-</span> ego_list[[<span class="dv">1</span>]]</span>
-<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. 把這個 igraph 子圖轉回 tidygraph</span></span>
-<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>tg_ego <span class="ot">&lt;-</span> <span class="fu">as_tbl_graph</span>(ego_sub_igraph) <span class="sc">%&gt;%</span></span>
-<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">activate</span>(nodes) <span class="sc">%&gt;%</span></span>
-<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 將原始屬性搬回來：label, genre, Node Type</span></span>
-<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">label       =</span> <span class="fu">V</span>(ego_sub_igraph)<span class="sc">$</span>name,            <span class="co"># 目前是 id 字串</span></span>
-<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">genre       =</span> <span class="fu">V</span>(ego_sub_igraph)<span class="sc">$</span>genre,           <span class="co"># 流派</span></span>
-<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">node_type   =</span> <span class="fu">V</span>(ego_sub_igraph)<span class="sc">$</span><span class="st">`</span><span class="at">Node Type</span><span class="st">`</span>,     <span class="co"># 節點類型</span></span>
-<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">impact_deg  =</span> <span class="fu">centrality_degree</span>(<span class="at">mode =</span> <span class="st">"in"</span>)     <span class="co"># in‐degree 當影響力</span></span>
-<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. 繪製網絡圖</span></span>
-<span id="cb26-35"><a href="#cb26-35" aria-hidden="true" tabindex="-1"></a><span class="fu">ggraph</span>(tg_ego, <span class="at">layout =</span> <span class="st">"fr"</span>) <span class="sc">+</span></span>
-<span id="cb26-36"><a href="#cb26-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>, <span class="at">colour =</span> <span class="st">"grey70"</span>) <span class="sc">+</span></span>
-<span id="cb26-37"><a href="#cb26-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>(<span class="fu">aes</span>(<span class="at">size =</span> impact_deg, <span class="at">fill =</span> genre, <span class="at">shape =</span> node_type),</span>
-<span id="cb26-38"><a href="#cb26-38" aria-hidden="true" tabindex="-1"></a>                  <span class="at">colour =</span> <span class="st">"black"</span>, <span class="at">stroke =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
-<span id="cb26-39"><a href="#cb26-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">ifelse</span>(genre<span class="sc">==</span><span class="st">"Oceanus Folk"</span>, label, <span class="st">""</span>)),</span>
-<span id="cb26-40"><a href="#cb26-40" aria-hidden="true" tabindex="-1"></a>                 <span class="at">repel =</span> <span class="cn">TRUE</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb26-41"><a href="#cb26-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Set3"</span>, <span class="at">name =</span> <span class="st">"Genre"</span>) <span class="sc">+</span></span>
-<span id="cb26-42"><a href="#cb26-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_shape_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Song"</span><span class="ot">=</span><span class="dv">21</span>,<span class="st">"Album"</span><span class="ot">=</span><span class="dv">22</span>,<span class="st">"Person"</span><span class="ot">=</span><span class="dv">23</span>,</span>
-<span id="cb26-43"><a href="#cb26-43" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"MusicalGroup"</span><span class="ot">=</span><span class="dv">24</span>,<span class="st">"RecordLabel"</span><span class="ot">=</span><span class="dv">25</span>),</span>
-<span id="cb26-44"><a href="#cb26-44" aria-hidden="true" tabindex="-1"></a>                     <span class="at">name=</span><span class="st">"Node Type"</span>) <span class="sc">+</span></span>
-<span id="cb26-45"><a href="#cb26-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size_continuous</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="dv">4</span>,<span class="dv">12</span>), <span class="at">name=</span><span class="st">"Influence (in‐degree)"</span>) <span class="sc">+</span></span>
-<span id="cb26-46"><a href="#cb26-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>() <span class="sc">+</span></span>
-<span id="cb26-47"><a href="#cb26-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb26-48"><a href="#cb26-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">title    =</span> <span class="st">"Oceanus Folk 的 2‐跳合作／影響網絡"</span>,</span>
-<span id="cb26-49"><a href="#cb26-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"節點大小 ∝ 被 Oceanus Folk 影響／引用的次數"</span></span>
-<span id="cb26-50"><a href="#cb26-50" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 10 rows containing missing values or values outside the scale range
-(`geom_text_repel()`).</code></pre>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>influence_types <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"CoverOf"</span>,</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"InStyleOf"</span>,</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"DirectlySamples"</span>,</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"InterpolatesFrom"</span>,</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"LyricalReferenceTo"</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>edges2 <span class="ot">&lt;-</span> edges_tbl <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">rel_type =</span> <span class="st">`</span><span class="at">Edge Type</span><span class="st">`</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
+<section id="filtering-the-data" class="level3">
+<h3 class="anchored" data-anchor-id="filtering-the-data">5.1.2 Filtering the Data</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1.1 Extracting </span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>direct_edges <span class="ot">&lt;-</span> edges2 <span class="sc">%&gt;%</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(rel_type <span class="sc">%in%</span> influence_types) <span class="sc">%&gt;%</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">semi_join</span>(</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>    nodes_tbl <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="st">`</span><span class="at">Node Type</span><span class="st">`</span> <span class="sc">==</span> <span class="st">"Song"</span>, genre <span class="sc">==</span> <span class="st">"Oceanus Folk"</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(id),</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"target"</span> <span class="ot">=</span> <span class="st">"id"</span>)</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="filtering-the-songs-that-are-influenced-by-oceanus-folks-but-do-not-belongs-to-oceanus-folk" class="level3">
+<h3 class="anchored" data-anchor-id="filtering-the-songs-that-are-influenced-by-oceanus-folks-but-do-not-belongs-to-oceanus-folk">5.1.3 Filtering the songs that are influenced by Oceanus Folks but do not belongs to Oceanus Folk</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>direct_songs <span class="ot">&lt;-</span> nodes_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    id <span class="sc">%in%</span> direct_edges<span class="sc">$</span>source,</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Node Type</span><span class="st">`</span> <span class="sc">==</span> <span class="st">"Song"</span>,</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>    genre <span class="sc">!=</span> <span class="st">"Oceanus Folk"</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">song_id =</span> id, <span class="at">song_name =</span> name, release_date, genre)</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>artist_songs <span class="ot">&lt;-</span> edges2 <span class="sc">%&gt;%</span></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(rel_type <span class="sc">==</span> <span class="st">"PerformerOf"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">semi_join</span>(</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>    nodes_tbl <span class="sc">%&gt;%</span> <span class="fu">filter</span>(name <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Sailor Shift"</span>, <span class="st">"Ivy Echoes"</span>)) <span class="sc">%&gt;%</span> <span class="fu">select</span>(id),</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"source"</span> <span class="ot">=</span> <span class="st">"id"</span>)</span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(target) <span class="sc">%&gt;%</span></span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unique</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>  { nodes_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(</span>
+<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a>        id <span class="sc">%in%</span> .,</span>
+<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a>        <span class="st">`</span><span class="at">Node Type</span><span class="st">`</span> <span class="sc">==</span> <span class="st">"Song"</span>,</span>
+<span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a>        genre <span class="sc">!=</span> <span class="st">"Oceanus Folk"</span></span>
+<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">%&gt;%</span></span>
+<span id="cb31-22"><a href="#cb31-22" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(<span class="at">song_id =</span> id, <span class="at">song_name =</span> name, release_date, genre)</span>
+<span id="cb31-23"><a href="#cb31-23" aria-hidden="true" tabindex="-1"></a>  }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="combine-the-data" class="level3">
+<h3 class="anchored" data-anchor-id="combine-the-data">5.1.4 Combine the data</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>step1_songs <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(direct_songs, artist_songs) <span class="sc">%&gt;%</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(song_id, song_name, release_date, genre)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>step1_songs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 109 × 4
+   song_id song_name                    release_date genre          
+     &lt;int&gt; &lt;chr&gt;                        &lt;chr&gt;        &lt;chr&gt;          
+ 1     196 Radiant Dreams               2017         Indie Folk     
+ 2     925 Liminal Passage              2027         Indie Folk     
+ 3    1069 Behind the Picture Glass     2026         Synthwave      
+ 4    1313 Radiance of the Heart        2029         Synthwave      
+ 5    1629 Legionary's Lament           2023         Desert Rock    
+ 6    1874 Dusty Miles                  2023         Dream Pop      
+ 7    2260 Inherited Arguments          2029         Symphonic Metal
+ 8    2272 Borrowed Time                2022         Space Rock     
+ 9    2379 Unwanted (And Still Waiting) 2027         Synthpop       
+10    3053 Dreaming in Technicolor      2024         Desert Rock    
+# ℹ 99 more rows</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>second_edges <span class="ot">&lt;-</span> edges2 <span class="sc">%&gt;%</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(rel_type <span class="sc">%in%</span> influence_types) <span class="sc">%&gt;%</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">semi_join</span>(</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>    step1_songs <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="at">id =</span> song_id),</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"target"</span> <span class="ot">=</span> <span class="st">"id"</span>)</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>step2_songs <span class="ot">&lt;-</span> nodes_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>    id <span class="sc">%in%</span> second_edges<span class="sc">$</span>source,</span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Node Type</span><span class="st">`</span> <span class="sc">==</span> <span class="st">"Song"</span>,</span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>    genre <span class="sc">!=</span> <span class="st">"Oceanus Folk"</span></span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">song_id =</span> id, <span class="at">song_name =</span> name, release_date, genre) <span class="sc">%&gt;%</span></span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>()</span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>step2_songs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 70 × 4
+   song_id song_name                         release_date genre     
+     &lt;int&gt; &lt;chr&gt;                             &lt;chr&gt;        &lt;chr&gt;     
+ 1     210 Luminous Path                     2029         Darkwave  
+ 2     321 Soil of My Soul                   2025         Space Rock
+ 3     901 Approaching Silhouettes           2029         Space Rock
+ 4    1076 Snapshot Shadows                  2025         Dream Pop 
+ 5    1358 If Freedom Were an Open Door      2027         Dream Pop 
+ 6    1970 Footsteps in the Forest's Embrace 2027         Darkwave  
+ 7    3358 Carry Me Through                  2017         Dream Pop 
+ 8    3580 Shadows of Unexpressed Feelings   2027         Dream Pop 
+ 9    3652 Wishful Thinking Anthem           2025         Dream Pop 
+10    4085 Balcony Heartbreak                2023         Indie Folk
+# ℹ 60 more rows</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>infl_edges <span class="ot">&lt;-</span> edges_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">rel_type =</span> <span class="st">`</span><span class="at">Edge Type</span><span class="st">`</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(rel_type <span class="sc">%in%</span> influence_types)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="visualizing-the-level-of-influences-by-oceanus-folk-of-all-genres-of-music" class="level2">
+<h2 class="anchored" data-anchor-id="visualizing-the-level-of-influences-by-oceanus-folk-of-all-genres-of-music">5.2 Visualizing the level of influences by Oceanus Folk of all genres of music</h2>
+<section id="extracting-the-data-of-genre-of-songs-and-album" class="level3">
+<h3 class="anchored" data-anchor-id="extracting-the-data-of-genre-of-songs-and-album">5.2.1 Extracting the data of genre of songs and album</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>infl_genre <span class="ot">&lt;-</span> infl_edges <span class="sc">%&gt;%</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>    nodes_tbl <span class="sc">%&gt;%</span> <span class="fu">select</span>(id, genre),</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"target"</span> <span class="ot">=</span> <span class="st">"id"</span>)</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(genre))   </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="grouping-the-data-by-genre-and-rel_tyoe" class="level3">
+<h3 class="anchored" data-anchor-id="grouping-the-data-by-genre-and-rel_tyoe">5.2.2 Grouping the data by <em>Genre</em> and <em>rel_tyoe</em></h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>genre_influence_counts <span class="ot">&lt;-</span> infl_genre <span class="sc">%&gt;%</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(genre, rel_type) <span class="sc">%&gt;%</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">count =</span> <span class="fu">n</span>(), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from  =</span> rel_type,</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> count,</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_fill =</span> <span class="dv">0</span></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(genre)</span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>genre_influence_counts</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 24 × 6
+   genre   CoverOf DirectlySamples InStyleOf InterpolatesFrom LyricalReferenceTo
+   &lt;chr&gt;     &lt;int&gt;           &lt;int&gt;     &lt;int&gt;            &lt;int&gt;              &lt;int&gt;
+ 1 Altern…      53              22        87               67                 75
+ 2 Americ…      29              13        62               39                 43
+ 3 Avant-…      29              16        47               28                 33
+ 4 Blues …      26               9        44               39                 33
+ 5 Celtic…       0               0         0                0                  1
+ 6 Darkwa…      27              19        47               30                 28
+ 7 Desert…      19               9        35               35                 20
+ 8 Doom M…     156              83       270              178                165
+ 9 Dream …     168              77       245              188                168
+10 Emo/Po…      45              18        71               37                 42
+# ℹ 14 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="defining-the-edges-and-nodes" class="level3">
+<h3 class="anchored" data-anchor-id="defining-the-edges-and-nodes">5.2.3 Defining the Edges and Nodes</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>edges2 <span class="ot">&lt;-</span> edges_tbl <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">rel_type =</span> <span class="st">`</span><span class="at">Edge Type</span><span class="st">`</span>)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>genre_counts <span class="ot">&lt;-</span> edges2 <span class="sc">%&gt;%</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(rel_type <span class="sc">%in%</span> influence_types) <span class="sc">%&gt;%</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">semi_join</span>(</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>    nodes_tbl <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="st">`</span><span class="at">Node Type</span><span class="st">`</span> <span class="sc">==</span> <span class="st">"Song"</span>, genre <span class="sc">==</span> <span class="st">"Oceanus Folk"</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(id),</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"target"</span><span class="ot">=</span><span class="st">"id"</span>)</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(nodes_tbl <span class="sc">%&gt;%</span> <span class="fu">select</span>(id, genre), <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"source"</span><span class="ot">=</span><span class="st">"id"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(genre)) <span class="sc">%&gt;%</span></span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(genre, rel_type) <span class="sc">%&gt;%</span></span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>(), <span class="at">.groups=</span><span class="st">"drop"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> rel_type, <span class="at">values_from =</span> n, <span class="at">values_fill =</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(genre <span class="sc">!=</span> <span class="st">"Oceanus Folk"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">total_genre =</span> <span class="fu">rowSums</span>(<span class="fu">select</span>(., <span class="fu">all_of</span>(influence_types))))</span>
+<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a>rel_totals <span class="ot">&lt;-</span> <span class="fu">colSums</span>(<span class="fu">select</span>(genre_counts, <span class="fu">all_of</span>(influence_types)))</span>
+<span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Defining the Nodes</span></span>
+<span id="cb40-20"><a href="#cb40-20" aria-hidden="true" tabindex="-1"></a>nodes <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
+<span id="cb40-21"><a href="#cb40-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">id =</span> <span class="st">"Oceanus Folk"</span>, <span class="at">type =</span> <span class="st">"central"</span>, <span class="at">count =</span> <span class="fu">sum</span>(genre_counts<span class="sc">$</span>total_genre)),</span>
+<span id="cb40-22"><a href="#cb40-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">id =</span> genre_counts<span class="sc">$</span>genre, <span class="at">type =</span> <span class="st">"genre"</span>, <span class="at">count =</span> genre_counts<span class="sc">$</span>total_genre),</span>
+<span id="cb40-23"><a href="#cb40-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">id =</span> influence_types, <span class="at">type =</span> <span class="st">"reltype"</span>, <span class="at">count =</span> <span class="fu">as.integer</span>(rel_totals))</span>
+<span id="cb40-24"><a href="#cb40-24" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb40-25"><a href="#cb40-25" aria-hidden="true" tabindex="-1"></a>edges1 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb40-26"><a href="#cb40-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">from   =</span> <span class="st">"Oceanus Folk"</span>,</span>
+<span id="cb40-27"><a href="#cb40-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">to     =</span> genre_counts<span class="sc">$</span>genre,</span>
+<span id="cb40-28"><a href="#cb40-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">weight =</span> genre_counts<span class="sc">$</span>total_genre</span>
+<span id="cb40-29"><a href="#cb40-29" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb40-30"><a href="#cb40-30" aria-hidden="true" tabindex="-1"></a>edges2 <span class="ot">&lt;-</span> genre_counts <span class="sc">%&gt;%</span></span>
+<span id="cb40-31"><a href="#cb40-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">all_of</span>(influence_types), <span class="at">names_to=</span><span class="st">"to"</span>, <span class="at">values_to=</span><span class="st">"weight"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb40-32"><a href="#cb40-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(weight<span class="sc">&gt;</span><span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb40-33"><a href="#cb40-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transmute</span>(<span class="at">from =</span> genre, <span class="at">to =</span> to, <span class="at">weight =</span> weight)</span>
+<span id="cb40-34"><a href="#cb40-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-35"><a href="#cb40-35" aria-hidden="true" tabindex="-1"></a>edges <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(edges1, edges2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="plotting-the-graph-1" class="level3">
+<h3 class="anchored" data-anchor-id="plotting-the-graph-1">5.2.4 Plotting the graph</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>graph_plot <span class="ot">&lt;-</span> <span class="fu">tbl_graph</span>(nodes, edges, <span class="at">directed =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>genres  <span class="ot">&lt;-</span> nodes <span class="sc">%&gt;%</span> <span class="fu">filter</span>(type<span class="sc">==</span><span class="st">"genre"</span>)  <span class="sc">%&gt;%</span> <span class="fu">pull</span>(id)</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>rels    <span class="ot">&lt;-</span> nodes <span class="sc">%&gt;%</span> <span class="fu">filter</span>(type<span class="sc">==</span><span class="st">"reltype"</span>)<span class="sc">%&gt;%</span> <span class="fu">pull</span>(id)</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>ang_g   <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">2</span><span class="sc">*</span>pi, <span class="at">length.out=</span><span class="fu">length</span>(genres)<span class="sc">+</span><span class="dv">1</span>)[<span class="sc">-</span><span class="dv">1</span>]</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>ang_r   <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">2</span><span class="sc">*</span>pi, <span class="at">length.out=</span><span class="fu">length</span>(rels)<span class="sc">+</span><span class="dv">1</span>)[<span class="sc">-</span><span class="dv">1</span>]</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>layout  <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">id =</span> <span class="fu">c</span>(<span class="st">"Oceanus Folk"</span>, genres, rels),</span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">x  =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">cos</span>(ang_g), <span class="dv">2</span><span class="sc">*</span><span class="fu">cos</span>(ang_r)),</span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">y  =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">sin</span>(ang_g), <span class="dv">2</span><span class="sc">*</span><span class="fu">sin</span>(ang_r))</span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>l <span class="ot">&lt;-</span> <span class="fu">create_layout</span>(graph_plot, <span class="at">layout=</span><span class="st">"manual"</span>, <span class="at">x=</span>layout<span class="sc">$</span>x, <span class="at">y=</span>layout<span class="sc">$</span>y)</span>
+<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a><span class="fu">ggraph</span>(l) <span class="sc">+</span></span>
+<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>(<span class="fu">aes</span>(<span class="at">width=</span>weight), <span class="at">color=</span><span class="st">"grey70"</span>, <span class="at">alpha=</span><span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_edge_width</span>(<span class="at">range=</span><span class="fu">c</span>(<span class="fl">0.2</span>,<span class="fl">1.5</span>)) <span class="sc">+</span></span>
+<span id="cb41-18"><a href="#cb41-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>(<span class="fu">aes</span>(<span class="at">size=</span>count, <span class="at">fill=</span>type), <span class="at">shape=</span><span class="dv">21</span>, <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb41-19"><a href="#cb41-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size_area</span>(<span class="at">max_size=</span><span class="dv">15</span>) <span class="sc">+</span></span>
+<span id="cb41-20"><a href="#cb41-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values=</span><span class="fu">c</span>(<span class="at">central=</span><span class="st">"#1f78b4"</span>, <span class="at">genre=</span><span class="st">"#33a02c"</span>, <span class="at">reltype=</span><span class="st">"#e31a1c"</span>)) <span class="sc">+</span></span>
+<span id="cb41-21"><a href="#cb41-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_text</span>(<span class="fu">aes</span>(<span class="at">label=</span>id), <span class="at">repel=</span><span class="cn">TRUE</span>, <span class="at">size=</span><span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb41-22"><a href="#cb41-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>() <span class="sc">+</span></span>
+<span id="cb41-23"><a href="#cb41-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Oceanus Folk → Genres → Influence Types (Excluding Oceanus Folk)"</span>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Connecting all three visuals (timelines + role-plot + influence-network) Chart dominance ↔︎ thick influence spokes. 2019-23 and 2029 show both high hit-rates and vigorous multi-genre edges (especially Cover / InStyleOf). 2028 dip = thin performer/composer counts and (in the knowledge graph) fewer new outward edges.</p>
+<p>Role diversity precedes genre diffusion. The 2026 farewell spike sees composer and producer nodes busy → graph shows wider CoverOf edges the following year (artists re-working Ivy Echoes catalog).</p>
+<p>Stewardship matters. After Sailor’s focus shifts in the early 2030s, performer/composer lines flatten, and here we see few thick new edges—Oceanus Folk’s brokerage power wanes until her 2040 homecoming.</p>
+<p>Additional clues from the influence-types Re-interpretation over raw sampling – InStyleOf, CoverOf, and InterpolatesFrom account for most heavy edges, whereas DirectlySamples has the thinnest fan-out. Oceanus Folk is being re-performed and referenced far more than it is sampled.</p>
+<p>Story-telling travels as lyrics – the right-hand red node LyricalReferenceTo links Oceanus Folk to Alt-Rock and Synthwave, underscoring that even when the acoustic sound is left behind, the maritime imagery and narrative structure live on.</p>
+<p>The genres soaking up Oceanus Folk influence most heavily are Desert Rock and Doom Metal, followed by the more predictable Indie Folk and crossover styles like Dream Pop and Synthwave. Musicians in those scenes aren’t grabbing raw samples; instead, they cover, reinterpret, or insert folk chord-loops and sea-faring lyrics into their own soundscapes. That pattern reinforces Oceanus Folk’s role as a story-telling blueprint rather than a beat library.</p>
+</section>
+</section>
+<section id="visualzing-the-most-influenced-artist-by-oceanus-folk" class="level2">
+<h2 class="anchored" data-anchor-id="visualzing-the-most-influenced-artist-by-oceanus-folk">5.2 Visualzing the most influenced artist by Oceanus Folk</h2>
+<section id="defining-the-edges" class="level3">
+<h3 class="anchored" data-anchor-id="defining-the-edges">5.2.1 Defining the Edges</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>edges2 <span class="ot">&lt;-</span> edges_tbl <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">rel_type =</span> <span class="st">`</span><span class="at">Edge Type</span><span class="st">`</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="filtering-the-oceanus-folk-songs" class="level3">
+<h3 class="anchored" data-anchor-id="filtering-the-oceanus-folk-songs">5.2.3 Filtering the Oceanus Folk songs</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>oceanus_song_ids <span class="ot">&lt;-</span> nodes_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="st">`</span><span class="at">Node Type</span><span class="st">`</span> <span class="sc">==</span> <span class="st">"Song"</span>, genre <span class="sc">==</span> <span class="st">"Oceanus Folk"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(id)</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>step1_song_ids <span class="ot">&lt;-</span> edges2 <span class="sc">%&gt;%</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(rel_type <span class="sc">%in%</span> influence_types, target <span class="sc">%in%</span> oceanus_song_ids) <span class="sc">%&gt;%</span></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(source) <span class="sc">%&gt;%</span></span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unique</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="filtering-the-songs-influenced-by-the-oceanus-songs" class="level3">
+<h3 class="anchored" data-anchor-id="filtering-the-songs-influenced-by-the-oceanus-songs">5.2.4 Filtering the songs influenced by the Oceanus songs</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>step2_song_ids <span class="ot">&lt;-</span> edges2 <span class="sc">%&gt;%</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(rel_type <span class="sc">%in%</span> influence_types, target <span class="sc">%in%</span> step1_song_ids) <span class="sc">%&gt;%</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(source) <span class="sc">%&gt;%</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unique</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="combining-the-songs-influenced-by-oceanus-folks" class="level3">
+<h3 class="anchored" data-anchor-id="combining-the-songs-influenced-by-oceanus-folks">5.2.5 Combining the songs influenced by Oceanus Folks</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. 合并所有受影响的歌曲 ID</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>all_song_ids <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">c</span>(step1_song_ids, step2_song_ids))</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 6. 统计演唱者（包括 Person 和 MusicalGroup），排除姓名 NA</span></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>performer_counts <span class="ot">&lt;-</span> edges2 <span class="sc">%&gt;%</span></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(rel_type <span class="sc">==</span> <span class="st">"PerformerOf"</span>, target <span class="sc">%in%</span> all_song_ids) <span class="sc">%&gt;%</span></span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(source, <span class="at">name =</span> <span class="st">"song_count"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">performer_id =</span> source) <span class="sc">%&gt;%</span></span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(</span>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>    nodes_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(<span class="st">`</span><span class="at">Node Type</span><span class="st">`</span> <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Person"</span>, <span class="st">"MusicalGroup"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(<span class="at">performer_id =</span> id, <span class="at">performer =</span> name),</span>
+<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="st">"performer_id"</span></span>
+<span id="cb45-14"><a href="#cb45-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb45-15"><a href="#cb45-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(performer))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="listing-the-top-5-artist-influenced-by-oceanus-folk" class="level3">
+<h3 class="anchored" data-anchor-id="listing-the-top-5-artist-influenced-by-oceanus-folk">5.2.6 Listing the top 5 artist influenced by Oceanus Folk</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>top5 <span class="ot">&lt;-</span> performer_counts <span class="sc">%&gt;%</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(song_count, <span class="at">n =</span> <span class="dv">5</span>)</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>top5</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 7 × 3
+  performer_id song_count performer    
+         &lt;int&gt;      &lt;int&gt; &lt;chr&gt;        
+1         2006          5 Filippo Pelli
+2         1180          4 Guiying Liao 
+3         1182          4 Yan Zou      
+4         1492          4 Juan Yu      
+5         1493          4 Lei Jin      
+6         4394          4 Xiuying Li   
+7         4395          4 Xia Cui      </code></pre>
+</div>
+</div>
+</section>
+<section id="defining-the-types-of-influence-and-edges" class="level3">
+<h3 class="anchored" data-anchor-id="defining-the-types-of-influence-and-edges">5.2.7 Defining the types of influence and Edges</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>influence_types <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"CoverOf"</span>, <span class="st">"InStyleOf"</span>, <span class="st">"DirectlySamples"</span>,</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"InterpolatesFrom"</span>, <span class="st">"LyricalReferenceTo"</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>edges2 <span class="ot">&lt;-</span> edges_tbl <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">rel_type =</span> <span class="st">`</span><span class="at">Edge Type</span><span class="st">`</span>)</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>of_song_ids <span class="ot">&lt;-</span> nodes_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="st">`</span><span class="at">Node Type</span><span class="st">`</span> <span class="sc">==</span> <span class="st">"Song"</span>, genre <span class="sc">==</span> <span class="st">"Oceanus Folk"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(id)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="filtering-and-listing-the-songs-id-influenced-by-oceanus-folk" class="level3">
+<h3 class="anchored" data-anchor-id="filtering-and-listing-the-songs-id-influenced-by-oceanus-folk">5.2.8 Filtering and Listing the songs ID influenced by Oceanus Folk</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>step1_song_ids <span class="ot">&lt;-</span> edges2 <span class="sc">%&gt;%</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(rel_type <span class="sc">%in%</span> influence_types, target <span class="sc">%in%</span> of_song_ids) <span class="sc">%&gt;%</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(source) <span class="sc">%&gt;%</span> <span class="fu">unique</span>()</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>step2_song_ids <span class="ot">&lt;-</span> edges2 <span class="sc">%&gt;%</span></span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(rel_type <span class="sc">%in%</span> influence_types, target <span class="sc">%in%</span> step1_song_ids) <span class="sc">%&gt;%</span></span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(source) <span class="sc">%&gt;%</span> <span class="fu">unique</span>()</span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>all_song_ids <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">c</span>(step1_song_ids, step2_song_ids))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="calculating-the-times-of-these-singers-performing-infuenced-songs" class="level2">
+<h2 class="anchored" data-anchor-id="calculating-the-times-of-these-singers-performing-infuenced-songs">5.3 Calculating the times of these singers performing inf;uenced songs</h2>
+<section id="defining-the-edges-1" class="level3">
+<h3 class="anchored" data-anchor-id="defining-the-edges-1">5.3.1 Defining the Edges</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>direct_edges <span class="ot">&lt;-</span> edges2 <span class="sc">%&gt;%</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(rel_type <span class="sc">%in%</span> influence_types, target <span class="sc">%in%</span> of_song_ids) <span class="sc">%&gt;%</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transmute</span>(<span class="at">influenced_song_id =</span> source, <span class="at">influence_type =</span> rel_type)</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>second_edges <span class="ot">&lt;-</span> edges2 <span class="sc">%&gt;%</span></span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(rel_type <span class="sc">%in%</span> influence_types, target <span class="sc">%in%</span> step1_song_ids) <span class="sc">%&gt;%</span></span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transmute</span>(<span class="at">influenced_song_id =</span> source, <span class="at">influence_type =</span> rel_type)</span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>all_influence_edges <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(direct_edges, second_edges)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="collecting-the-influeced-songs-performed-by-top-5-artist" class="level3">
+<h3 class="anchored" data-anchor-id="collecting-the-influeced-songs-performed-by-top-5-artist">5.3.2 Collecting the influeced songs performed by Top 5 artist</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>performer_edges <span class="ot">&lt;-</span> edges2 <span class="sc">%&gt;%</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>    rel_type <span class="sc">==</span> <span class="st">"PerformerOf"</span>,</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>    source   <span class="sc">%in%</span> top5<span class="sc">$</span>performer_id,</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>    target   <span class="sc">%in%</span> all_song_ids</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transmute</span>(<span class="at">performer_id =</span> source, <span class="at">song_id =</span> target)</span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>table_top5 <span class="ot">&lt;-</span> performer_edges <span class="sc">%&gt;%</span></span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(top5 <span class="sc">%&gt;%</span> <span class="fu">select</span>(performer_id, performer), <span class="at">by =</span> <span class="st">"performer_id"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(all_influence_edges, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"song_id"</span> <span class="ot">=</span> <span class="st">"influenced_song_id"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(</span>
+<span id="cb51-13"><a href="#cb51-13" aria-hidden="true" tabindex="-1"></a>    nodes_tbl <span class="sc">%&gt;%</span> <span class="fu">select</span>(id, name, <span class="st">`</span><span class="at">Node Type</span><span class="st">`</span>),</span>
+<span id="cb51-14"><a href="#cb51-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"song_id"</span> <span class="ot">=</span> <span class="st">"id"</span>)</span>
+<span id="cb51-15"><a href="#cb51-15" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb51-16"><a href="#cb51-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb51-17"><a href="#cb51-17" aria-hidden="true" tabindex="-1"></a>    performer,</span>
+<span id="cb51-18"><a href="#cb51-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">song_or_album =</span> name,</span>
+<span id="cb51-19"><a href="#cb51-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">node_type     =</span> <span class="st">`</span><span class="at">Node Type</span><span class="st">`</span>,</span>
+<span id="cb51-20"><a href="#cb51-20" aria-hidden="true" tabindex="-1"></a>    influence_type</span>
+<span id="cb51-21"><a href="#cb51-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb51-22"><a href="#cb51-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(performer, song_or_album)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning: ggrepel: 5 unlabeled data points (too many overlaps). Consider
+<pre><code>Warning in left_join(., all_influence_edges, by = c(song_id = "influenced_song_id")): Detected an unexpected many-to-many relationship between `x` and `y`.
+ℹ Row 1 of `x` matches multiple rows in `y`.
+ℹ Row 12 of `y` matches multiple rows in `x`.
+ℹ If a many-to-many relationship is expected, set `relationship =
+  "many-to-many"` to silence this warning.</code></pre>
+</div>
+</div>
+</section>
+<section id="summary-table" class="level3">
+<h3 class="anchored" data-anchor-id="summary-table">5.3.3 Summary Table</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>table_top5</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 82 × 4
+   performer     song_or_album                   node_type influence_type    
+   &lt;chr&gt;         &lt;chr&gt;                           &lt;chr&gt;     &lt;chr&gt;             
+ 1 Filippo Pelli Carry Me Through                Song      CoverOf           
+ 2 Filippo Pelli Carry Me Through                Song      InStyleOf         
+ 3 Filippo Pelli Carry Me Through                Song      CoverOf           
+ 4 Filippo Pelli Carry Me Through                Song      InStyleOf         
+ 5 Filippo Pelli Glance My Way                   Song      InStyleOf         
+ 6 Filippo Pelli Lonesome Trail Ballad           Song      CoverOf           
+ 7 Filippo Pelli Roadside Memories               Song      CoverOf           
+ 8 Filippo Pelli Welcome to the Kemono Sanctuary Song      LyricalReferenceTo
+ 9 Guiying Liao  Aerial Conquistadors            Song      InterpolatesFrom  
+10 Guiying Liao  Aerial Conquistadors            Song      InterpolatesFrom  
+# ℹ 72 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="plotting-the-graph-2" class="level3">
+<h3 class="anchored" data-anchor-id="plotting-the-graph-2">5.3.4 Plotting the Graph</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>influence_types <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"LyricistOf"</span>,<span class="st">"RecordedBy"</span>,<span class="st">"DistributedBy"</span>,</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"InStyleOf"</span>,<span class="st">"InterpolatesFrom"</span>,<span class="st">"CoverOf"</span>,</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"LyricalReferenceTo"</span>,<span class="st">"DirectlySamples"</span></span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>edges2 <span class="ot">&lt;-</span> edges_tbl <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">rel_type =</span> <span class="st">`</span><span class="at">Edge Type</span><span class="st">`</span>)</span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Oceanus Folk 的 Song ID</span></span>
+<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>of_song_ids <span class="ot">&lt;-</span> nodes_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="st">`</span><span class="at">Node Type</span><span class="st">`</span><span class="sc">==</span><span class="st">"Song"</span>, genre<span class="sc">==</span><span class="st">"Oceanus Folk"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb55-11"><a href="#cb55-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(id)</span>
+<span id="cb55-12"><a href="#cb55-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-13"><a href="#cb55-13" aria-hidden="true" tabindex="-1"></a>step1 <span class="ot">&lt;-</span> edges2 <span class="sc">%&gt;%</span></span>
+<span id="cb55-14"><a href="#cb55-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(rel_type <span class="sc">%in%</span> influence_types, target <span class="sc">%in%</span> of_song_ids) <span class="sc">%&gt;%</span></span>
+<span id="cb55-15"><a href="#cb55-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(source) <span class="sc">%&gt;%</span> <span class="fu">unique</span>()</span>
+<span id="cb55-16"><a href="#cb55-16" aria-hidden="true" tabindex="-1"></a>step2 <span class="ot">&lt;-</span> edges2 <span class="sc">%&gt;%</span></span>
+<span id="cb55-17"><a href="#cb55-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(rel_type <span class="sc">%in%</span> influence_types, target <span class="sc">%in%</span> step1) <span class="sc">%&gt;%</span></span>
+<span id="cb55-18"><a href="#cb55-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(source) <span class="sc">%&gt;%</span> <span class="fu">unique</span>()</span>
+<span id="cb55-19"><a href="#cb55-19" aria-hidden="true" tabindex="-1"></a>all_songs <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">c</span>(step1, step2))</span>
+<span id="cb55-20"><a href="#cb55-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-21"><a href="#cb55-21" aria-hidden="true" tabindex="-1"></a>performer_counts <span class="ot">&lt;-</span> edges2 <span class="sc">%&gt;%</span></span>
+<span id="cb55-22"><a href="#cb55-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(rel_type<span class="sc">==</span><span class="st">"PerformerOf"</span>, target <span class="sc">%in%</span> all_songs) <span class="sc">%&gt;%</span></span>
+<span id="cb55-23"><a href="#cb55-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(source, <span class="at">name=</span><span class="st">"song_count"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb55-24"><a href="#cb55-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">performer_id =</span> source) <span class="sc">%&gt;%</span></span>
+<span id="cb55-25"><a href="#cb55-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(</span>
+<span id="cb55-26"><a href="#cb55-26" aria-hidden="true" tabindex="-1"></a>    nodes_tbl <span class="sc">%&gt;%</span> </span>
+<span id="cb55-27"><a href="#cb55-27" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(<span class="st">`</span><span class="at">Node Type</span><span class="st">`</span> <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Person"</span>,<span class="st">"MusicalGroup"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb55-28"><a href="#cb55-28" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(<span class="at">performer_id =</span> id, <span class="at">performer =</span> name),</span>
+<span id="cb55-29"><a href="#cb55-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">by=</span><span class="st">"performer_id"</span></span>
+<span id="cb55-30"><a href="#cb55-30" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb55-31"><a href="#cb55-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(performer))</span>
+<span id="cb55-32"><a href="#cb55-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-33"><a href="#cb55-33" aria-hidden="true" tabindex="-1"></a>top5 <span class="ot">&lt;-</span> performer_counts <span class="sc">%&gt;%</span> </span>
+<span id="cb55-34"><a href="#cb55-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(<span class="at">order_by=</span>song_count, <span class="at">n=</span><span class="dv">5</span>, <span class="at">with_ties=</span><span class="cn">TRUE</span>)</span>
+<span id="cb55-35"><a href="#cb55-35" aria-hidden="true" tabindex="-1"></a>top5_ids <span class="ot">&lt;-</span> top5<span class="sc">$</span>performer_id</span>
+<span id="cb55-36"><a href="#cb55-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-37"><a href="#cb55-37" aria-hidden="true" tabindex="-1"></a>perf_edges <span class="ot">&lt;-</span> edges2 <span class="sc">%&gt;%</span></span>
+<span id="cb55-38"><a href="#cb55-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(rel_type<span class="sc">==</span><span class="st">"PerformerOf"</span>,</span>
+<span id="cb55-39"><a href="#cb55-39" aria-hidden="true" tabindex="-1"></a>         source <span class="sc">%in%</span> top5_ids,</span>
+<span id="cb55-40"><a href="#cb55-40" aria-hidden="true" tabindex="-1"></a>         target <span class="sc">%in%</span> all_songs) <span class="sc">%&gt;%</span></span>
+<span id="cb55-41"><a href="#cb55-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transmute</span>(<span class="at">song_id      =</span> target,</span>
+<span id="cb55-42"><a href="#cb55-42" aria-hidden="true" tabindex="-1"></a>            <span class="at">performer_id =</span> source)</span>
+<span id="cb55-43"><a href="#cb55-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-44"><a href="#cb55-44" aria-hidden="true" tabindex="-1"></a>nodes_songs <span class="ot">&lt;-</span> perf_edges <span class="sc">%&gt;%</span></span>
+<span id="cb55-45"><a href="#cb55-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(song_id) <span class="sc">%&gt;%</span></span>
+<span id="cb55-46"><a href="#cb55-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(nodes_tbl <span class="sc">%&gt;%</span> <span class="fu">select</span>(id, name, <span class="st">`</span><span class="at">Node Type</span><span class="st">`</span>), </span>
+<span id="cb55-47"><a href="#cb55-47" aria-hidden="true" tabindex="-1"></a>            <span class="at">by=</span><span class="fu">c</span>(<span class="st">"song_id"</span><span class="ot">=</span><span class="st">"id"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb55-48"><a href="#cb55-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transmute</span>(</span>
+<span id="cb55-49"><a href="#cb55-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">orig_id   =</span> song_id,</span>
+<span id="cb55-50"><a href="#cb55-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">name      =</span> name,</span>
+<span id="cb55-51"><a href="#cb55-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">type      =</span> <span class="st">`</span><span class="at">Node Type</span><span class="st">`</span>,</span>
+<span id="cb55-52"><a href="#cb55-52" aria-hidden="true" tabindex="-1"></a>    <span class="at">size      =</span> <span class="dv">1</span>,</span>
+<span id="cb55-53"><a href="#cb55-53" aria-hidden="true" tabindex="-1"></a>    <span class="at">bipartite =</span> <span class="cn">FALSE</span></span>
+<span id="cb55-54"><a href="#cb55-54" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb55-55"><a href="#cb55-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-56"><a href="#cb55-56" aria-hidden="true" tabindex="-1"></a>nodes_perf <span class="ot">&lt;-</span> top5 <span class="sc">%&gt;%</span></span>
+<span id="cb55-57"><a href="#cb55-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transmute</span>(</span>
+<span id="cb55-58"><a href="#cb55-58" aria-hidden="true" tabindex="-1"></a>    <span class="at">orig_id   =</span> performer_id,</span>
+<span id="cb55-59"><a href="#cb55-59" aria-hidden="true" tabindex="-1"></a>    <span class="at">name      =</span> performer,</span>
+<span id="cb55-60"><a href="#cb55-60" aria-hidden="true" tabindex="-1"></a>    <span class="at">type      =</span> <span class="st">"Performer"</span>,</span>
+<span id="cb55-61"><a href="#cb55-61" aria-hidden="true" tabindex="-1"></a>    <span class="at">size      =</span> song_count,</span>
+<span id="cb55-62"><a href="#cb55-62" aria-hidden="true" tabindex="-1"></a>    <span class="at">bipartite =</span> <span class="cn">TRUE</span></span>
+<span id="cb55-63"><a href="#cb55-63" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb55-64"><a href="#cb55-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-65"><a href="#cb55-65" aria-hidden="true" tabindex="-1"></a>nodes_net <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(nodes_songs, nodes_perf) <span class="sc">%&gt;%</span></span>
+<span id="cb55-66"><a href="#cb55-66" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(orig_id, <span class="at">.keep_all=</span><span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb55-67"><a href="#cb55-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(bipartite, name) <span class="sc">%&gt;%</span></span>
+<span id="cb55-68"><a href="#cb55-68" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">node_index =</span> <span class="fu">row_number</span>())</span>
+<span id="cb55-69"><a href="#cb55-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-70"><a href="#cb55-70" aria-hidden="true" tabindex="-1"></a>edges_net <span class="ot">&lt;-</span> perf_edges <span class="sc">%&gt;%</span></span>
+<span id="cb55-71"><a href="#cb55-71" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(nodes_net <span class="sc">%&gt;%</span> <span class="fu">select</span>(orig_id, node_index), </span>
+<span id="cb55-72"><a href="#cb55-72" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"song_id"</span>      <span class="ot">=</span> <span class="st">"orig_id"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb55-73"><a href="#cb55-73" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">from =</span> node_index) <span class="sc">%&gt;%</span></span>
+<span id="cb55-74"><a href="#cb55-74" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(nodes_net <span class="sc">%&gt;%</span> <span class="fu">select</span>(orig_id, node_index), </span>
+<span id="cb55-75"><a href="#cb55-75" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"performer_id"</span> <span class="ot">=</span> <span class="st">"orig_id"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb55-76"><a href="#cb55-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">to   =</span> node_index) <span class="sc">%&gt;%</span></span>
+<span id="cb55-77"><a href="#cb55-77" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transmute</span>(from, to)</span>
+<span id="cb55-78"><a href="#cb55-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-79"><a href="#cb55-79" aria-hidden="true" tabindex="-1"></a>graph_net <span class="ot">&lt;-</span> <span class="fu">tbl_graph</span>(<span class="at">nodes =</span> nodes_net, <span class="at">edges =</span> edges_net, <span class="at">directed =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb55-80"><a href="#cb55-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-81"><a href="#cb55-81" aria-hidden="true" tabindex="-1"></a><span class="fu">ggraph</span>(graph_net, <span class="at">layout =</span> <span class="st">"bipartite"</span>, <span class="at">types =</span> nodes_net<span class="sc">$</span>bipartite) <span class="sc">+</span></span>
+<span id="cb55-82"><a href="#cb55-82" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>(<span class="at">color =</span> <span class="st">"grey70"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb55-83"><a href="#cb55-83" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>(<span class="fu">aes</span>(<span class="at">size =</span> size, <span class="at">fill =</span> type), <span class="at">shape =</span> <span class="dv">21</span>) <span class="sc">+</span></span>
+<span id="cb55-84"><a href="#cb55-84" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> name), <span class="at">repel =</span> <span class="cn">TRUE</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb55-85"><a href="#cb55-85" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(</span>
+<span id="cb55-86"><a href="#cb55-86" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Song"</span> <span class="ot">=</span> <span class="st">"#33a02c"</span>, <span class="st">"Album"</span> <span class="ot">=</span> <span class="st">"red"</span>, <span class="st">"Performer"</span> <span class="ot">=</span> <span class="st">"#1f78b4"</span>)</span>
+<span id="cb55-87"><a href="#cb55-87" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb55-88"><a href="#cb55-88" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size_area</span>(<span class="at">max_size =</span> <span class="dv">8</span>) <span class="sc">+</span></span>
+<span id="cb55-89"><a href="#cb55-89" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>() <span class="sc">+</span></span>
+<span id="cb55-90"><a href="#cb55-90" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb55-91"><a href="#cb55-91" aria-hidden="true" tabindex="-1"></a>    <span class="at">title    =</span> <span class="st">"Top 5 Performers ← PerformerOf ← 29 Songs/Albums"</span>,</span>
+<span id="cb55-92"><a href="#cb55-92" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"The Top 5 Artist Influenced by Oceanus Folk Music"</span></span>
+<span id="cb55-93"><a href="#cb55-93" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: ggrepel: 7 unlabeled data points (too many overlaps). Consider
 increasing max.overlaps</code></pre>
 </div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<ol type="a">
-<li>Was this influence intermittent or did it have a gradual rise?</li>
-</ol>
-<p>First of all, There are few key indicators to observe the influence of Oceanus Folk music genre. I would look at the trend of popularity of “PerformerOf” , “ComposerOf” , “ProducerOf”, LyricsOf”, “RecordedBy” , “DistributedBy” the Ocernus Folk genre of songs or album after 2018.</p>
-<p>b.What genres and top artists have been most influenced by Oceanus Folk?</p>
-<p>There are few indicators to look at the Oceanus Folk influence over the musical industry. Firstly, “ComposerOf” suggests the number of composer composing Oceanus Folk, which indirectly suggesting the influence of the popularity of Oceanus Folk music. Similarly, “ProducerOf” also indicates the popularity of that genre of music. As for “InstyleOf”, I would like to show the number of non-Oceanus Folk nodes that is performed in the style of Oceanus Folk genre of songs, album, person or musical group. Last but not least, “DirectlySamples” also suggests the popularity of the genre of the Oceanus Folk. To gain popularity, artist tend to follow the trnding genre during the period.</p>
-<p>c.On the converse, how has Oceanus Folk changed with the rise of Sailor Shift? From which genres does it draw most of its contemporary inspiration?</p>
+<p>Concentration, not collaboration</p>
+<p>Every green song node connects to one blue performer only—no songs are shared across artists—so each singer is independently producing Oceanus-Folk-tinged material rather than collaborating on the same tracks.</p>
+<p>Singles over albums</p>
+<p>Only one red node (“Instrument Failure”) appears, meaning just one full album is tagged with the style among these 29 releases. Most artists are testing the waters via singles or EP tracks.</p>
+<p>Geographic spread</p>
+<p>Chinese-sounding names dominate (Guiying Liao, Yan Zou, Xiuying Li, Lei Jin, etc.), but Filippo Pelli’s presence shows the influence has leapt to at least one Western artist—mirroring Desert-Rock and Dream-Pop crossovers seen in the genre network.</p>
+<p>Depth versus breadth</p>
+<p>Guiying Liao and Yan Zou together account for ~40 % of all Oceanus-Folk performer edges here, acting as principal carriers of the sound in the late 2030s (compare the small role counts in the time–series plot after 2032).</p>
+<p>After Sailor Shift’s 2029 ‘Roots &amp; Tides’ push, Oceanus Folk splintered into a handful of ‘torch-bearer’ vocalists. Guiying Liao and Yan Zou led the charge, each releasing half-a-dozen folk-infused singles, while Italy’s Filippo Pelli proved the genre’s reach beyond Oceanus and Asia. Interestingly, only a single full-length album—Instrument Failure—surfaced; the rest were standalone tracks, suggesting artists were experimenting rather than reconstructing their entire sound.</p>
+</section>
+</section>
+<section id="visualizing-the-sailor-shift-influences-to-oceanus-folk" class="level2">
+<h2 class="anchored" data-anchor-id="visualizing-the-sailor-shift-influences-to-oceanus-folk">5.4 Visualizing the Sailor Shift influences to Oceanus Folk</h2>
+<section id="defining-the-types-of-relation" class="level3">
+<h3 class="anchored" data-anchor-id="defining-the-types-of-relation">5.4.1 Defining the types of relation</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>rel_types <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"LyricistOf"</span>, <span class="st">"RecordedBy"</span>, <span class="st">"DistributedBy"</span>,</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"InStyleOf"</span>, <span class="st">"InterpolatesFrom"</span>, <span class="st">"CoverOf"</span>,</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"LyricalReferenceTo"</span>, <span class="st">"DirectlySamples"</span></span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="defining-the-edges-and-extracting-the-year-data-of-oceanus-folks-songs" class="level3">
+<h3 class="anchored" data-anchor-id="defining-the-edges-and-extracting-the-year-data-of-oceanus-folks-songs">5.4.2 Defining the Edges and Extracting the Year data of Oceanus Folks songs</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>edges2 <span class="ot">&lt;-</span> edges_tbl <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">rel_type =</span> <span class="st">`</span><span class="at">Edge Type</span><span class="st">`</span>)</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>oceanus_songs <span class="ot">&lt;-</span> nodes_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Node Type</span><span class="st">`</span> <span class="sc">==</span> <span class="st">"Song"</span>,</span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>    genre        <span class="sc">==</span> <span class="st">"Oceanus Folk"</span>,</span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a>    <span class="sc">!</span><span class="fu">is.na</span>(release_date),</span>
+<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">str_detect</span>(release_date, <span class="st">"^</span><span class="sc">\\</span><span class="st">d{4}"</span>)</span>
+<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb58-10"><a href="#cb58-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">as.integer</span>(<span class="fu">str_extract</span>(release_date, <span class="st">"^</span><span class="sc">\\</span><span class="st">d{4}"</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb58-11"><a href="#cb58-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">&gt;=</span> <span class="dv">2022</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb58-12"><a href="#cb58-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id, year)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="calculating-the-data-by-years" class="level3">
+<h3 class="anchored" data-anchor-id="calculating-the-data-by-years">5.4.3 Calculating the data by years</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>counts_by_year <span class="ot">&lt;-</span> edges2 <span class="sc">%&gt;%</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(rel_type <span class="sc">%in%</span> rel_types) <span class="sc">%&gt;%</span></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 标记针对 Oceanus Folk song 的边：LyricistOf 用 target，其它用 source</span></span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">song_id =</span> <span class="fu">if_else</span>(rel_type <span class="sc">==</span> <span class="st">"LyricistOf"</span>, target, source)) <span class="sc">%&gt;%</span></span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(oceanus_songs, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"song_id"</span> <span class="ot">=</span> <span class="st">"id"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year, rel_type) <span class="sc">%&gt;%</span></span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">count =</span> <span class="fu">n</span>(), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb59-8"><a href="#cb59-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
+<span id="cb59-9"><a href="#cb59-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from  =</span> rel_type,</span>
+<span id="cb59-10"><a href="#cb59-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> count,</span>
+<span id="cb59-11"><a href="#cb59-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_fill =</span> <span class="dv">0</span></span>
+<span id="cb59-12"><a href="#cb59-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb59-13"><a href="#cb59-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(year)</span>
+<span id="cb59-14"><a href="#cb59-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-15"><a href="#cb59-15" aria-hidden="true" tabindex="-1"></a>media_counts <span class="ot">&lt;-</span> nodes_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb59-16"><a href="#cb59-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
+<span id="cb59-17"><a href="#cb59-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Node Type</span><span class="st">`</span> <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Song"</span>, <span class="st">"Album"</span>),</span>
+<span id="cb59-18"><a href="#cb59-18" aria-hidden="true" tabindex="-1"></a>    genre        <span class="sc">==</span> <span class="st">"Oceanus Folk"</span>,</span>
+<span id="cb59-19"><a href="#cb59-19" aria-hidden="true" tabindex="-1"></a>    <span class="sc">!</span><span class="fu">is.na</span>(release_date),</span>
+<span id="cb59-20"><a href="#cb59-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">str_detect</span>(release_date, <span class="st">"^</span><span class="sc">\\</span><span class="st">d{4}"</span>)</span>
+<span id="cb59-21"><a href="#cb59-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb59-22"><a href="#cb59-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">as.integer</span>(<span class="fu">str_extract</span>(release_date, <span class="st">"^</span><span class="sc">\\</span><span class="st">d{4}"</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb59-23"><a href="#cb59-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">&gt;=</span> <span class="dv">2022</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb59-24"><a href="#cb59-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(year, <span class="st">`</span><span class="at">Node Type</span><span class="st">`</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb59-25"><a href="#cb59-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
+<span id="cb59-26"><a href="#cb59-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from  =</span> <span class="st">`</span><span class="at">Node Type</span><span class="st">`</span>,</span>
+<span id="cb59-27"><a href="#cb59-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> n,</span>
+<span id="cb59-28"><a href="#cb59-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_fill =</span> <span class="dv">0</span></span>
+<span id="cb59-29"><a href="#cb59-29" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb59-30"><a href="#cb59-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb59-31"><a href="#cb59-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">song_count  =</span> Song,</span>
+<span id="cb59-32"><a href="#cb59-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">album_count =</span> Album</span>
+<span id="cb59-33"><a href="#cb59-33" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb59-34"><a href="#cb59-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(year)</span>
+<span id="cb59-35"><a href="#cb59-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-36"><a href="#cb59-36" aria-hidden="true" tabindex="-1"></a><span class="co"># 6. 合并两张表</span></span>
+<span id="cb59-37"><a href="#cb59-37" aria-hidden="true" tabindex="-1"></a>final_table <span class="ot">&lt;-</span> counts_by_year <span class="sc">%&gt;%</span></span>
+<span id="cb59-38"><a href="#cb59-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(media_counts, <span class="at">by =</span> <span class="st">"year"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="summary-table-1" class="level3">
+<h3 class="anchored" data-anchor-id="summary-table-1">5.4.4 Summary Table</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 7. 查看最终结果</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>final_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 17 × 11
+    year CoverOf DistributedBy InStyleOf LyricistOf RecordedBy DirectlySamples
+   &lt;int&gt;   &lt;int&gt;         &lt;int&gt;     &lt;int&gt;      &lt;int&gt;      &lt;int&gt;           &lt;int&gt;
+ 1  2022       1             2         2          2          2               0
+ 2  2023       9            22        16         23         27               4
+ 3  2024       4             6         1          6          6               1
+ 4  2025       3             3         3          5          5               0
+ 5  2026       8            11        13         11         17               6
+ 6  2027       8             3         4          1          4               2
+ 7  2028       1             2         6          2          2               0
+ 8  2029       8             3         9          6          4               4
+ 9  2030       1             0         6          2          2               0
+10  2031       4             0         1          0          0               1
+11  2032       0             0         1          0          0               0
+12  2033       0             0         0          0          0               0
+13  2034       0             0         1          0          0               0
+14  2035       0             0         1          0          0               1
+15  2036       0             0         1          0          0               0
+16  2037       1             0         2          0          0               1
+17  2038       0             0         1          0          0               1
+# ℹ 4 more variables: InterpolatesFrom &lt;int&gt;, LyricalReferenceTo &lt;int&gt;,
+#   album_count &lt;int&gt;, song_count &lt;int&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="setting-the-data-table" class="level3">
+<h3 class="anchored" data-anchor-id="setting-the-data-table">5.4.5 Setting the data table</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>plot_df <span class="ot">&lt;-</span> final_table <span class="sc">%&gt;%</span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">&gt;=</span> <span class="dv">2025</span>, year <span class="sc">&lt;=</span> <span class="dv">2035</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="sc">-</span>year,</span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to  =</span> <span class="st">"variable"</span>,</span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"count"</span></span>
+<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="plotting-the-graph-3" class="level3">
+<h3 class="anchored" data-anchor-id="plotting-the-graph-3">5.4.6 Plotting the graph</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(plot_df, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> count, <span class="at">color =</span> variable)) <span class="sc">+</span></span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="dv">2025</span><span class="sc">:</span><span class="dv">2035</span>) <span class="sc">+</span></span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Trend of Oceanus Folk Music from 2022 - 2035"</span>,</span>
+<span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">x     =</span> <span class="st">"Year"</span>,</span>
+<span id="cb63-8"><a href="#cb63-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">y     =</span> <span class="st">"Numbers"</span>,</span>
+<span id="cb63-9"><a href="#cb63-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"Indications"</span></span>
+<span id="cb63-10"><a href="#cb63-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb63-11"><a href="#cb63-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb63-12"><a href="#cb63-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb63-13"><a href="#cb63-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>)</span>
+<span id="cb63-14"><a href="#cb63-14" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-48-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The plot tracks nine counts per year: overall song &amp; album tallies plus seven influence-edge types (CoverOf, InStyleOf, etc.). The pink “song_count” line is a convenient proxy for activity; the coloured influence lines show how that activity connects back to Oceanus Folk. Overlay Sailor’s timeline and three distinct pulses emerge.</p>
+<p>Between those peaks the lines flatten:</p>
+<p>2027–28 dip – After the farewell tour, Sailor pivots to an Indie-Pop viral hit (outside the Oceanus tag), leaving only residual covers/interpolations.</p>
+<p>2031 – A small RecordedBy spike (10) but virtually no InStyleOf/CoverOf activity → Sailor or Sophie took producer roles on isolated projects, not enough to reignite broad stylistic borrowing.</p>
+<p>2032–33 trough – All metrics near zero when Sailor’s focus is fully global, confirming that the genre lacks natural momentum without her stewardship.</p>
+<p>Synthesis Sailor’s direct engagement is the primary accelerator. Years she releases or curates (2026, 2029) show multi-line surges; years she steps back (2027, 2032) every metric collapses.</p>
+<p>Homage beats sampling. Peaks favour InStyleOf and CoverOf, while DirectlySamples remains minimal across the entire window—mirroring Sailor’s preference for reinterpretation over raw stem usage.</p>
+<p>Producer influence outlasts performer presence. Even when song_count is low (2031, 2034) a RecordedBy rise signals Sophie or Sailor shaping releases behind the console.</p>
+<p>Album culture stays niche. album_count never exceeds three in any year; Oceanus Folk influence spreads mostly via singles and collaborations—consistent with streaming-era listening habits.</p>
 
 
+</section>
 </section>
 </section>
 

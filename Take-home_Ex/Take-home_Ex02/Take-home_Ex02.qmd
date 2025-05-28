@@ -7,7 +7,7 @@ format: html
 # 1. Installing Packages and Importing Data
 
 ```{r}
-pacman::p_load(tidyverse, jsonlite, SmartEDA, tidygraph,ggraph, igraph)
+pacman::p_load(tidyverse, jsonlite, SmartEDA, tidygraph,ggraph, igraph, lubridate, ggimage)
 ```
 
 ## 1.1 Read the Data
@@ -146,7 +146,7 @@ ggraph(graph_memberof,
   theme_void()
 ```
 
-# 3. Background and Scenario
+# 3. Background and Scenario - VAST Challenge Mini Case 1
 
 One of music’s biggest superstars is Oceanus native Sailor Shift. From humble beginnings, Sailor has grown in popularity and now enjoys fans around the world. Sailor started her career on the island nation of Oceanus which can be clearly seen in her early work, she started in the genre of “Oceanus Folk”. While Sailor has moved away from the traditional Oceanus style, the Oceanus Folk has made a name for itself in the musical world. The popularity of this music is one of the factors driving an increase in tourism to a quiet island nation that used to be known for fishing.
 
@@ -160,74 +160,24 @@ Additionally, because of Sailor’s success, more attention began to be paid ove
 
 Now, as Sailor returns to Oceanus in 2040, a local journalist – Silas Reed – is writing a piece titled Oceanus Folk: Then-and-Now that aims to trace the rise of Sailor and the influence of Oceanus Folk on the rest of the music world. He has collected a large dataset of musical artists, producers, albums, songs, and influences and organized it into a knowledge graph. Your task is to help Silas create beautiful and informative visualizations of this data and uncover new and interesting information about Sailor’s past, her rise to stardom, and her influence.
 
+# 4 Develop visualizations that illustrate how the influence of Oceanus Folk has spread through the musical world.
 
-# 2. Task 2 - Develop visualizations that illustrate how the influence of Oceanus Folk has spread through the musical world.
+## 4.1 visualizing the popularity of Oceanus Folk songs
 
-## 2.1 Was this influence intermittent or did it have a gradual rise?
+In this section, we are going to visualize the popularity of Oceanus Folk's popularity by plotting the numbers of Oceanus Folk's songs hitting the top chart.
 
-Step 1 Filtering Time and Oceanus folks song / album after 2028
-
-
-
-```{r}
-filtered_songs <- nodes_tbl %>%
-  # 先只留「歌曲」節點，且 genre 是 Oceanus Folk
-  filter(`Node Type` == "Song",
-         genre      == "Oceanus Folk",
-         !is.na(release_date),
-         release_date != "") %>%  
-  # 直接把 release_date 當成數字轉年
-  mutate(release_year = as.integer(release_date)) %>%
-  # 過濾 2028 之後
-  filter(release_year > 2028) %>%
-  filter(`notable` == TRUE)
-
-# 看看結果
-filtered_songs
-```
-
-
+### 4.1.1 Setting up annual statistics of the numbers of Oceanus Folk songs on the top chart
 
 ```{r}
-# 1. 把你已經處理好的 graph 轉成 tidygraph
-tg <- as_tbl_graph(graph) %>%
-  activate(nodes) %>%
-  # 加一個 genre_clean 欄，把 NA 換成 "Unknown"
-  mutate(genre_clean = ifelse(is.na(genre) | genre=="", "Unknown", genre))
-
-# 2. 只保留 Album 與 Song 節點（若要畫全網就可以跳過這步）
-tg_sub <- tg %>%
-  activate(nodes) %>%
-  filter(`Node Type` %in% c("Album","Song"))
-
-# 3. 畫網狀圖：節點顏色對應 genre，形狀對應 Node Type
-ggraph(tg_sub, layout = "fr") + 
-  # 邊
-  geom_edge_link(alpha = 0.2, colour = "grey70") +
-  # 節點
-  geom_node_point(aes(color = genre_clean,
-                      shape = `Node Type`),
-                  size = 3) +
-  # 節點標籤（可視需要開關）
-  # geom_node_text(aes(label = name), size = 2, repel = TRUE) +
-  scale_colour_brewer(palette = "Set3") +
-  scale_shape_manual(values = c(16, 17)) +  # 16=circle,17=triangle
-  theme_void() +
-  labs(color = "Genre",
-       shape = "Node Type",
-       title = "Album & Song")
-```
-
-
-```{r, fig.width = 10, fig.height=8}
-
-# 1. 準備 df：只要 2029 年以後、Oceanus Folk Song 的 notable 比例
 df <- nodes_tbl %>%
-  filter(`Node Type` == "Song",
-         genre        == "Oceanus Folk",
-         !is.na(release_date), release_date != "") %>%
+  filter(
+    `Node Type` == "Song",
+    genre        == "Oceanus Folk",
+    !is.na(release_date),
+    release_date != ""
+  ) %>%
   mutate(year = as.integer(release_date)) %>%
-  filter(year > 2026, year < 2040) %>%
+  filter(year > 2018, year < 2030) %>%
   group_by(year) %>%
   summarise(
     total   = n(),
@@ -235,106 +185,773 @@ df <- nodes_tbl %>%
     ratio   = notable / total,
     .groups = "drop"
   ) %>%
-  arrange(year) %>%
-  mutate(genre = "Oceanus Folk")    # for display
+  arrange(year)
+```
 
-# 2. 把 df 轉成 tbl_graph，edges 用空 data.frame()
-g_bubble <- tbl_graph(
-  nodes = df %>% mutate(name = as.character(year)), 
-  edges = data.frame(from=character(), to=character()),
-  directed = FALSE
-)
+### 4.1.2 Plotting the graph
 
-# 3. 建 manual 佈局：x=year, y=1（或其他常數）
-layout_bubble <- create_layout(
-  g_bubble, 
-  layout = "manual",
-  x      = df$year,
-  y      = rep(1, nrow(df))
-)
+```{r}
+df_ratio <- nodes_tbl %>%
+  filter(
+    `Node Type` == "Song",
+    genre        == "Oceanus Folk",
+    !is.na(release_date),
+    release_date != ""
+  ) %>%
+  mutate(year = as.integer(release_date)) %>%
+  filter(year >= 2019, year <= 2029) %>%
+  group_by(year) %>%
+  summarise(
+    total   = n(),
+    notable = sum(notable, na.rm = TRUE),
+    ratio   = notable / total,
+    .groups = "drop"
+  ) %>%
+  arrange(year)
 
-# 4. 用 ggraph 畫泡泡
-ggraph(layout_bubble) +
-  geom_node_point(aes(size = ratio, fill = ratio),
-                  shape = 21, colour = "black", alpha = 0.8) +
-  scale_size_area(max_size = 20, name = "Ratio of Ocenaus Folk songs hitting top chart") +
-  scale_fill_gradient(low = "lightblue", high = "steelblue", name = "Ratio of Ocenaus Folk songs hitting top chart") +
-  scale_x_continuous("Released Year", breaks = df$year) +
-  scale_y_continuous(NULL) +
-  labs(title = "Ratio of Ocenaus Folk songs hitting top chart") +
-  theme_void() +
-  theme(
-    axis.text.x     = element_text(angle = 90, hjust = 1),
-    legend.position = "right"
+# ── 2) df_counts: total Oceanus-Folk releases per year ─────────────────────
+df_counts <- df_ratio %>%
+  transmute(year, n_releases = total)
+
+# ── 3) Plot Panels A & C ─────────────────────────────────────────────────
+
+# Panel A: Genre success rate
+p1 <- ggplot(df_ratio, aes(x = year, y = ratio)) +
+  geom_line(size = 1.2, color = "steelblue") +
+  geom_point(size = 3, color = "steelblue") +
+  scale_y_continuous("Top-chart %", labels = scales::percent_format(accuracy = 1)) +
+  scale_x_continuous("Year", breaks = df_ratio$year) +
+  labs(title = "A. % of Oceanus Folk Songs Hitting Top Chart") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Panel C: Total release volume
+p3 <- ggplot(df_counts, aes(x = year, y = n_releases)) +
+  geom_col(fill = "gray80") +
+  scale_y_continuous("Number of Releases") +
+  scale_x_continuous("Year", breaks = df_counts$year) +
+  labs(title = "C. Oceanus Folk: Release Volume") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# ── 4) Combine panels vertically ──────────────────────────────────────────
+library(patchwork)
+
+(p1 / p3) +
+  plot_annotation(
+    title    = "Oceanus Folk: Genre Success vs. Release Volume (2019–2029)",
+    subtitle = "Panel A: Top-chart %  •  Panel C: Total release volume"
   )
 ```
+
+
+Perfect scores are fragile once the catalogue grows.
+– The genre maintained 100 % only while releases were scarce or strongly branded (early years, Ivy Echoes peak, curated 2027 wave).
+
+Sailor’s presence is the single biggest swing factor.
+– When she pivots away (2028), the hit-rate collapses even though release volume is ordinary.
+– When she leads collaborations (2029) or headlines group projects (2023, 2026-27), success rates soar.
+
+Volume alone doesn’t guarantee chart impact.
+– 2023 and 2026 had similar release surges, yet the hit-rate diverged (100 % vs ~86 %) depending on unified branding vs. fragmented efforts.
+
+Strategic collaborations rejuvenate the scene.
+– The 2029 rebound aligns exactly with Sailor’s Roots & Tides initiative, confirming that leveraging star power to spotlight newcomers can lift an entire genre.
+
+Bottom line: the data reinforce the article’s narrative that Oceanus Folk’s fortunes rise and fall with Sailor Shift’s artistic choices—especially her willingness to keep one foot in her roots while experimenting globally.
+
+## 4.2 Visualizing the trend of popularity of Oceanus Folk.
+
+### 4.2.1 Data Preparations - Naming the edges
+
 ```{r}
-library(igraph)
-library(tidygraph)
-library(ggraph)
-library(dplyr)
+edges2 <- edges_tbl %>%
+  rename(rel_type = `Edge Type`)
+```
 
-# 假設你已經有一個 tidygraph 物件叫 graph
-# 1. 先轉成 igraph，方便用 make_ego_graph()
-g_igraph <- as.igraph(graph)
+### 4.2.2 Filtering and Extracting the Data
 
-# 2. 定位 Oceanus Folk 在 igraph 中的頂點編號
-#    這裡用 genre == "Oceanus Folk" 來找節點
-centre_vid <- which(V(g_igraph)$genre == "Oceanus Folk")
-if (length(centre_vid)==0) stop("找不到 Oceanus Folk 節點")
+```{r}
+oceanus_edges <- edges2 %>%
+  semi_join(
+    nodes_tbl %>% filter(genre == "Oceanus Folk") %>% select(id),
+    by = c("target" = "id")
+  ) %>%
+  filter(rel_type %in% c("ComposerOf", "PerformerOf", "ProducerOf"))
 
-# 3. 用 igraph::make_ego_graph 抽 2‐跳內的子圖
-ego_list <- make_ego_graph(g_igraph,
-                           order = 2,
-                           nodes = centre_vid,
-                           mode = "all")
-# 只有一個元素：取出它
-ego_sub_igraph <- ego_list[[1]]
-
-# 4. 把這個 igraph 子圖轉回 tidygraph
-tg_ego <- as_tbl_graph(ego_sub_igraph) %>%
-  activate(nodes) %>%
-  # 將原始屬性搬回來：label, genre, Node Type
+df_yearly <- oceanus_edges %>%
+  left_join(
+    nodes_tbl %>% select(id, release_date),
+    by = c("target" = "id")
+  ) %>%
   mutate(
-    label       = V(ego_sub_igraph)$name,            # 目前是 id 字串
-    genre       = V(ego_sub_igraph)$genre,           # 流派
-    node_type   = V(ego_sub_igraph)$`Node Type`,     # 節點類型
-    impact_deg  = centrality_degree(mode = "in")     # in‐degree 當影響力
+    year = str_extract(release_date, "^\\d{4}") %>% as.integer()
+  ) %>%
+  filter(year >= 2022) %>%
+
+  group_by(year, rel_type) %>%
+  summarise(count = n(), .groups = "drop") %>%
+  pivot_wider(
+    names_from  = rel_type,
+    values_from = count,
+    values_fill = 0
+  ) %>%
+    arrange(year)
+```
+
+### 4.2.3 The data table
+
+```{r}
+df_yearly
+```
+
+### 4.2.4 Plotting the line chart of the popularity of Oceanus Folk
+
+```{r, fig.width=15, fig.height=8}
+df_long <- df_yearly %>%
+  pivot_longer(
+    cols = c(ComposerOf, PerformerOf, ProducerOf),
+    names_to  = "rel_type",
+    values_to = "count"
+  )
+ggplot(df_long, aes(x = year, y = count, color = rel_type)) +
+  geom_line(size = 1.2) +
+  geom_point(size = 3) +
+  scale_x_continuous(breaks = df_yearly$year) +
+  scale_color_manual(
+    name   = "Relation Type",
+    values = c(
+      ComposerOf  = "lightblue",  
+      PerformerOf = "lightgreen",  
+      ProducerOf  = "gray"   
+    )
+  ) +
+  labs(
+    title = "Popularity of Oceanus Folk songs and albums after 2022",
+    x     = "Year",
+    y     = "Count",
+    color = "Relation Type"
+  ) +
+  theme_classic() +
+  theme(
+    plot.title = element_text(size = 14, face = "bold"),
+    axis.title = element_text(size = 12),
+    axis.text  = element_text(size = 11),
+    legend.title = element_text(size = 12),
+    legend.text  = element_text(size = 11)
+  )
+```
+
+Big picture
+Three distinct “Sailor pulses.”
+Performer spikes (2023, 2026, 2029) align exactly with:
+
+the Ivy Echoes boom,
+
+their farewell, and
+
+Sailor’s Roots & Tides comeback.
+Each pulse corresponds to a rebound or preservation of the 100 % (or near-perfect) top-chart ratio on the first graph.
+
+Quality vs. quantity hinges on unified branding.
+When large output is driven by a cohesive banner (Ivy Echoes, Roots & Tides), the genre keeps its hit-making reputation. When volume grows without Sailor’s direct stamp (mid-2020s), success rates slip.
+
+Post-2030 fade shows influence isn’t permanent without stewardship.
+Composer and producer lines outlive performer activity—reflecting Maya’s writing gigs and Sophie’s studio career—but neither is enough to maintain mainstream traction. The genre becomes boutique again until Sailor’s 2040 homecoming.
+
+Silas Reed’s editorial angle.
+These intertwined trajectories visually prove his thesis: Oceanus Folk’s rise, dips, and mini-revivals are inseparable from Sailor Shift’s career choices—whether she’s front-stage, curating collaborations, or momentarily absent from the scene.
+
+Use the two visuals together in the article:
+
+Figure 1 (2019-29 panels) to show the front-end outcomes—chart success and release volume.
+
+Figure 2 (role-based 2022-40 plot) to uncover the back-end mechanics—who is writing, performing, producing, and how that ebbs when Sailor steps away.
+
+# 5. Examining the most influenced artist and genre of music by Visualizing the influence graph
+
+## 5.1 Visualizing the influence Graph - The genre of music most influenced by Oceanus Folk
+
+### 5.1.1 Defining the influence types
+
+```{r}
+influence_types <- c(
+  "CoverOf",
+  "InStyleOf",
+  "DirectlySamples",
+  "InterpolatesFrom",
+  "LyricalReferenceTo"
+)
+edges2 <- edges_tbl %>% rename(rel_type = `Edge Type`)
+```
+
+### 5.1.2 Filtering the Data
+
+```{r}
+
+# 1.1 Extracting 
+direct_edges <- edges2 %>%
+  filter(rel_type %in% influence_types) %>%
+  semi_join(
+    nodes_tbl %>% filter(`Node Type` == "Song", genre == "Oceanus Folk") %>% select(id),
+    by = c("target" = "id")
+  )
+```
+
+### 5.1.3 Filtering the songs that are influenced by Oceanus Folks but do not belongs to Oceanus Folk
+
+```{r}
+
+direct_songs <- nodes_tbl %>%
+  filter(
+    id %in% direct_edges$source,
+    `Node Type` == "Song",
+    genre != "Oceanus Folk"
+  ) %>%
+  select(song_id = id, song_name = name, release_date, genre)
+artist_songs <- edges2 %>%
+  filter(rel_type == "PerformerOf") %>%
+  semi_join(
+    nodes_tbl %>% filter(name %in% c("Sailor Shift", "Ivy Echoes")) %>% select(id),
+    by = c("source" = "id")
+  ) %>%
+  pull(target) %>%
+  unique() %>%
+  { nodes_tbl %>%
+      filter(
+        id %in% .,
+        `Node Type` == "Song",
+        genre != "Oceanus Folk"
+      ) %>%
+      select(song_id = id, song_name = name, release_date, genre)
+  }
+```
+
+### 5.1.4 Combine the data
+
+```{r}
+step1_songs <- bind_rows(direct_songs, artist_songs) %>%
+  distinct(song_id, song_name, release_date, genre)
+step1_songs
+```
+
+
+```{r}
+
+second_edges <- edges2 %>%
+  filter(rel_type %in% influence_types) %>%
+  semi_join(
+    step1_songs %>% select(id = song_id),
+    by = c("target" = "id")
   )
 
-# 5. 繪製網絡圖
-ggraph(tg_ego, layout = "fr") +
-  geom_edge_link(alpha = 0.3, colour = "grey70") +
-  geom_node_point(aes(size = impact_deg, fill = genre, shape = node_type),
-                  colour = "black", stroke = 0.3) +
-  geom_node_text(aes(label = ifelse(genre=="Oceanus Folk", label, "")),
-                 repel = TRUE, size = 3) +
-  scale_fill_brewer(palette = "Set3", name = "Genre") +
-  scale_shape_manual(values = c("Song"=21,"Album"=22,"Person"=23,
-                                "MusicalGroup"=24,"RecordLabel"=25),
-                     name="Node Type") +
-  scale_size_continuous(range = c(4,12), name="Influence (in‐degree)") +
+step2_songs <- nodes_tbl %>%
+  filter(
+    id %in% second_edges$source,
+    `Node Type` == "Song",
+    genre != "Oceanus Folk"
+  ) %>%
+  select(song_id = id, song_name = name, release_date, genre) %>%
+  distinct()
+step2_songs
+infl_edges <- edges_tbl %>%
+  rename(rel_type = `Edge Type`) %>%
+  filter(rel_type %in% influence_types)
+```
+
+## 5.2 Visualizing the level of influences by Oceanus Folk of all genres of music
+
+### 5.2.1 Extracting the data of genre of songs and album
+
+```{r}
+infl_genre <- infl_edges %>%
+  left_join(
+    nodes_tbl %>% select(id, genre),
+    by = c("target" = "id")
+  ) %>%
+  filter(!is.na(genre))   
+```
+
+### 5.2.2 Grouping the data by *Genre* and *rel_tyoe*
+
+```{r}
+genre_influence_counts <- infl_genre %>%
+  group_by(genre, rel_type) %>%
+  summarise(count = n(), .groups = "drop") %>%
+  pivot_wider(
+    names_from  = rel_type,
+    values_from = count,
+    values_fill = 0
+  ) %>%
+  arrange(genre)
+genre_influence_counts
+```
+
+### 5.2.3 Defining the Edges and Nodes
+
+```{r}
+edges2 <- edges_tbl %>% rename(rel_type = `Edge Type`)
+
+genre_counts <- edges2 %>%
+  filter(rel_type %in% influence_types) %>%
+  semi_join(
+    nodes_tbl %>% filter(`Node Type` == "Song", genre == "Oceanus Folk") %>% select(id),
+    by = c("target"="id")
+  ) %>%
+  left_join(nodes_tbl %>% select(id, genre), by = c("source"="id")) %>%
+  filter(!is.na(genre)) %>%
+  group_by(genre, rel_type) %>%
+  summarise(n = n(), .groups="drop") %>%
+  pivot_wider(names_from = rel_type, values_from = n, values_fill = 0) %>%
+  filter(genre != "Oceanus Folk") %>%
+  mutate(total_genre = rowSums(select(., all_of(influence_types))))
+
+rel_totals <- colSums(select(genre_counts, all_of(influence_types)))
+
+# Defining the Nodes
+nodes <- bind_rows(
+  tibble(id = "Oceanus Folk", type = "central", count = sum(genre_counts$total_genre)),
+  tibble(id = genre_counts$genre, type = "genre", count = genre_counts$total_genre),
+  tibble(id = influence_types, type = "reltype", count = as.integer(rel_totals))
+)
+edges1 <- tibble(
+  from   = "Oceanus Folk",
+  to     = genre_counts$genre,
+  weight = genre_counts$total_genre
+)
+edges2 <- genre_counts %>%
+  pivot_longer(all_of(influence_types), names_to="to", values_to="weight") %>%
+  filter(weight>0) %>%
+  transmute(from = genre, to = to, weight = weight)
+
+edges <- bind_rows(edges1, edges2)
+```
+
+### 5.2.4 Plotting the graph
+
+```{r}
+graph_plot <- tbl_graph(nodes, edges, directed = FALSE)
+
+genres  <- nodes %>% filter(type=="genre")  %>% pull(id)
+rels    <- nodes %>% filter(type=="reltype")%>% pull(id)
+ang_g   <- seq(0, 2*pi, length.out=length(genres)+1)[-1]
+ang_r   <- seq(0, 2*pi, length.out=length(rels)+1)[-1]
+layout  <- tibble(
+  id = c("Oceanus Folk", genres, rels),
+  x  = c(0, cos(ang_g), 2*cos(ang_r)),
+  y  = c(0, sin(ang_g), 2*sin(ang_r))
+)
+
+l <- create_layout(graph_plot, layout="manual", x=layout$x, y=layout$y)
+
+ggraph(l) +
+  geom_edge_link(aes(width=weight), color="grey70", alpha=0.8) +
+  scale_edge_width(range=c(0.2,1.5)) +
+  geom_node_point(aes(size=count, fill=type), shape=21, color="black") +
+  scale_size_area(max_size=15) +
+  scale_fill_manual(values=c(central="#1f78b4", genre="#33a02c", reltype="#e31a1c")) +
+  geom_node_text(aes(label=id), repel=TRUE, size=3) +
+  theme_void() +
+  labs(title="Oceanus Folk → Genres → Influence Types (Excluding Oceanus Folk)")  
+```
+Connecting all three visuals (timelines + role-plot + influence-network)
+Chart dominance ↔ thick influence spokes.
+2019-23 and 2029 show both high hit-rates and vigorous multi-genre edges (especially Cover / InStyleOf).
+2028 dip = thin performer/composer counts and (in the knowledge graph) fewer new outward edges.
+
+Role diversity precedes genre diffusion.
+The 2026 farewell spike sees composer and producer nodes busy → graph shows wider CoverOf edges the following year (artists re-working Ivy Echoes catalog).
+
+Stewardship matters.
+After Sailor’s focus shifts in the early 2030s, performer/composer lines flatten, and here we see few thick new edges—Oceanus Folk’s brokerage power wanes until her 2040 homecoming.
+
+Additional clues from the influence-types
+Re-interpretation over raw sampling – InStyleOf, CoverOf, and InterpolatesFrom account for most heavy edges, whereas DirectlySamples has the thinnest fan-out.
+Oceanus Folk is being re-performed and referenced far more than it is sampled.
+
+Story-telling travels as lyrics – the right-hand red node LyricalReferenceTo links Oceanus Folk to Alt-Rock and Synthwave, underscoring that even when the acoustic sound is left behind, the maritime imagery and narrative structure live on.
+
+The genres soaking up Oceanus Folk influence most heavily are Desert Rock and Doom Metal, followed by the more predictable Indie Folk and crossover styles like Dream Pop and Synthwave. Musicians in those scenes aren’t grabbing raw samples; instead, they cover, reinterpret, or insert folk chord-loops and sea-faring lyrics into their own soundscapes. That pattern reinforces Oceanus Folk’s role as a story-telling blueprint rather than a beat library.
+
+
+## 5.2 Visualzing the most influenced artist by Oceanus Folk
+
+### 5.2.1 Defining the Edges 
+
+```{r}
+edges2 <- edges_tbl %>% rename(rel_type = `Edge Type`)
+```
+
+### 5.2.3 Filtering the Oceanus Folk songs 
+
+```{r}
+
+oceanus_song_ids <- nodes_tbl %>%
+  filter(`Node Type` == "Song", genre == "Oceanus Folk") %>%
+  pull(id)
+
+step1_song_ids <- edges2 %>%
+  filter(rel_type %in% influence_types, target %in% oceanus_song_ids) %>%
+  pull(source) %>%
+  unique()
+```
+
+### 5.2.4 Filtering the songs influenced by the Oceanus songs
+
+```{r}
+step2_song_ids <- edges2 %>%
+  filter(rel_type %in% influence_types, target %in% step1_song_ids) %>%
+  pull(source) %>%
+  unique()
+```
+
+### 5.2.5 Combining the songs influenced by Oceanus Folks
+
+```{r}
+# 5. 合并所有受影响的歌曲 ID
+all_song_ids <- unique(c(step1_song_ids, step2_song_ids))
+
+# 6. 统计演唱者（包括 Person 和 MusicalGroup），排除姓名 NA
+performer_counts <- edges2 %>%
+  filter(rel_type == "PerformerOf", target %in% all_song_ids) %>%
+  count(source, name = "song_count") %>%
+  rename(performer_id = source) %>%
+  left_join(
+    nodes_tbl %>%
+      filter(`Node Type` %in% c("Person", "MusicalGroup")) %>%
+      select(performer_id = id, performer = name),
+    by = "performer_id"
+  ) %>%
+  filter(!is.na(performer))
+```
+
+### 5.2.6 Listing the top 5 artist influenced by Oceanus Folk
+
+```{r}
+top5 <- performer_counts %>%
+  slice_max(song_count, n = 5)
+top5
+```
+
+### 5.2.7 Defining the types of influence and Edges
+
+```{r}
+influence_types <- c(
+  "CoverOf", "InStyleOf", "DirectlySamples",
+  "InterpolatesFrom", "LyricalReferenceTo"
+)
+edges2 <- edges_tbl %>% rename(rel_type = `Edge Type`)
+of_song_ids <- nodes_tbl %>%
+  filter(`Node Type` == "Song", genre == "Oceanus Folk") %>%
+  pull(id)
+```
+
+### 5.2.8 Filtering and Listing the songs ID influenced by Oceanus Folk
+
+```{r}
+step1_song_ids <- edges2 %>%
+  filter(rel_type %in% influence_types, target %in% of_song_ids) %>%
+  pull(source) %>% unique()
+
+step2_song_ids <- edges2 %>%
+  filter(rel_type %in% influence_types, target %in% step1_song_ids) %>%
+  pull(source) %>% unique()
+
+all_song_ids <- unique(c(step1_song_ids, step2_song_ids))
+```
+
+## 5.3 Calculating the times of these singers performing inf;uenced songs
+
+### 5.3.1 Defining the Edges 
+
+```{r}
+
+direct_edges <- edges2 %>%
+  filter(rel_type %in% influence_types, target %in% of_song_ids) %>%
+  transmute(influenced_song_id = source, influence_type = rel_type)
+
+second_edges <- edges2 %>%
+  filter(rel_type %in% influence_types, target %in% step1_song_ids) %>%
+  transmute(influenced_song_id = source, influence_type = rel_type)
+
+all_influence_edges <- bind_rows(direct_edges, second_edges)
+```
+
+### 5.3.2 Collecting the influeced songs performed by Top 5 artist
+
+```{r}
+performer_edges <- edges2 %>%
+  filter(
+    rel_type == "PerformerOf",
+    source   %in% top5$performer_id,
+    target   %in% all_song_ids
+  ) %>%
+  transmute(performer_id = source, song_id = target)
+
+table_top5 <- performer_edges %>%
+  left_join(top5 %>% select(performer_id, performer), by = "performer_id") %>%
+  left_join(all_influence_edges, by = c("song_id" = "influenced_song_id")) %>%
+  left_join(
+    nodes_tbl %>% select(id, name, `Node Type`),
+    by = c("song_id" = "id")
+  ) %>%
+  select(
+    performer,
+    song_or_album = name,
+    node_type     = `Node Type`,
+    influence_type
+  ) %>%
+  arrange(performer, song_or_album)
+```
+
+### 5.3.3 Summary Table
+
+```{r}
+table_top5
+```
+
+### 5.3.4 Plotting the Graph
+
+```{r}
+
+influence_types <- c(
+  "LyricistOf","RecordedBy","DistributedBy",
+  "InStyleOf","InterpolatesFrom","CoverOf",
+  "LyricalReferenceTo","DirectlySamples"
+)
+edges2 <- edges_tbl %>% rename(rel_type = `Edge Type`)
+
+# 2. Oceanus Folk 的 Song ID
+of_song_ids <- nodes_tbl %>%
+  filter(`Node Type`=="Song", genre=="Oceanus Folk") %>%
+  pull(id)
+
+step1 <- edges2 %>%
+  filter(rel_type %in% influence_types, target %in% of_song_ids) %>%
+  pull(source) %>% unique()
+step2 <- edges2 %>%
+  filter(rel_type %in% influence_types, target %in% step1) %>%
+  pull(source) %>% unique()
+all_songs <- unique(c(step1, step2))
+
+performer_counts <- edges2 %>%
+  filter(rel_type=="PerformerOf", target %in% all_songs) %>%
+  count(source, name="song_count") %>%
+  rename(performer_id = source) %>%
+  left_join(
+    nodes_tbl %>% 
+      filter(`Node Type` %in% c("Person","MusicalGroup")) %>%
+      select(performer_id = id, performer = name),
+    by="performer_id"
+  ) %>%
+  filter(!is.na(performer))
+
+top5 <- performer_counts %>% 
+  slice_max(order_by=song_count, n=5, with_ties=TRUE)
+top5_ids <- top5$performer_id
+
+perf_edges <- edges2 %>%
+  filter(rel_type=="PerformerOf",
+         source %in% top5_ids,
+         target %in% all_songs) %>%
+  transmute(song_id      = target,
+            performer_id = source)
+
+nodes_songs <- perf_edges %>%
+  distinct(song_id) %>%
+  left_join(nodes_tbl %>% select(id, name, `Node Type`), 
+            by=c("song_id"="id")) %>%
+  transmute(
+    orig_id   = song_id,
+    name      = name,
+    type      = `Node Type`,
+    size      = 1,
+    bipartite = FALSE
+  )
+
+nodes_perf <- top5 %>%
+  transmute(
+    orig_id   = performer_id,
+    name      = performer,
+    type      = "Performer",
+    size      = song_count,
+    bipartite = TRUE
+  )
+
+nodes_net <- bind_rows(nodes_songs, nodes_perf) %>%
+  distinct(orig_id, .keep_all=TRUE) %>%
+  arrange(bipartite, name) %>%
+  mutate(node_index = row_number())
+
+edges_net <- perf_edges %>%
+  left_join(nodes_net %>% select(orig_id, node_index), 
+            by = c("song_id"      = "orig_id")) %>%
+  rename(from = node_index) %>%
+  left_join(nodes_net %>% select(orig_id, node_index), 
+            by = c("performer_id" = "orig_id")) %>%
+  rename(to   = node_index) %>%
+  transmute(from, to)
+
+graph_net <- tbl_graph(nodes = nodes_net, edges = edges_net, directed = FALSE)
+
+ggraph(graph_net, layout = "bipartite", types = nodes_net$bipartite) +
+  geom_edge_link(color = "grey70", alpha = 0.7) +
+  geom_node_point(aes(size = size, fill = type), shape = 21) +
+  geom_node_text(aes(label = name), repel = TRUE, size = 3) +
+  scale_fill_manual(
+    values = c("Song" = "#33a02c", "Album" = "red", "Performer" = "#1f78b4")
+  ) +
+  scale_size_area(max_size = 8) +
   theme_void() +
   labs(
-    title    = "Oceanus Folk 的 2‐跳合作／影響網絡",
-    subtitle = "節點大小 ∝ 被 Oceanus Folk 影響／引用的次數"
+    title    = "Top 5 Performers ← PerformerOf ← 29 Songs/Albums",
+    subtitle = "The Top 5 Artist Influenced by Oceanus Folk Music"
   )
 
 ```
+Concentration, not collaboration
 
-a. Was this influence intermittent or did it have a gradual rise?
+Every green song node connects to one blue performer only—no songs are shared across artists—so each singer is independently producing Oceanus-Folk-tinged material rather than collaborating on the same tracks.
 
-First of all, There are few key indicators to observe the influence of Oceanus Folk music genre. I would look at the trend of popularity of "PerformerOf" , "ComposerOf" , "ProducerOf", LyricsOf", "RecordedBy" , "DistributedBy" the Ocernus Folk genre of songs or album after 2018.
+Singles over albums
 
-b.What genres and top artists have been most influenced by Oceanus Folk?
+Only one red node (“Instrument Failure”) appears, meaning just one full album is tagged with the style among these 29 releases. Most artists are testing the waters via singles or EP tracks.
 
-There are few indicators to look at the Oceanus Folk influence over the musical industry. Firstly, "ComposerOf" suggests the number of composer composing Oceanus Folk, which indirectly suggesting the influence of the popularity of Oceanus Folk music. Similarly, "ProducerOf" also indicates the popularity of that genre of music. As for "InstyleOf", I would like to show the number of non-Oceanus Folk nodes that is performed in the style of Oceanus Folk genre of songs, album, person or musical group. Last but not least, "DirectlySamples" also suggests the popularity of the genre of the Oceanus Folk. To gain popularity, artist tend to follow the trnding genre during the period.
+Geographic spread
 
-c.On the converse, how has Oceanus Folk changed with the rise of Sailor Shift? From which genres does it draw most of its contemporary inspiration?
+Chinese-sounding names dominate (Guiying Liao, Yan Zou, Xiuying Li, Lei Jin, etc.), but Filippo Pelli’s presence shows the influence has leapt to at least one Western artist—mirroring Desert-Rock and Dream-Pop crossovers seen in the genre network.
 
+Depth versus breadth
 
+Guiying Liao and Yan Zou together account for ~40 % of all Oceanus-Folk performer edges here, acting as principal carriers of the sound in the late 2030s (compare the small role counts in the time–series plot after 2032).
 
+After Sailor Shift’s 2029 ‘Roots & Tides’ push, Oceanus Folk splintered into a handful of ‘torch-bearer’ vocalists. Guiying Liao and Yan Zou led the charge, each releasing half-a-dozen folk-infused singles, while Italy’s Filippo Pelli proved the genre’s reach beyond Oceanus and Asia. Interestingly, only a single full-length album—Instrument Failure—surfaced; the rest were standalone tracks, suggesting artists were experimenting rather than reconstructing their entire sound.
 
+## 5.4 Visualizing the Sailor Shift influences to Oceanus Folk
 
+### 5.4.1 Defining the types of relation
+```{r}
+rel_types <- c(
+  "LyricistOf", "RecordedBy", "DistributedBy",
+  "InStyleOf", "InterpolatesFrom", "CoverOf",
+  "LyricalReferenceTo", "DirectlySamples"
+)
+```
 
+### 5.4.2 Defining the Edges and Extracting the Year data of Oceanus Folks songs
 
+```{r}
+edges2 <- edges_tbl %>% rename(rel_type = `Edge Type`)
+
+oceanus_songs <- nodes_tbl %>%
+  filter(
+    `Node Type` == "Song",
+    genre        == "Oceanus Folk",
+    !is.na(release_date),
+    str_detect(release_date, "^\\d{4}")
+  ) %>%
+  mutate(year = as.integer(str_extract(release_date, "^\\d{4}"))) %>%
+  filter(year >= 2022) %>%
+  select(id, year)
+```
+
+### 5.4.3 Calculating the data by years
+
+```{r}
+counts_by_year <- edges2 %>%
+  filter(rel_type %in% rel_types) %>%
+  # 标记针对 Oceanus Folk song 的边：LyricistOf 用 target，其它用 source
+  mutate(song_id = if_else(rel_type == "LyricistOf", target, source)) %>%
+  inner_join(oceanus_songs, by = c("song_id" = "id")) %>%
+  group_by(year, rel_type) %>%
+  summarise(count = n(), .groups = "drop") %>%
+  pivot_wider(
+    names_from  = rel_type,
+    values_from = count,
+    values_fill = 0
+  ) %>%
+  arrange(year)
+
+media_counts <- nodes_tbl %>%
+  filter(
+    `Node Type` %in% c("Song", "Album"),
+    genre        == "Oceanus Folk",
+    !is.na(release_date),
+    str_detect(release_date, "^\\d{4}")
+  ) %>%
+  mutate(year = as.integer(str_extract(release_date, "^\\d{4}"))) %>%
+  filter(year >= 2022) %>%
+  count(year, `Node Type`) %>%
+  pivot_wider(
+    names_from  = `Node Type`,
+    values_from = n,
+    values_fill = 0
+  ) %>%
+  rename(
+    song_count  = Song,
+    album_count = Album
+  ) %>%
+  arrange(year)
+
+# 6. 合并两张表
+final_table <- counts_by_year %>%
+  left_join(media_counts, by = "year")
+
+```
+
+### 5.4.4 Summary Table
+
+```{r}
+# 7. 查看最终结果
+final_table
+```
+
+### 5.4.5 Setting the data table
+
+```{r}
+plot_df <- final_table %>%
+  filter(year >= 2025, year <= 2035) %>%
+  pivot_longer(
+    cols = -year,
+    names_to  = "variable",
+    values_to = "count"
+  )
+```
+
+### 5.4.6 Plotting the graph
+
+```{r}
+ggplot(plot_df, aes(x = year, y = count, color = variable)) +
+  geom_line(size = 1) +
+  geom_point(size = 2) +
+  scale_x_continuous(breaks = 2025:2035) +
+  labs(
+    title = "Trend of Oceanus Folk Music from 2022 - 2035",
+    x     = "Year",
+    y     = "Numbers",
+    color = "Indications"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+
+```
+The plot tracks nine counts per year: overall song & album tallies plus seven influence-edge types (CoverOf, InStyleOf, etc.). The pink “song_count” line is a convenient proxy for activity; the coloured influence lines show how that activity connects back to Oceanus Folk. Overlay Sailor’s timeline and three distinct pulses emerge.
+
+Between those peaks the lines flatten:
+
+2027–28 dip – After the farewell tour, Sailor pivots to an Indie-Pop viral hit (outside the Oceanus tag), leaving only residual covers/interpolations.
+
+2031 – A small RecordedBy spike (10) but virtually no InStyleOf/CoverOf activity → Sailor or Sophie took producer roles on isolated projects, not enough to reignite broad stylistic borrowing.
+
+2032–33 trough – All metrics near zero when Sailor’s focus is fully global, confirming that the genre lacks natural momentum without her stewardship.
+
+Synthesis
+Sailor’s direct engagement is the primary accelerator. Years she releases or curates (2026, 2029) show multi-line surges; years she steps back (2027, 2032) every metric collapses.
+
+Homage beats sampling. Peaks favour InStyleOf and CoverOf, while DirectlySamples remains minimal across the entire window—mirroring Sailor’s preference for reinterpretation over raw stem usage.
+
+Producer influence outlasts performer presence. Even when song_count is low (2031, 2034) a RecordedBy rise signals Sophie or Sailor shaping releases behind the console.
+
+Album culture stays niche. album_count never exceeds three in any year; Oceanus Folk influence spreads mostly via singles and collaborations—consistent with streaming-era listening habits.
