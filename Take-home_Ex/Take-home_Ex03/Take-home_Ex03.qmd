@@ -25,7 +25,7 @@ To further look into the genre that is influenced by specific genre of music, we
 
 ### Step 5: Plotting the graph
 
-![How selected genre of music influence one another based on the statistics](images/螢幕擷取畫面 2025-06-14 170434.png){fig-align="center"}
+![How selected genre of music influence one another based on the statistics](images/螢幕擷取畫面%202025-06-14%20170434.png){fig-align="center"}
 
 ## Tab 2 - How had the changes of Oceanus Folk brought changes to the music industries
 
