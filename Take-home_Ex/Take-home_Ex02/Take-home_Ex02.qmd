@@ -1,7 +1,7 @@
 ---
 title: "Take-home_Ex02"
 author: "PENG Hsiao Yuan"
-format: html
+format: docx
 ---
 
 # 1. Installing Packages and Importing Data
@@ -244,19 +244,13 @@ library(patchwork)
   )
 ```
 
+Perfect scores are fragile once the catalogue grows. – The genre maintained 100 % only while releases were scarce or strongly branded (early years, Ivy Echoes peak, curated 2027 wave).
 
-Perfect scores are fragile once the catalogue grows.
-– The genre maintained 100 % only while releases were scarce or strongly branded (early years, Ivy Echoes peak, curated 2027 wave).
+Sailor’s presence is the single biggest swing factor. – When she pivots away (2028), the hit-rate collapses even though release volume is ordinary. – When she leads collaborations (2029) or headlines group projects (2023, 2026-27), success rates soar.
 
-Sailor’s presence is the single biggest swing factor.
-– When she pivots away (2028), the hit-rate collapses even though release volume is ordinary.
-– When she leads collaborations (2029) or headlines group projects (2023, 2026-27), success rates soar.
+Volume alone doesn’t guarantee chart impact. – 2023 and 2026 had similar release surges, yet the hit-rate diverged (100 % vs \~86 %) depending on unified branding vs. fragmented efforts.
 
-Volume alone doesn’t guarantee chart impact.
-– 2023 and 2026 had similar release surges, yet the hit-rate diverged (100 % vs ~86 %) depending on unified branding vs. fragmented efforts.
-
-Strategic collaborations rejuvenate the scene.
-– The 2029 rebound aligns exactly with Sailor’s Roots & Tides initiative, confirming that leveraging star power to spotlight newcomers can lift an entire genre.
+Strategic collaborations rejuvenate the scene. – The 2029 rebound aligns exactly with Sailor’s Roots & Tides initiative, confirming that leveraging star power to spotlight newcomers can lift an entire genre.
 
 Bottom line: the data reinforce the article’s narrative that Oceanus Folk’s fortunes rise and fall with Sailor Shift’s artistic choices—especially her willingness to keep one foot in her roots while experimenting globally.
 
@@ -322,7 +316,7 @@ ggplot(df_long, aes(x = year, y = count, color = rel_type)) +
     name   = "Relation Type",
     values = c(
       ComposerOf  = "lightblue",  
-      PerformerOf = "lightgreen",  
+      PerformerOf = "black",  
       ProducerOf  = "gray"   
     )
   ) +
@@ -342,25 +336,19 @@ ggplot(df_long, aes(x = year, y = count, color = rel_type)) +
   )
 ```
 
-Big picture
-Three distinct “Sailor pulses.”
-Performer spikes (2023, 2026, 2029) align exactly with:
+Big picture Three distinct “Sailor pulses.” Performer spikes (2023, 2026, 2029) align exactly with:
 
 the Ivy Echoes boom,
 
 their farewell, and
 
-Sailor’s Roots & Tides comeback.
-Each pulse corresponds to a rebound or preservation of the 100 % (or near-perfect) top-chart ratio on the first graph.
+Sailor’s Roots & Tides comeback. Each pulse corresponds to a rebound or preservation of the 100 % (or near-perfect) top-chart ratio on the first graph.
 
-Quality vs. quantity hinges on unified branding.
-When large output is driven by a cohesive banner (Ivy Echoes, Roots & Tides), the genre keeps its hit-making reputation. When volume grows without Sailor’s direct stamp (mid-2020s), success rates slip.
+Quality vs. quantity hinges on unified branding. When large output is driven by a cohesive banner (Ivy Echoes, Roots & Tides), the genre keeps its hit-making reputation. When volume grows without Sailor’s direct stamp (mid-2020s), success rates slip.
 
-Post-2030 fade shows influence isn’t permanent without stewardship.
-Composer and producer lines outlive performer activity—reflecting Maya’s writing gigs and Sophie’s studio career—but neither is enough to maintain mainstream traction. The genre becomes boutique again until Sailor’s 2040 homecoming.
+Post-2030 fade shows influence isn’t permanent without stewardship. Composer and producer lines outlive performer activity—reflecting Maya’s writing gigs and Sophie’s studio career—but neither is enough to maintain mainstream traction. The genre becomes boutique again until Sailor’s 2040 homecoming.
 
-Silas Reed’s editorial angle.
-These intertwined trajectories visually prove his thesis: Oceanus Folk’s rise, dips, and mini-revivals are inseparable from Sailor Shift’s career choices—whether she’s front-stage, curating collaborations, or momentarily absent from the scene.
+Silas Reed’s editorial angle. These intertwined trajectories visually prove his thesis: Oceanus Folk’s rise, dips, and mini-revivals are inseparable from Sailor Shift’s career choices—whether she’s front-stage, curating collaborations, or momentarily absent from the scene.
 
 Use the two visuals together in the article:
 
@@ -434,7 +422,6 @@ step1_songs <- bind_rows(direct_songs, artist_songs) %>%
   distinct(song_id, song_name, release_date, genre)
 step1_songs
 ```
-
 
 ```{r}
 
@@ -554,35 +541,28 @@ ggraph(l) +
   theme_void() +
   labs(title="Oceanus Folk → Genres → Influence Types (Excluding Oceanus Folk)")  
 ```
-Connecting all three visuals (timelines + role-plot + influence-network)
-Chart dominance ↔ thick influence spokes.
-2019-23 and 2029 show both high hit-rates and vigorous multi-genre edges (especially Cover / InStyleOf).
-2028 dip = thin performer/composer counts and (in the knowledge graph) fewer new outward edges.
 
-Role diversity precedes genre diffusion.
-The 2026 farewell spike sees composer and producer nodes busy → graph shows wider CoverOf edges the following year (artists re-working Ivy Echoes catalog).
+Connecting all three visuals (timelines + role-plot + influence-network) Chart dominance ↔ thick influence spokes. 2019-23 and 2029 show both high hit-rates and vigorous multi-genre edges (especially Cover / InStyleOf). 2028 dip = thin performer/composer counts and (in the knowledge graph) fewer new outward edges.
 
-Stewardship matters.
-After Sailor’s focus shifts in the early 2030s, performer/composer lines flatten, and here we see few thick new edges—Oceanus Folk’s brokerage power wanes until her 2040 homecoming.
+Role diversity precedes genre diffusion. The 2026 farewell spike sees composer and producer nodes busy → graph shows wider CoverOf edges the following year (artists re-working Ivy Echoes catalog).
 
-Additional clues from the influence-types
-Re-interpretation over raw sampling – InStyleOf, CoverOf, and InterpolatesFrom account for most heavy edges, whereas DirectlySamples has the thinnest fan-out.
-Oceanus Folk is being re-performed and referenced far more than it is sampled.
+Stewardship matters. After Sailor’s focus shifts in the early 2030s, performer/composer lines flatten, and here we see few thick new edges—Oceanus Folk’s brokerage power wanes until her 2040 homecoming.
+
+Additional clues from the influence-types Re-interpretation over raw sampling – InStyleOf, CoverOf, and InterpolatesFrom account for most heavy edges, whereas DirectlySamples has the thinnest fan-out. Oceanus Folk is being re-performed and referenced far more than it is sampled.
 
 Story-telling travels as lyrics – the right-hand red node LyricalReferenceTo links Oceanus Folk to Alt-Rock and Synthwave, underscoring that even when the acoustic sound is left behind, the maritime imagery and narrative structure live on.
 
 The genres soaking up Oceanus Folk influence most heavily are Desert Rock and Doom Metal, followed by the more predictable Indie Folk and crossover styles like Dream Pop and Synthwave. Musicians in those scenes aren’t grabbing raw samples; instead, they cover, reinterpret, or insert folk chord-loops and sea-faring lyrics into their own soundscapes. That pattern reinforces Oceanus Folk’s role as a story-telling blueprint rather than a beat library.
 
-
 ## 5.2 Visualzing the most influenced artist by Oceanus Folk
 
-### 5.2.1 Defining the Edges 
+### 5.2.1 Defining the Edges
 
 ```{r}
 edges2 <- edges_tbl %>% rename(rel_type = `Edge Type`)
 ```
 
-### 5.2.3 Filtering the Oceanus Folk songs 
+### 5.2.3 Filtering the Oceanus Folk songs
 
 ```{r}
 
@@ -662,7 +642,7 @@ all_song_ids <- unique(c(step1_song_ids, step2_song_ids))
 
 ## 5.3 Calculating the times of these singers performing inf;uenced songs
 
-### 5.3.1 Defining the Edges 
+### 5.3.1 Defining the Edges
 
 ```{r}
 
@@ -809,6 +789,7 @@ ggraph(graph_net, layout = "bipartite", types = nodes_net$bipartite) +
   )
 
 ```
+
 Concentration, not collaboration
 
 Every green song node connects to one blue performer only—no songs are shared across artists—so each singer is independently producing Oceanus-Folk-tinged material rather than collaborating on the same tracks.
@@ -823,13 +804,14 @@ Chinese-sounding names dominate (Guiying Liao, Yan Zou, Xiuying Li, Lei Jin, etc
 
 Depth versus breadth
 
-Guiying Liao and Yan Zou together account for ~40 % of all Oceanus-Folk performer edges here, acting as principal carriers of the sound in the late 2030s (compare the small role counts in the time–series plot after 2032).
+Guiying Liao and Yan Zou together account for \~40 % of all Oceanus-Folk performer edges here, acting as principal carriers of the sound in the late 2030s (compare the small role counts in the time–series plot after 2032).
 
 After Sailor Shift’s 2029 ‘Roots & Tides’ push, Oceanus Folk splintered into a handful of ‘torch-bearer’ vocalists. Guiying Liao and Yan Zou led the charge, each releasing half-a-dozen folk-infused singles, while Italy’s Filippo Pelli proved the genre’s reach beyond Oceanus and Asia. Interestingly, only a single full-length album—Instrument Failure—surfaced; the rest were standalone tracks, suggesting artists were experimenting rather than reconstructing their entire sound.
 
 ## 5.4 Visualizing the Sailor Shift influences to Oceanus Folk
 
 ### 5.4.1 Defining the types of relation
+
 ```{r}
 rel_types <- c(
   "LyricistOf", "RecordedBy", "DistributedBy",
@@ -937,6 +919,7 @@ ggplot(plot_df, aes(x = year, y = count, color = variable)) +
   )
 
 ```
+
 The plot tracks nine counts per year: overall song & album tallies plus seven influence-edge types (CoverOf, InStyleOf, etc.). The pink “song_count” line is a convenient proxy for activity; the coloured influence lines show how that activity connects back to Oceanus Folk. Overlay Sailor’s timeline and three distinct pulses emerge.
 
 Between those peaks the lines flatten:
@@ -947,8 +930,7 @@ Between those peaks the lines flatten:
 
 2032–33 trough – All metrics near zero when Sailor’s focus is fully global, confirming that the genre lacks natural momentum without her stewardship.
 
-Synthesis
-Sailor’s direct engagement is the primary accelerator. Years she releases or curates (2026, 2029) show multi-line surges; years she steps back (2027, 2032) every metric collapses.
+Synthesis Sailor’s direct engagement is the primary accelerator. Years she releases or curates (2026, 2029) show multi-line surges; years she steps back (2027, 2032) every metric collapses.
 
 Homage beats sampling. Peaks favour InStyleOf and CoverOf, while DirectlySamples remains minimal across the entire window—mirroring Sailor’s preference for reinterpretation over raw stem usage.
 

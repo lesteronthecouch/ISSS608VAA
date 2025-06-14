@@ -1,0 +1,43 @@
+---
+title: "Take-home_Ex03"
+format: html
+---
+
+# Our Story Boards
+
+In this part , I would like to show how the other genre of music is affect by one another. Hence, I want to create a drop down table to select a genre of music, which will be the center of the network graph while hte others will be shown around the selected genre.
+
+## Tab 1 - How genre of music affects one another
+
+### Step 1: Defining the influence type
+
+Before looking into how the other genre of music musics are influenced by Oceanus Folk, we have to define what are the influences there are. In this scenario, we defined "CoverOf". InStyleOf", DirectlySamples", "InterprlatesFrom" and "LyricsReferenceTo" as the types of influences we are looking for.
+
+### Step 2: Filtering the data
+
+Whenever we choose a genre aof music, we have to filter the music that are influenced by that type of genre of music but does not belongs to the genre itself.
+
+### Step 3: Extracting the data.
+
+To further look into the genre that is influenced by specific genre of music, we have to extract the genre of music of the filtered data to analyze the data.
+
+### Step 4: Grouping the data by rel_type
+
+### Step 5: Plotting the graph
+
+![How selected genre of music influence one another based on the statistics](images/螢幕擷取畫面 2025-06-14 170434.png){fig-align="center"}
+
+## Tab 2 - How had the changes of Oceanus Folk brought changes to the music industries
+
+In this section, we want to analyze how the production style had been reshaped by the rise of Sailor Shift. In this case, we analyze the number of everykind of edges related to the productions.
+
+### Step 1: Defining the relation
+
+To evaluate the trend of relation, we defined the relation include " "LyricistOf", "RecordedBy", "DistributedBy", "InStyleOf", "InterpolatesFrom", "CoverOf",\
+"LyricalReferenceTo" and "DirectlySamples"
+
+### Step 2:Defining edges and extracting years data songs according to its genre
+
+### Step 3: Plotting the graph
+
+![](images/clipboard-2241938686.png)
